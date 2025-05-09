@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enter OTP</title>
+  <link rel="stylesheet" href="/styles/otp.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <span class="back-arrow">&#8592;</span>
+      <span class="login-text">LOGIN</span>
+    </div>
+
+    <h1>Enter OTP</h1>
+    <p class="otp-info">OTP sent to +91 1234567890 <span class="edit">EDIT</span></p>
+
+    <p class="resend">RESEND</p>
+
+    <div class="otp-inputs">
+      <input type="text" maxlength="1">
+      <input type="text" maxlength="1">
+      <input type="text" maxlength="1">
+      <input type="text" maxlength="1">
+      <input type="text" maxlength="1">
+      <input type="text" maxlength="1">
+    </div>
+
+    <button class="verify-btn">
+      VERIFY <span class="arrow">&#8594;</span>
+      
+    </button>
+  </div>
+
+  <script>
+  const inputs = document.querySelectorAll('.otp-inputs input');
+
+  inputs.forEach((input, index) => {
+    input.addEventListener('input', () => {
+      if (input.value.length === 1 && index < inputs.length - 1) {
+        inputs[index + 1].focus();
+      }
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === "Backspace" && input.value === "" && index > 0) {
+        inputs[index - 1].focus();
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
