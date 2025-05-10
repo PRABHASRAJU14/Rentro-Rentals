@@ -1,56 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Enter OTP</title>
-  <link rel="stylesheet" href="/styles/otp.css">
+  <link rel="stylesheet" href="../styles/otp.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset & Base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Body and Page Layout */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      height: 100vh;
+      background-color: black;
+    }
+
+    .container {
+      background: white;
+      width: 100%;
+      max-width: 430px;
+      height: 100vh;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Header Styling */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* Back Arrow Styling */
+    .back-arrow {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;  /* Width of the box */
+      height: 40px; /* Height of the box */
+      background-color: #f1f1f1;  /* Light background */
+      border: 2px solid #ccc;  /* Border around the box */
+      border-radius: 8px;  /* Rounded corners */
+      font-size: 1.5em;  /* Size of the arrow */
+      color: black;
+      cursor: pointer;
+      text-decoration: none;  /* Remove underline */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);  /* Optional shadow */
+      transition: background-color 0.3s, border 0.3s;
+    }
+
+    .back-arrow:hover {
+      background-color: #ddd;  /* Darker background on hover */
+      border-color: #bbb;  /* Darker border on hover */
+    }
+
+    .login-text {
+      font-weight: bold;
+    }
+
+    .title {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    /* OTP Inputs */
+    .otp-inputs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .otp-digit {
+      width: 40px;
+      height: 40px;
+      text-align: center;
+      font-size: 1.5em;
+      margin-right: 5px;
+      margin-bottom: 10px;
+      border: 2px solid #FBC02D; /* yellow border */
+      border-radius: 6px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      outline: none;
+    }
+
+    /* Button Styling */
+    .verify-btn, .resend-btn, button {
+      padding: 10px 20px;
+      font-size: 1em;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .verify-btn {
+      background-color: #FFD700;
+      color: black;
+      border: none;
+    }
+
+    .resend-btn {
+      background-color: #FFD700;
+      border: 1px solid #ccc;
+      color: black;
+    }
+
+    .edit-btn {
+      color: black;
+      background-color: #FFD700;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #edit-section {
+      display: none;
+      margin-top: 10px;
+    }
+
+    #phone-input {
+      width: 80%;
+      padding: 10px;
+      font-size: 1em;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    #country-code {
+      padding: 10px;
+      font-size: 1em;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-right: 10px;
+    }
+
+    #error-msg {
+      color: red;
+      text-align: center;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
+
   <div class="container">
-    <div class="header">
-      <span class="back-arrow">&#8592;</span>
+    <!-- Header with Back Arrow -->
+    <header class="header">
+      <button class="back-arrow" aria-label="Go back">&larr;</button>
       <span class="login-text">LOGIN</span>
+    </header>
+
+    <!-- OTP Title -->
+    <h1 class="title">Enter OTP</h1>
+
+    <!-- OTP Info -->
+    <p class="otp-info">
+      OTP sent to <strong id="phone-number">+91 1234567890</strong>
+      <button class="edit-btn" id="edit-btn">EDIT</button>
+    </p>
+
+    <div id="edit-section">
+      <select id="country-code">
+        <option value="+1">+1 (USA / Canada)</option>
+        <option value="+44">+44 (UK)</option>
+        <option value="+61">+61 (Australia)</option>
+        <option value="+81">+81 (Japan)</option>
+        <option value="+49">+49 (Germany)</option>
+        <option value="+33">+33 (France)</option>
+        <option value="+86">+86 (China)</option>
+        <option value="+91" selected>+91 (India)</option>
+        <option value="+55">+55 (Brazil)</option>
+        <option value="+27">+27 (South Africa)</option>
+      </select>
+      <input type="text" id="phone-input" placeholder="Enter phone number"/>
+      <button onclick="updatePhone()">Save</button>
     </div>
 
-    <h1>Enter OTP</h1>
-    <p class="otp-info">OTP sent to +91 1234567890 <span class="edit">EDIT</span></p>
+    <!-- Resend Button -->
+    <button class="resend-btn" id="resend-btn">RESEND</button>
 
-    <p class="resend">RESEND</p>
-
+    <!-- OTP Input Fields -->
     <div class="otp-inputs">
-      <input type="text" maxlength="1">
-      <input type="text" maxlength="1">
-      <input type="text" maxlength="1">
-      <input type="text" maxlength="1">
-      <input type="text" maxlength="1">
-      <input type="text" maxlength="1">
+      <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
+      <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
+      <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
+      <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
+      <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
+      <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
     </div>
 
-    <button class="verify-btn">
-      VERIFY <span class="arrow">&#8594;</span>
-      
+    <!-- Error Message -->
+    <p id="error-msg">Invalid OTP. Please try again.</p>
+
+    <!-- Verify Button -->
+    <button class="verify-btn" id="verify-btn">
+      VERIFY <span class="verify-arrow">&rarr;</span>
     </button>
   </div>
 
   <script>
-  const inputs = document.querySelectorAll('.otp-inputs input');
-
-  inputs.forEach((input, index) => {
-    input.addEventListener('input', () => {
-      if (input.value.length === 1 && index < inputs.length - 1) {
-        inputs[index + 1].focus();
-      }
+    // Redirect back arrow to index.html
+    document.querySelector(".back-arrow").addEventListener("click", () => {
+      window.location.href = "index.html";
     });
 
-    input.addEventListener('keydown', (e) => {
-      if (e.key === "Backspace" && input.value === "" && index > 0) {
-        inputs[index - 1].focus();
+    // Auto-focus OTP
+    const inputs = document.querySelectorAll(".otp-digit");
+
+    function getOTP() {
+      return Array.from(inputs).map(input => input.value).join('');
+    }
+
+    inputs.forEach((input, index) => {
+      input.addEventListener("input", () => {
+        input.value = input.value.replace(/\D/, ''); // Only digits
+        if (input.value && index < inputs.length - 1) {
+          inputs[index + 1].focus();
+        }
+
+        if (getOTP().length === inputs.length) {
+          document.getElementById("error-msg").style.display = "none";
+        }
+      });
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && input.value === "" && index > 0) {
+          inputs[index - 1].focus();
+        }
+      });
+    });
+
+    // Edit phone number
+    const editBtn = document.getElementById("edit-btn");
+    const phoneNumberDisplay = document.getElementById("phone-number");
+    const phoneInput = document.getElementById("phone-input");
+    const countryCode = document.getElementById("country-code");
+    const editSection = document.getElementById("edit-section");
+
+    editBtn.addEventListener("click", () => {
+      editSection.style.display = "block";
+      phoneInput.focus();
+    });
+
+    function updatePhone() {
+      const code = countryCode.value;
+      const number = phoneInput.value.trim();
+      if (number.length < 10) {
+        alert("Please enter a valid phone number.");
+        return;
+      }
+      phoneNumberDisplay.textContent = `${code} ${number}`;
+      editSection.style.display = "none";
+    }
+
+    // Resend button
+    const resendBtn = document.getElementById("resend-btn");
+    resendBtn.addEventListener("click", () => {
+      resendBtn.disabled = true;
+      resendBtn.textContent = "Sending...";
+      setTimeout(() => {
+        resendBtn.disabled = false;
+        resendBtn.textContent = "RESEND";
+      }, 30000);
+    });
+
+    // Verify button (mock check)
+    const verifyBtn = document.getElementById("verify-btn");
+    verifyBtn.addEventListener("click", () => {
+      const otp = getOTP();
+      if (otp.length < inputs.length || otp !== "123456") {
+        document.getElementById("error-msg").style.display = "block";
+      } else {
+        alert("OTP Verified!");
+        document.getElementById("error-msg").style.display = "none";
       }
     });
-  });
-</script>
-
+  </script>
 </body>
 </html>
