@@ -28,34 +28,35 @@ html, body {
   overflow-y: auto;
 }
 
-/* Back Button Inside a Box */
+/* Styled Back Arrow (Box style) */
 .back-button {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 40px;  /* Adjust width of the box */
-  height: 40px; /* Adjust height of the box */
-  background-color: #f1f1f1;  /* Light background for the box */
-  border: 2px solid #ccc;  /* Border around the box */
-  border-radius: 8px;  /* Rounded corners */
-  font-size: 1.5em;  /* Size of the arrow */
+  width: 40px;
+  height: 40px;
+  background-color: #f1f1f1;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 1.5em;
   color: black;
   cursor: pointer;
-  text-decoration: none;  /* Remove underline */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);  /* Optional: Adding slight shadow */
-  transition: background-color 0.3s, border 0.3s;
+  text-decoration: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, border-color 0.3s;
+  font-weight: bold;
 }
 
 .back-button:hover {
-  background-color: #ddd;  /* Darker background on hover */
-  border-color: #bbb;  /* Darker border on hover */
+  background-color: #ddd;
+  border-color: #bbb;
 }
 
 /* Top Section with Background Image */
 .top-image {
   width: 100%;
   height: 180px;
-  background-image: url('/images/iPhone\ 16\ Pro\ Max\ -\ 4-pica (1).png'); /* Replace with your actual image */
+  background-image: url('/images/iPhone 16 Pro Max - 4.png'); /* Ensure this path is correct */
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -87,4 +88,27 @@ h2 {
   color: #000;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   outline: none;
+}
+
+/* Submit Button */
+/* Submit Button Styled Exactly as Shown */
+.submit-btn {
+  padding: 14px;
+  width: 100%;
+  background-color: #ffcc00;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.4em;
+  font-weight: bold;
+  color: black;
+  text-transform: uppercase;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  text-align: center;
+}
+
+
+
+.form .submit-btn:hover {
+  background-color: #f1c40f;
 }

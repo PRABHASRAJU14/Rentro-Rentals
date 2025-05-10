@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Enter OTP</title>
-  <link rel="stylesheet" href="../styles/otp.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <style>
     /* Reset & Base */
@@ -15,7 +14,6 @@
       font-family: 'Inter', sans-serif;
     }
 
-    /* Body and Page Layout */
     body {
       display: flex;
       justify-content: center;
@@ -36,34 +34,32 @@
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
     }
 
-    /* Header Styling */
     .header {
       display: flex;
       align-items: center;
       gap: 16px;
     }
 
-    /* Back Arrow Styling */
     .back-arrow {
       display: inline-flex;
       justify-content: center;
       align-items: center;
-      width: 40px;  /* Width of the box */
-      height: 40px; /* Height of the box */
-      background-color: #f1f1f1;  /* Light background */
-      border: 2px solid #ccc;  /* Border around the box */
-      border-radius: 8px;  /* Rounded corners */
-      font-size: 1.5em;  /* Size of the arrow */
+      width: 40px;
+      height: 40px;
+      background-color: #f1f1f1;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      font-size: 1.5em;
       color: black;
       cursor: pointer;
-      text-decoration: none;  /* Remove underline */
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);  /* Optional shadow */
+      text-decoration: none;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
       transition: background-color 0.3s, border 0.3s;
     }
 
     .back-arrow:hover {
-      background-color: #ddd;  /* Darker background on hover */
-      border-color: #bbb;  /* Darker border on hover */
+      background-color: #ddd;
+      border-color: #bbb;
     }
 
     .login-text {
@@ -75,7 +71,6 @@
       margin: 20px 0;
     }
 
-    /* OTP Inputs */
     .otp-inputs {
       display: flex;
       justify-content: center;
@@ -89,13 +84,12 @@
       font-size: 1.5em;
       margin-right: 5px;
       margin-bottom: 10px;
-      border: 2px solid #FBC02D; /* yellow border */
+      border: 2px solid #FBC02D;
       border-radius: 6px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
       outline: none;
     }
 
-    /* Button Styling */
     .verify-btn, .resend-btn, button {
       padding: 10px 20px;
       font-size: 1em;
@@ -157,138 +151,146 @@
 </head>
 <body>
 
-  <div class="container">
-    <!-- Header with Back Arrow -->
-    <header class="header">
-      <button class="back-arrow" aria-label="Go back">&larr;</button>
-      <span class="login-text">LOGIN</span>
-    </header>
+<div class="container">
+  <header class="header">
+    <button class="back-arrow" aria-label="Go back">&larr;</button>
+    <span class="login-text">LOGIN</span>
+  </header>
 
-    <!-- OTP Title -->
-    <h1 class="title">Enter OTP</h1>
+  <h1 class="title">Enter OTP</h1>
 
-    <!-- OTP Info -->
-    <p class="otp-info">
-      OTP sent to <strong id="phone-number">+91 1234567890</strong>
-      <button class="edit-btn" id="edit-btn">EDIT</button>
-    </p>
+  <p class="otp-info">
+    OTP sent to <strong id="phone-number">+91 1234567890</strong>
+    <button class="edit-btn" id="edit-btn">EDIT</button>
+  </p>
 
-    <div id="edit-section">
-      <select id="country-code">
-        <option value="+1">+1 (USA / Canada)</option>
-        <option value="+44">+44 (UK)</option>
-        <option value="+61">+61 (Australia)</option>
-        <option value="+81">+81 (Japan)</option>
-        <option value="+49">+49 (Germany)</option>
-        <option value="+33">+33 (France)</option>
-        <option value="+86">+86 (China)</option>
-        <option value="+91" selected>+91 (India)</option>
-        <option value="+55">+55 (Brazil)</option>
-        <option value="+27">+27 (South Africa)</option>
-      </select>
-      <input type="text" id="phone-input" placeholder="Enter phone number"/>
-      <button onclick="updatePhone()">Save</button>
-    </div>
-
-    <!-- Resend Button -->
-    <button class="resend-btn" id="resend-btn">RESEND</button>
-
-    <!-- OTP Input Fields -->
-    <div class="otp-inputs">
-      <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
-      <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
-      <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
-      <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
-      <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
-      <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
-    </div>
-
-    <!-- Error Message -->
-    <p id="error-msg">Invalid OTP. Please try again.</p>
-
-    <!-- Verify Button -->
-    <button class="verify-btn" id="verify-btn">
-      VERIFY <span class="verify-arrow">&rarr;</span>
-    </button>
+  <div id="edit-section">
+    <select id="country-code">
+      <option value="+1">+1 (USA / Canada)</option>
+      <option value="+44">+44 (UK)</option>
+      <option value="+61">+61 (Australia)</option>
+      <option value="+81">+81 (Japan)</option>
+      <option value="+49">+49 (Germany)</option>
+      <option value="+33">+33 (France)</option>
+      <option value="+86">+86 (China)</option>
+      <option value="+91" selected>+91 (India)</option>
+      <option value="+55">+55 (Brazil)</option>
+      <option value="+27">+27 (South Africa)</option>
+    </select>
+    <input type="text" id="phone-input" placeholder="Enter phone number"/>
+    <button onclick="updatePhone()">Save</button>
   </div>
 
-  <script>
-    // Redirect back arrow to index.html
-    document.querySelector(".back-arrow").addEventListener("click", () => {
-      window.location.href = "index.html";
-    });
+  <button class="resend-btn" id="resend-btn">RESEND</button>
 
-    // Auto-focus OTP
-    const inputs = document.querySelectorAll(".otp-digit");
+  <div class="otp-inputs">
+    <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
+    <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
+    <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
+    <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
+    <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
+    <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" />
+  </div>
 
-    function getOTP() {
-      return Array.from(inputs).map(input => input.value).join('');
-    }
+  <p id="error-msg">Invalid OTP. Please try again.</p>
 
-    inputs.forEach((input, index) => {
-      input.addEventListener("input", () => {
-        input.value = input.value.replace(/\D/, ''); // Only digits
-        if (input.value && index < inputs.length - 1) {
-          inputs[index + 1].focus();
-        }
+  <button class="verify-btn" id="verify-btn">
+    VERIFY <span class="verify-arrow">&rarr;</span>
+  </button>
+</div>
 
-        if (getOTP().length === inputs.length) {
-          document.getElementById("error-msg").style.display = "none";
-        }
-      });
+<script>
+  const phoneNumberLengths = {
+    "+1": 10,
+    "+44": 10,
+    "+61": 9,
+    "+81": 10,
+    "+49": 11,
+    "+33": 9,
+    "+86": 11,
+    "+91": 10,
+    "+55": 11,
+    "+27": 9
+  };
 
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Backspace" && input.value === "" && index > 0) {
-          inputs[index - 1].focus();
-        }
-      });
-    });
+  document.querySelector(".back-arrow").addEventListener("click", () => {
+    window.location.href = "index.html";
+  });
 
-    // Edit phone number
-    const editBtn = document.getElementById("edit-btn");
-    const phoneNumberDisplay = document.getElementById("phone-number");
-    const phoneInput = document.getElementById("phone-input");
-    const countryCode = document.getElementById("country-code");
-    const editSection = document.getElementById("edit-section");
+  const inputs = document.querySelectorAll(".otp-digit");
 
-    editBtn.addEventListener("click", () => {
-      editSection.style.display = "block";
-      phoneInput.focus();
-    });
+  function getOTP() {
+    return Array.from(inputs).map(input => input.value).join('');
+  }
 
-    function updatePhone() {
-      const code = countryCode.value;
-      const number = phoneInput.value.trim();
-      if (number.length < 10) {
-        alert("Please enter a valid phone number.");
-        return;
+  inputs.forEach((input, index) => {
+    input.addEventListener("input", () => {
+      input.value = input.value.replace(/\D/, '');
+      if (input.value && index < inputs.length - 1) {
+        inputs[index + 1].focus();
       }
-      phoneNumberDisplay.textContent = `${code} ${number}`;
-      editSection.style.display = "none";
-    }
-
-    // Resend button
-    const resendBtn = document.getElementById("resend-btn");
-    resendBtn.addEventListener("click", () => {
-      resendBtn.disabled = true;
-      resendBtn.textContent = "Sending...";
-      setTimeout(() => {
-        resendBtn.disabled = false;
-        resendBtn.textContent = "RESEND";
-      }, 30000);
-    });
-
-    // Verify button (mock check)
-    const verifyBtn = document.getElementById("verify-btn");
-    verifyBtn.addEventListener("click", () => {
-      const otp = getOTP();
-      if (otp.length < inputs.length || otp !== "123456") {
-        document.getElementById("error-msg").style.display = "block";
-      } else {
-        alert("OTP Verified!");
+      if (getOTP().length === inputs.length) {
         document.getElementById("error-msg").style.display = "none";
       }
     });
-  </script>
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Backspace" && input.value === "" && index > 0) {
+        inputs[index - 1].focus();
+      }
+    });
+  });
+
+  const editBtn = document.getElementById("edit-btn");
+  const phoneNumberDisplay = document.getElementById("phone-number");
+  const phoneInput = document.getElementById("phone-input");
+  const countryCode = document.getElementById("country-code");
+  const editSection = document.getElementById("edit-section");
+
+  editBtn.addEventListener("click", () => {
+    editSection.style.display = "block";
+    phoneInput.focus();
+  });
+
+  function updatePhone() {
+    const code = countryCode.value;
+    const number = phoneInput.value.trim();
+    const expectedLength = phoneNumberLengths[code] || 10;
+
+    if (!/^\d+$/.test(number)) {
+      alert("Please enter digits only.");
+      return;
+    }
+
+    if (number.length !== expectedLength) {
+      alert(`Phone number for ${code} must be ${expectedLength} digits.`);
+      return;
+    }
+
+    phoneNumberDisplay.textContent = `${code} ${number}`;
+    editSection.style.display = "none";
+  }
+
+  const resendBtn = document.getElementById("resend-btn");
+  resendBtn.addEventListener("click", () => {
+    resendBtn.disabled = true;
+    resendBtn.textContent = "Sending...";
+    setTimeout(() => {
+      resendBtn.disabled = false;
+      resendBtn.textContent = "RESEND";
+    }, 30000);
+  });
+
+  const verifyBtn = document.getElementById("verify-btn");
+  verifyBtn.addEventListener("click", () => {
+    const otp = getOTP();
+    if (otp.length < inputs.length || otp !== "123456") {
+      document.getElementById("error-msg").style.display = "block";
+    } else {
+      alert("OTP Verified!");
+      document.getElementById("error-msg").style.display = "none";
+    }
+  });
+</script>
 </body>
 </html>

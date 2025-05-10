@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Rento Rentals</title>
+  <title>Rento Rentals</title>  
   <link rel="stylesheet" href="/styles/styles.css" />
   <style>
     /* Custom styling for the country code dropdown */
@@ -39,7 +39,7 @@
   <div class="container">
     <div class="get-started">
       <div class="overlay">
-        <h1 class="brand-title">RENTO<br><span class="highlight">RENTALS</span></h1>
+        <h1 class="brand-title">RENTRO<br><span class="highlight">RENTALS</span></h1>
 
         <div class="bottom-panel">
           <h2 class="section-title">Get Started</h2>
@@ -83,6 +83,20 @@
   </div>
 
   <script>
+    // Mapping country codes to valid phone number lengths (example values)
+    const phoneNumberLengths = {
+      "+91": 10, // India
+      "+1": 10, // USA/Canada
+      "+44": 10, // UK
+      "+61": 9, // Australia
+      "+81": 10, // Japan
+      "+49": 10, // Germany
+      "+33": 9, // France
+      "+86": 11, // China
+      "+55": 11, // Brazil
+      "+27": 10, // South Africa
+    };
+
     // Handle the click event on the "next" button (arrow)
     document.getElementById("next-page-link").addEventListener("click", function(event) {
       event.preventDefault();  // Prevent the default link behavior
@@ -90,10 +104,11 @@
       const phoneNumber = document.getElementById("phone-number").value.trim();
       const countryCode = document.getElementById("country-code").value;
 
-      // Validate phone number (check if it has at least 10 digits)
-      const validPhoneNumber = /^[0-9]{10,}$/;
+      // Get the valid phone number length for the selected country
+      const validPhoneNumberLength = phoneNumberLengths[countryCode];
 
-      if (validPhoneNumber.test(phoneNumber)) {
+      // Validate phone number length
+      if (phoneNumber.length === validPhoneNumberLength) {
         // If valid, redirect to the OTP page
         window.location.href = "otp.html";
       } else {
