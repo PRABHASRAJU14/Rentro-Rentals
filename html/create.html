@@ -1,26 +1,164 @@
-=<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Create Account</title>
   <link rel="stylesheet" href="/styles/create.css" />
+  <style>
+    #country-code {
+      width: 80px;
+      height: 40px;
+      background-color: #f1f1f1;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      font-size: 1em;
+      text-align: center;
+      cursor: pointer;
+      padding: 5px;
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    #country-code:hover {
+      background-color: #ddd;
+      border-color: #bbb;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    input {
+      height: 40px;
+      padding: 10px;
+      font-size: 1em;
+      margin-bottom: 10px;
+      width: 100%;
+    }
+
+    input[type="tel"] {
+      flex: 1;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.9em;
+      margin-top: -8px;
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <!-- Back arrow styled as a clickable button -->
     <a href="index.html" class="back-button">←</a>
-
     <div class="top-image"></div>
-
     <h2>CREATE ACCOUNT</h2>
 
-    <form class="form">
-      <input type="text" placeholder="Enter your name" required />
-      <input type="tel" placeholder="Enter your number" required />
-      <input type="email" placeholder="Enter your mail" required />
-      <!-- Removed the submit button from here -->
+    <form class="form" id="create-account-form" novalidate>
+      <input type="text" id="name" placeholder="Enter your name" required />
+      <div class="error" id="name-error"></div>
+
+      <!-- Number input with country code -->
+      <div class="input-group">
+        <select id="country-code">
+          <option value="+91" selected>+91 (India)</option>
+          <option value="+1">+1 (USA / Canada)</option>
+          <option value="+44">+44 (UK)</option>
+          <option value="+61">+61 (Australia)</option>
+          <option value="+81">+81 (Japan)</option>
+          <option value="+49">+49 (Germany)</option>
+          <option value="+33">+33 (France)</option>
+          <option value="+86">+86 (China)</option>
+          <option value="+55">+55 (Brazil)</option>
+          <option value="+27">+27 (South Africa)</option>
+        </select>
+        <input type="tel" id="number" placeholder="Enter your number" required />
+      </div>
+      <div class="error" id="number-error"></div>
+
+      <input type="email" id="email" placeholder="Enter your mail" required />
+      <div class="error" id="email-error"></div>
+
+      <button type="submit" class="submit-btn">SUBMIT</button>
     </form>
   </div>
+
+  <script>
+    const form = document.getElementById("create-account-form");
+    const name = document.getElementById("name");
+    const number = document.getElementById("number");
+    const email = document.getElementById("email");
+
+    const nameError = document.getElementById("name-error");
+    const numberError = document.getElementById("number-error");
+    const emailError = document.getElementById("email-error");
+    const countryCode = document.getElementById("country-code");
+
+    const phoneNumberLengths = {
+      "+91": 10,
+      "+1": 10,
+      "+44": 10,
+      "+61": 9,
+      "+81": 10,
+      "+49": 10,
+      "+33": 9,
+      "+86": 11,
+      "+55": 11,
+      "+27": 10,
+    };
+
+    function isValidName(name) {
+      return /^[A-Za-z\s]+$/.test(name.trim());
+    }
+
+    function isValidEmail(email) {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      nameError.textContent = "";
+      numberError.textContent = "";
+      emailError.textContent = "";
+
+      const nameVal = name.value.trim();
+      const phone = number.value.trim();
+      const mail = email.value.trim();
+      const code = countryCode.value;
+      const validLength = phoneNumberLengths[code];
+      let isValid = true;
+
+      // Name validation
+      if (!isValidName(nameVal)) {
+        nameError.textContent = "Name should only contain letters and spaces.";
+        isValid = false;
+      }
+
+      // Phone validation
+      if (!/^\d+$/.test(phone)) {
+        numberError.textContent = "Phone number must contain only digits.";
+        isValid = false;
+      } else if (phone.length !== validLength) {
+        numberError.textContent = `Phone number should be ${validLength} digits for ${code}.`;
+        isValid = false;
+      }
+
+      // Email validation
+      if (!isValidEmail(mail)) {
+        emailError.textContent = "Please enter a valid email address.";
+        isValid = false;
+      }
+
+      if (isValid) {
+        alert("Form submitted successfully!");
+        form.reset();
+      }
+    });
+  </script>
 </body>
 </html>
