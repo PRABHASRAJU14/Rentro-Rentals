@@ -15,6 +15,13 @@ document.addEventListener("DOMContentLoaded", () => {
   dropoffDateInput.addEventListener("change", () => {
     updateMinTime(dropoffDateInput, dropoffTimeInput);
   });
+
+  ["pickupDate", "pickupTime", "dropoffDate", "dropoffTime"].forEach(id => {
+    document.getElementById(id).addEventListener("change", updateDuration);
+  });
+
+  document.getElementById("searchBtn").addEventListener("click", handleSearch);
+  updateDuration();
 });
 
 function updateMinTime(dateInput, timeInput) {
@@ -58,7 +65,7 @@ function updateDuration() {
     const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
     const minutes = totalMinutes % 60;
 
-    let durationStr = `Duration: `;
+    let durationStr = "Duration: ";
     if (days > 0) durationStr += `${days} Day${days > 1 ? 's' : ''} `;
     if (hours > 0) durationStr += `${hours} Hour${hours > 1 ? 's' : ''} `;
     if (minutes > 0) durationStr += `${minutes} Minute${minutes > 1 ? 's' : ''}`;
@@ -70,13 +77,7 @@ function updateDuration() {
   }
 }
 
-// Attach change listeners to trigger duration calculation
-["pickupDate", "pickupTime", "dropoffDate", "dropoffTime"].forEach(id => {
-  document.getElementById(id).addEventListener("change", updateDuration);
-});
-
-// Handle search button click
-document.getElementById("searchBtn").addEventListener("click", function () {
+function handleSearch() {
   const pickupDate = document.getElementById("pickupDate").value;
   const pickupTime = document.getElementById("pickupTime").value;
   const dropoffDate = document.getElementById("dropoffDate").value;
@@ -107,9 +108,9 @@ document.getElementById("searchBtn").addEventListener("click", function () {
     pickupTime,
     dropoffDate,
     dropoffTime,
-    location: pickupLocation  // Use the updated variable name here
+    location: pickupLocation
   });
 
   sessionStorage.setItem("vehicleFormData", JSON.stringify(params));
   window.location.href = `vehicle.html?${params.toString()}`;
-});
+}
