@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rental Summary</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fffdf3;
+      margin: 0;
+      padding: 2rem;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background-color: #ffffff;
+      border: 2px solid #f4d35e;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .back-arrow {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      background-color: #f1f1f1;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      font-size: 1.5em;
+      color: black;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s, border 0.3s;
+      margin-bottom: 1rem;
+    }
+
+    .back-arrow:hover {
+      background-color: #ddd;
+      border-color: #bbb;
+    }
+
+    .section {
+      margin-bottom: 2rem;
+    }
+
+    h2 {
+      color: #f4a261;
+      margin-bottom: 1rem;
+    }
+
+    .product {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      color: #f4a261;
+      font-size: 1.2rem;
+    }
+
+    .fee {
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    .rental-link {
+      color: #e9c46a;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .location {
+      margin-top: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .days {
+      background-color: #f4d35e;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-weight: bold;
+      margin-left: 6px;
+    }
+
+    .bike-img {
+      width: 120px;
+    }
+
+    .charges {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .charge-box {
+      background-color: #fff7cc;
+      padding: 1rem;
+      border: 2px dashed #f4d35e;
+      border-radius: 10px;
+      text-align: center;
+      flex: 1;
+    }
+
+    .address-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .add-address {
+      background-color: #f4d35e;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #333;
+      width: fit-content;
+    }
+
+    .address-form {
+      display: none;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .address-form input {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .address-form label {
+      font-weight: bold;
+    }
+
+    .address-display {
+      background-color: #fff7cc;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #f4d35e;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Back Arrow Button -->
+    <button class="back-arrow" onclick="window.history.back();" aria-label="Go back">&larr;</button>
+
+    <div class="section">
+      <h2>Product Details</h2>
+      <div class="product">
+        <div>
+          <strong class="brand">HERO</strong> Glamour <br />
+          <span class="fee">Zero Deposit Fee</span> <br />
+          <a href="#" class="rental-link">Rental Details</a>
+          <p class="location">
+            📍 Vijayawada <span>18-May-2025 → 20-May-2025</span>
+            <span class="days">2 Days</span>
+          </p>
+        </div>
+        <img src="https://i.imgur.com/Nb0lHBJ.png" alt="Hero Glamour" class="bike-img" />
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Additional Details</h2>
+      <div class="charges">
+        <div class="charge-box">
+          💰<br />
+          Excess Km Charges<br />
+          <strong>₹2/km</strong>
+        </div>
+        <div class="charge-box">
+          ⏱️<br />
+          Excess Hourly Charges<br />
+          <strong>₹50/hr</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Mode Of Delivery</h2>
+      <label
+        ><input type="radio" name="delivery" value="home" checked />
+        Home Delivery</label
+      >
+    </div>
+
+    <div class="section address-section">
+      <h2>Delivery Address</h2>
+      <button class="add-address" id="addressBtn" onclick="toggleAddressForm()">Add Address</button>
+
+      <div class="address-form" id="addressForm">
+        <label for="pincode">Pincode:
+          <input type="text" id="pincode" placeholder="Enter Pincode" />
+        </label>
+        <label for="street">Street:
+          <input type="text" id="street" placeholder="Street Name" />
+        </label>
+        <label for="city">City:
+          <input type="text" id="city" placeholder="City" />
+        </label>
+        <label for="state">State:
+          <input type="text" id="state" placeholder="State" />
+        </label>
+
+        <button type="button" class="add-address" onclick="detectLocation()">
+          Detect Location
+        </button>
+        <button type="button" class="add-address" onclick="submitAddress()">
+          Submit
+        </button>
+
+        <div id="locationMessage" style="color: #b45309; font-weight: bold; min-height: 1.2em; margin-top: 0.5rem;"></div>
+      </div>
+
+      <div class="address-display" id="addressDisplay" style="display: none;"></div>
+    </div>
+  </div>
+
+  <script>
+    function toggleAddressForm() {
+      document.getElementById('addressForm').style.display = 'flex';
+      document.getElementById('addressBtn').style.display = 'none';
+    }
+
+    function submitAddress() {
+      const pincode = document.getElementById('pincode').value.trim();
+      const street = document.getElementById('street').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const state = document.getElementById('state').value.trim();
+
+      if (!pincode || !street || !city || !state) {
+        alert('Please fill all the fields.');
+        return;
+      }
+
+      const address = `
+        <strong>Pincode:</strong> ${pincode}<br />
+        <strong>Street:</strong> ${street}<br />
+        <strong>City:</strong> ${city}<br />
+        <strong>State:</strong> ${state}
+      `;
+
+      document.getElementById('addressDisplay').innerHTML = address;
+      document.getElementById('addressDisplay').style.display = 'block';
+      document.getElementById('addressForm').style.display = 'none';
+
+      const btn = document.getElementById('addressBtn');
+      btn.textContent = 'Update Address';
+      btn.style.display = 'inline-block';
+
+      // Clear message on submit success
+      document.getElementById('locationMessage').textContent = '';
+    }
+
+    function detectLocation() {
+      const detectBtn = document.querySelector('.address-form button:nth-of-type(1)');
+      const messageEl = document.getElementById('locationMessage');
+
+      detectBtn.disabled = true;
+      detectBtn.textContent = 'Detecting...';
+      messageEl.textContent = '';
+
+      if (!navigator.geolocation) {
+        messageEl.textContent = 'Geolocation is not supported by your browser.';
+        detectBtn.disabled = false;
+        detectBtn.textContent = 'Detect Location';
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+
+          fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`)
+            .then((response) => response.json())
+            .then((data) => {
+              const address = data.address || {};
+              document.getElementById('pincode').value = address.postcode || '';
+              document.getElementById('street').value = address.road || address.pedestrian || '';
+              document.getElementById('city').value = address.city || address.town || address.village || '';
+              document.getElementById('state').value = address.state || '';
+
+              messageEl.textContent = 'Location detected and fields populated!';
+            })
+            .catch(() => {
+              messageEl.textContent = 'Failed to retrieve address from location.';
+            })
+            .finally(() => {
+              detectBtn.disabled = false;
+              detectBtn.textContent = 'Detect Location';
+            });
+        },
+        () => {
+          messageEl.textContent = 'Unable to retrieve your location.';
+          detectBtn.disabled = false;
+          detectBtn.textContent = 'Detect Location';
+        }
+      );
+    }
+  </script>
+</body>
+</html>

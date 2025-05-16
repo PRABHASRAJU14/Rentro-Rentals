@@ -1,0 +1,115 @@
+/* Reset & Base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+/* Main White Panel */
+.container {
+  background: white;
+  width: 100%;
+  max-width: 430px;
+  height: 100vh;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  overflow-y: auto;
+}
+
+/* Styled Back Arrow (Box style) */
+.back-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: #f1f1f1;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 1.5em;
+  color: black;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, border-color 0.3s;
+  font-weight: bold;
+}
+
+.back-button:hover {
+  background-color: #ddd;
+  border-color: #bbb;
+}
+
+/* Top Section with Background Image */
+.top-image {
+  width: 100%;
+  height: 180px;
+  background-image: url('/images/bp.jpg'); /* Ensure this path is correct */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-bottom: 10px;
+}
+
+/* Title */
+h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: #000;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Form Styling */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form input {
+  padding: 14px;
+  font-size: 1em;
+  border: none;
+  border-radius: 8px;
+  background-color: #ffde59;
+  color: #000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+
+/* Submit Button */
+/* Submit Button Styled Exactly as Shown */
+.submit-btn {
+  padding: 14px;
+  width: 100%;
+  background-color: #ffcc00;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.4em;
+  font-weight: bold;
+  color: black;
+  text-transform: uppercase;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  text-align: center;
+}
+
+
+
+.form .submit-btn:hover {
+  background-color: #f1c40f;
+}
+
