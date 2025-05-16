@@ -4,49 +4,95 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Create Account</title>
-  <link rel="stylesheet" href="/styles/create.css" />
   <style>
-    #country-code {
-      width: 80px;
-      height: 40px;
-      background-color: #f1f1f1;
-      border: 2px solid #ccc;
-      border-radius: 8px;
-      font-size: 1em;
-      text-align: center;
-      cursor: pointer;
-      padding: 5px;
-      transition: background-color 0.3s, border-color 0.3s;
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fffcee;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
 
-    #country-code:hover {
-      background-color: #ddd;
-      border-color: #bbb;
+    .container {
+      background: #fff;
+      border: 2px solid #f9d97a;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      padding: 30px;
+      max-width: 450px;
+      width: 90%;
+    }
+
+    .back-button {
+      display: inline-block;
+      font-size: 1.5em;
+      text-decoration: none;
+      color: #333;
+      background: #f9d97a;
+      border-radius: 50%;
+      padding: 5px 12px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #ff914d;
+      margin-bottom: 30px;
+    }
+
+    form input,
+    form select,
+    form button {
+      width: 100%;
+      padding: 12px;
+      font-size: 1em;
+      margin-bottom: 15px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      transition: 0.3s;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #ffc107;
+      outline: none;
     }
 
     .input-group {
       display: flex;
       gap: 10px;
       margin-bottom: 10px;
-      flex-wrap: wrap;
     }
 
-    input {
-      height: 40px;
-      padding: 10px;
-      font-size: 1em;
-      margin-bottom: 10px;
-      width: 100%;
+    #country-code {
+      width: 35%;
+      background-color: #fff6cc;
+      border-color: #f0d361;
+      cursor: pointer;
     }
 
     input[type="tel"] {
       flex: 1;
     }
 
+    .submit-btn {
+      background-color: #ffcc47;
+      border: none;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background-color: #ffc107;
+    }
+
     .error {
       color: red;
-      font-size: 0.9em;
-      margin-top: -8px;
+      font-size: 0.85em;
+      margin-top: -10px;
       margin-bottom: 10px;
     }
   </style>
@@ -54,14 +100,12 @@
 <body>
   <div class="container">
     <a href="index.html" class="back-button">←</a>
-    <div class="top-image"></div>
     <h2>CREATE ACCOUNT</h2>
 
     <form class="form" id="create-account-form" novalidate>
       <input type="text" id="name" placeholder="Enter your name" required />
       <div class="error" id="name-error"></div>
 
-      <!-- Number input with country code -->
       <div class="input-group">
         <select id="country-code">
           <option value="+91" selected>+91 (India)</option>
@@ -110,8 +154,6 @@
       "+27": 10,
     };
 
-    
-
     function isValidName(name) {
       return /^[A-Za-z\s]+$/.test(name.trim());
     }
@@ -157,7 +199,7 @@
       }
 
       if (isValid) {
-        window.location.href = "city.html"; // Redirect to city.html
+        window.location.href = "city.html";
       }
     });
   </script>

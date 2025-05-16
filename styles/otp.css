@@ -1,41 +1,39 @@
-/* Reset & Base */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-html, body {
-  height: 100%;
-  width: 100%;
-  background: black;
+body {
   display: flex;
   justify-content: center;
   align-items: stretch;
+  height: 100vh;
+  background-color: #fffdf3; /* soft cream background */
+  color: #333;
 }
 
-/* White OTP Panel */
 .container {
-  background: white;
+  background-color: #ffffff;
   width: 100%;
   max-width: 430px;
   height: 100vh;
-  padding: 32px 20px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  border: 2px solid #f4d35e;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
-/* Header */
 .header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
-/* Back arrow remains unchanged */
 .back-arrow {
   display: inline-flex;
   justify-content: center;
@@ -48,7 +46,6 @@ html, body {
   font-size: 1.5em;
   color: black;
   cursor: pointer;
-  text-decoration: none;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   transition: background-color 0.3s, border 0.3s;
 }
@@ -58,81 +55,158 @@ html, body {
   border-color: #bbb;
 }
 
-/* Title */
-.title {
-  font-size: 1.6em;
-  font-weight: 800;
+.login-text {
+  font-weight: 700;
+  color: #f4a261;
+  font-size: 1.25rem;
 }
 
-/* OTP Info & EDIT */
+.title {
+  text-align: center;
+  color: #f4a261;
+  font-weight: 700;
+  font-size: 2rem;
+  margin: 20px 0;
+}
+
 .otp-info {
-  font-size: 0.95em;
-  color: black;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
+  text-align: center;
+  font-weight: 600;
+  color: #555;
 }
 
 .edit-btn {
-  background: none;
+  background-color: #f4d35e;
   border: none;
-  font-weight: 700;
-  font-size: 0.95em;
-  margin-left: 8px;
+  padding: 5px 10px;
+  border-radius: 8px;
   cursor: pointer;
-  color: black;
-  text-decoration: underline;
+  color: #333;
+  font-weight: 600;
+  margin-left: 10px;
+  transition: background-color 0.3s;
 }
 
-/* Resend */
+.edit-btn:hover {
+  background-color: #f4a261;
+  color: white;
+}
+
+#edit-section {
+  display: none;
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+#country-code, #phone-input {
+  padding: 10px;
+  font-size: 1rem;
+  border: 2px solid #f4d35e;
+  border-radius: 8px;
+  outline-offset: 2px;
+  transition: border-color 0.3s;
+}
+
+#country-code:focus, #phone-input:focus {
+  border-color: #f4a261;
+  box-shadow: 0 0 5px #f4a261;
+}
+
+#edit-section button {
+  background-color: #f4d35e;
+  border: none;
+  padding: 10px 20px;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #333;
+  transition: background-color 0.3s;
+}
+
+#edit-section button:hover {
+  background-color: #f4a261;
+  color: white;
+}
+
 .resend-btn {
-  background: none;
-  border: none;
-  font-size: 0.95em;
+  background-color: #f4d35e;
+  border: 2px solid #f4a261;
+  color: #333;
+  padding: 10px 20px;
   font-weight: 700;
-  color: black;
+  border-radius: 8px;
   cursor: pointer;
-  margin-top: 12px;
+  transition: background-color 0.3s, border-color 0.3s;
+  align-self: center;
 }
 
-/* OTP Inputs */
+.resend-btn:hover:not(:disabled) {
+  background-color: #f4a261;
+  border-color: #f4a261;
+  color: white;
+}
+
+.resend-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .otp-inputs {
   display: flex;
   justify-content: center;
-  gap: 12px;
-  margin-top: 8px;
+  gap: 10px;
 }
 
 .otp-digit {
-  width: 50px;
-  height: 55px;
-  font-size: 1.4em;
+  width: 40px;
+  height: 40px;
   text-align: center;
-  border: 3px solid #FBC02D;
-  border-radius: 6px;
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.25);
+  font-size: 1.5em;
+  border: 2px solid #f4d35e;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   outline: none;
-  font-weight: bold;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-/* Verify Button */
-.verify-btn {
-  margin-top: auto;
-  padding: 18px;
-  background: #FBC02D;
+.otp-digit:focus {
+  border-color: #f4a261;
+  box-shadow: 0 0 8px #f4a261;
+}
+
+#verify-btn {
+  background-color: #f4d35e;
+  color: #333;
   border: none;
-  border-radius: 10px;
+  padding: 12px 0;
   font-weight: 700;
-  font-size: 1.05em;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
+  font-size: 1.2rem;
+  border-radius: 12px;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 10px rgba(244, 211, 94, 0.6);
+  transition: background-color 0.3s, box-shadow 0.3s;
+  margin-top: auto;
+  width: 100%;
 }
 
-.verify-arrow {
-  font-size: 1.2em;
-  font-weight: bold;
+#verify-btn:hover {
+  background-color: #f4a261;
+  box-shadow: 0 8px 15px rgba(244, 162, 97, 0.7);
+  color: white;
+}
+
+#verify-btn .verify-arrow {
+  margin-left: 8px;
+  font-weight: 700;
+}
+
+#error-msg {
+  color: #d9534f; /* a soft red */
+  text-align: center;
+  margin-top: 10px;
+  display: none;
+  font-weight: 600;
 }

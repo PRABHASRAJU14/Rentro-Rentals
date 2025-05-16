@@ -40,6 +40,7 @@
       background-color: #ffcc00;
       padding: 12px 16px;
       border-radius: 0 0 12px 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     }
 
     .back-arrow {
@@ -68,7 +69,7 @@
       color: #000;
       font-size: 1.4em;
       font-weight: 600;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6); /* Shadow added */
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
     }
 
     .search-box {
@@ -79,7 +80,7 @@
       padding: 8px 12px;
       background-color: #f9f9f9;
       margin: 12px 16px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow added to search box */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
 
     .search-box input {
@@ -204,6 +205,17 @@
         card.style.display = cityName.includes(query) ? 'flex' : 'none';
       });
     });
+
+    // Save selected city and redirect
+    const cityCards = document.querySelectorAll('.city-card');
+    cityCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const cityName = card.textContent.trim();
+        localStorage.setItem('selectedCity', cityName);
+        window.location.href = 'search.html';
+      });
+    });
   </script>
+
 </body>
 </html>
