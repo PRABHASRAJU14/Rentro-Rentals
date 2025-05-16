@@ -1,0 +1,92 @@
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to right, #9b8ad0, #fdf3c4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0; /* Ensure no margin around the body */
+}
+
+.container {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  width: 300px;
+  max-width: 350px;
+  margin: 20px; /* Adds some space around the container */
+}
+
+h2 {
+  margin-bottom: 15px;
+  font-size: 24px;
+  color: #333;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="time"] {
+  padding: 10px;
+  width: 100%;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border 0.2s ease-in-out;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus {
+  border-color: #ffcd3c; /* Highlight input borders on focus */
+  outline: none;
+}
+
+.datetime-row {
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  background-color: #ffcd3c;
+  color: black;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  width: 100%;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s ease;
+}
+
+button:hover {
+  background-color: #f4b700;
+}
+
+button:focus {
+  outline: none;
+  transform: scale(1.05);
+}
+
+.duration-text {
+  font-size: 16px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: #444;
+}
+
+@media (max-width: 480px) {
+  .datetime-row {
+    flex-direction: column;
+  }
+
+  .container {
+    padding: 20px; 
+  }
+
+  h2 {
+    font-size: 22px; 
+  }
+}

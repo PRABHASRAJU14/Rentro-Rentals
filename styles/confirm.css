@@ -1,0 +1,159 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to right, #9b8ad0, #fdf3c4);
+  color: #000;
+}
+
+.container {
+  padding: 16px;
+  max-width: 500px;
+  margin: auto;
+}
+
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+.back-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: #f1f1f1;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 1.5em;
+  color: black;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, border 0.3s;
+}
+
+.back-btn:hover {
+  background-color: #ddd;
+  border-color: #bbb;
+}
+
+.bike-image img {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.bike-name {
+  margin: 2vh 0;
+  font-size: clamp(20px, 5vw, 28px);
+  text-align: center;
+  font-weight: lighter;
+}
+
+.bike-name span {
+  font-weight: normal;
+}
+
+.booking-details {
+  background-color: #fff4cc;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.date-time {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.time {
+  font-weight: bold;
+}
+
+.arrow {
+  font-size: 24px;
+  margin: 0 10px;
+}
+
+.location-info {
+  margin-top: 12px;
+}
+
+.excludes {
+  background-color: #f8f8f8;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.total-amount {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.total-amount h3 {
+  font-size: 24px;
+  margin: 8px 0 0;
+}
+
+.pay-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: #ffd000;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.pay-btn:hover {
+  background-color: #f4b700;
+}
+
+form#confirmForm {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+  .container {
+    max-width: 90%;
+    padding: 12px;
+    height: auto;
+    display: block;
+  }
+
+  .bike-name {
+    font-size: 20px;
+  }
+
+  .bike-image img {
+    width: 100%;
+    height: auto;
+  }
+
+  .booking-details,
+  .excludes {
+    padding: 12px;
+    margin-top: 12px;
+  }
+
+  .total-amount h3 {
+    font-size: 20px;
+  }
+
+  .pay-btn {
+    font-size: 16px;
+    padding: 12px;
+  }
+}

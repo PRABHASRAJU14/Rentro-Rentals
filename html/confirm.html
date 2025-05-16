@@ -1,0 +1,62 @@
+<!DOCTYPE html>  
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Booking Confirmation</title>
+  <link rel="stylesheet" href="/styles/confirm.css" />
+  <script src="/scripts/confirm.js"></script>
+</head>
+<body>
+  <button class="back-btn" onclick="goBack()">←</button>
+
+  <div class="container">
+    <form id="confirmForm">
+      <div class="bike-image">
+        <img id="bikeImage" src="" alt="Bike" />
+      </div>
+
+      <h2 class="bike-name">
+        <strong id="bikeBrand">Brand</strong>
+        <span id="bikeModel">Model</span>
+      </h2>
+
+      <h3>Booking Details</h3>
+      <div class="booking-details">
+        <div class="date-time">
+          <div>
+            <p id="pickupDate">07 May 2025</p>
+            <p class="time" id="pickupTime">02:00 PM</p>
+          </div>
+          <span class="arrow">→</span>
+          <div>
+            <p id="dropoffDate">08 May 2025</p>
+            <p class="time" id="dropoffTime">02:00 PM</p>
+          </div>
+        </div>
+        <div class="location-info">
+          <p><strong>Location:</strong> <span id="location">Mogalarajapuram</span></p>
+          <p><strong>km :</strong> <span id="kmIncluded">192 km</span></p>
+        </div>
+      </div>
+
+      <div class="excludes">
+        <p><strong>Excludes:</strong></p>
+        <ul>
+          <li>Exceeding KM limit is chargeable at ₹8/km.</li>
+          <li>Fuel is not included as part of the booking.</li>
+        </ul>
+      </div>
+
+      <div class="total-amount">
+        <p>Total Payable Amount</p>
+        <h3 id="price">₹1780.54</h3>
+      </div>
+
+      <button class="pay-btn" id="pay-btn">PROCEED TO PAY</button>
+    </form>
+  </div>
+
+  
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search Ride</title>
+  <link rel="stylesheet" href="/styles/search.css" />
+  <script src="/scripts/search.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h2>Search your ride</h2>
+
+    <label for="location">Location</label>
+    <input type="text" id="location" placeholder="Enter city or area" />
+
+    <h4>Pickup</h4>
+    <div class="datetime-row">
+      <input type="date" id="pickupDate" />
+      <input type="time" id="pickupTime" />
+    </div>
+
+    <h4>Dropoff</h4>
+    <div class="datetime-row">
+      <input type="date" id="dropoffDate" />
+      <input type="time" id="dropoffTime" />
+    </div>
+
+    <!-- Duration Display -->
+    <div id="duration" class="duration-text">Duration: </div>
+
+    <!-- Search Button -->
+    <button id="searchBtn">Search</button>
+  </div>
+
+  
+</body>
+</html>

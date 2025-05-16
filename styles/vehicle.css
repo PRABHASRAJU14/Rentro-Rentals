@@ -1,0 +1,182 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 1rem;
+  background: linear-gradient(to right, #9b8ad0, #fdf3c4);
+  min-height: 100vh;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+#scooter-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: flex-start;  /* align cards left */
+  padding: 0 1rem;
+}
+
+/* Card style */
+.card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  padding: 1rem;
+  width: 100%;
+  max-width: 280px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 0.5rem 0;
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.location-name {
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.time-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.time-block {
+  text-align: center;
+}
+
+.time {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.date {
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.to-circle {
+  background-color: #333;
+  color: white;
+  border-radius: 50%;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.bottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.price {
+  font-size: 1rem;
+  color: #000;
+  line-height: 1.2;
+  text-align: left;
+}
+
+.price small {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.book-btn {
+  background-color: #ffcd3c;
+  color: black;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.book-btn:hover {
+  background-color: #f4b700;
+}
+
+.back-arrow {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: #f1f1f1;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 1.5em;
+  color: black;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, border 0.3s;
+}
+
+.back-arrow:hover {
+  background-color: #ddd;
+  border-color: #bbb;
+}
+
+.card h2 {
+  text-align: center;
+}
+
+/* Responsive adjustments */
+
+/* For tablets */
+@media (max-width: 900px) {
+  #scooter-container {
+    justify-content: center;  /* center on smaller screens */
+  }
+  .card {
+    max-width: 45%;  /* two cards per row */
+  }
+}
+
+/* For mobile phones */
+@media (max-width: 600px) {
+  #scooter-container {
+    flex-direction: column;
+    align-items: center;
+    padding: 0 0.5rem;
+  }
+  .card {
+    max-width: 100%;  /* full width cards */
+    margin: 0.5rem 0;
+  }
+  .bottom-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .price {
+    text-align: center;
+  }
+  .book-btn {
+    width: 100%;
+  }
+}

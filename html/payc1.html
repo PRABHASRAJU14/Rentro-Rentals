@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Debit Card Payment</title>
+  <link rel="stylesheet" href="/styles/payc.css" />
+</head>
+<body>
+  <div class="header">
+    <span class="back-arrow" onclick="goBack()">&#8592;</span>
+  </div>
+
+  <div class="container">
+    <p class="amount-text">Total Payable Amount: <strong>₹ 1780.54</strong></p>
+
+    <div class="payment-box">
+      <div class="payment-header">
+        <span class="inner-back-arrow" onclick="goBack()">&#8592;</span>
+        CHOOSE PAYMENT METHOD
+      </div>
+
+      <div class="form-section">
+        <label for="card-type">Enter your debit card details</label>
+        <select id="card-type">
+          <option>Choose your debit card type</option>
+          <option>Visa</option>
+          <option>MasterCard</option>
+          <option>RuPay</option>
+        </select>
+
+        <div class="input-box">
+          <label>Card Number</label>
+          <input type="text" placeholder="Enter your card number" />
+        </div>
+
+        <div class="input-box">
+          <label>Name on the card</label>
+          <input type="text" placeholder="Enter name on the card" />
+        </div>
+
+        <div class="row">
+          <div class="input-small">
+            <label>Expiry</label>
+            <input type="text" placeholder="M" maxlength="2" />
+          </div>
+          <div class="input-small">
+            <label>&nbsp;</label>
+            <input type="text" placeholder="Y" maxlength="2" />
+          </div>
+          <div class="input-small">
+            <label>CVV</label>
+            <input type="password" placeholder="CVV" maxlength="3" />
+          </div>
+        </div>
+      </div>
+
+      <button class="pay-button">MAKE PAYMENT</button>
+    </div>
+  </div>
+
+<script>
+  function goBack() {
+    window.history.back();
+  }
+
+  // Display the total amount from sessionStorage
+  document.addEventListener("DOMContentLoaded", () => {
+    const amount = sessionStorage.getItem("totalAmount");
+    if (amount) {
+      document.querySelector(".amount-text strong").textContent = `₹ ${amount}`;
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,115 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #222;
+}
+
+.container {
+  max-width: 420px;
+  margin: auto;
+  background-color: #fff;
+}
+
+.header {
+  background-color: #ffd400;
+  padding: 20px;
+  position: relative;
+  text-align: center;
+}
+
+.back-arrow {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.bike-image {
+  width: 70%;
+  margin-top: 20px;
+}
+
+.bike-title {
+  font-size: 20px;
+  padding: 16px;
+  text-align: center;
+}
+
+.booking-section {
+  padding: 16px;
+}
+
+.booking-card {
+  background-color: #fff3cc;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.date-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.date p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.date strong {
+  font-size: 16px;
+}
+
+.arrow {
+  font-size: 24px;
+  color: purple;
+}
+
+.location-info {
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.location-info p {
+  margin: 4px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.excludes {
+  background-color: #fff;
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.excludes h4 {
+  margin-top: 0;
+}
+
+.total-amount {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.total-amount h2 {
+  margin: 5px 0;
+  color: #000;
+}
+
+.pay-button {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  color: #000;
+  background-color: #ffd400;
+  padding: 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  width: 100%;
+  box-sizing: border-box;
+}
