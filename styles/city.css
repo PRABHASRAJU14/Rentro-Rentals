@@ -15,18 +15,17 @@ html, body {
   align-items: stretch;
 }
 
-/* White Panel */
+/* Container */
 .container {
   background: white;
   width: 100%;
   max-width: 430px;
   height: 100vh;
-  padding: 24px 20px;
+  padding: 32px 20px;
   display: flex;
   flex-direction: column;
   gap: 24px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-  overflow-y: auto;
 }
 
 /* Header */
@@ -48,56 +47,76 @@ html, body {
   font-size: 1.5em;
   color: black;
   cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, border 0.3s;
+}
+
+.back-arrow:hover {
+  background-color: #ddd;
+  border-color: #bbb;
 }
 
 .title {
-  font-size: 1.5em;
+  font-size: 1.6em;
   font-weight: 800;
 }
 
-/* Search Box */
-.search-box {
-  position: relative;
-}
-
-.search-box input {
-  width: 100%;
-  padding: 14px 42px 14px 16px;
-  border-radius: 12px;
-  border: 2px solid #ccc;
-  font-size: 1em;
-  background: #f9f9f9;
-  color: black;
-}
-
-.search-icon {
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 18px;
-  color: #888;
-}
-
-/* Grid */
-.grid {
+/* Selection Grid */
+.selection-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: 16px;
+  margin-top: 8px;
 }
 
-/* City Card */
-.city-card {
-  height: 120px;
-  border-radius: 12px;
-  background-size: cover;
-  background-position: center;
+.part-option {
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border 0.3s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.part-option img {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 8px;
+}
+
+.part-option span {
+  font-weight: 600;
+  font-size: 0.95em;
+  color: #222;
+}
+
+.part-option.selected {
+  border-color: #FBC02D;
+  background-color: #fffef5;
+}
+
+/* Continue Button */
+.continue-btn {
+  margin-top: auto;
+  padding: 18px;
+  background: #FBC02D;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1.05em;
+  display: flex;
   justify-content: center;
-  color: white;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.verify-arrow {
+  font-size: 1.2em;
   font-weight: bold;
-  font-size: 14px;
-  padding: 10px;
-  text-shadow: 0 0 6px rgba(0, 0, 0, 0.9);
 }

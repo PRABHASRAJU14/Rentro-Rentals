@@ -32,6 +32,10 @@
       text-align: center;
       display: none;
     }
+
+    #error-msg span {
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -64,7 +68,7 @@
           </div>
 
           <!-- Error Message for Invalid Number -->
-          <p id="error-msg">Please enter a valid phone number.</p>
+          <p id="error-msg"></p>
 
           <p class="small">
             By continuing, you agree to our 
@@ -83,37 +87,72 @@
   </div>
 
   <script>
-    // Mapping country codes to valid phone number lengths (example values)
     const phoneNumberLengths = {
-      "+91": 10, // India
-      "+1": 10, // USA/Canada
-      "+44": 10, // UK
-      "+61": 9, // Australia
-      "+81": 10, // Japan
-      "+49": 10, // Germany
-      "+33": 9, // France
-      "+86": 11, // China
-      "+55": 11, // Brazil
-      "+27": 10, // South Africa
+      "+91": 10,
+      "+1": 10,
+      "+44": 10,
+      "+61": 9,
+      "+81": 10,
+      "+49": 10,
+      "+33": 9,
+      "+86": 11,
+      "+55": 11,
+      "+27": 10,
     };
 
-    // Handle the click event on the "next" button (arrow)
-    document.getElementById("next-page-link").addEventListener("click", function(event) {
-      event.preventDefault();  // Prevent the default link behavior
-      
-      const phoneNumber = document.getElementById("phone-number").value.trim();
-      const countryCode = document.getElementById("country-code").value;
+    const phoneRegex = /^[0-9]+$/;
+    const phoneInput = document.getElementById("phone-number");
+    const errorMsg = document.getElementById("error-msg");
+    const countryCodeSelect = document.getElementById("country-code");
 
-      // Get the valid phone number length for the selected country
-      const validPhoneNumberLength = phoneNumberLengths[countryCode];
+    // Validate phone number on input
+    phoneInput.addEventListener("input", function () {
+      const maxLength = phoneNumberLengths[countryCodeSelect.value];
+      // Restrict input to max length
+      if (phoneInput.value.length > maxLength) {
+        phoneInput.value = phoneInput.value.slice(0, maxLength);
+      }
+      validatePhoneNumber();
+    });
 
-      // Validate phone number length
-      if (phoneNumber.length === validPhoneNumberLength) {
-        // If valid, redirect to the OTP page
+    countryCodeSelect.addEventListener("change", function () {
+      validatePhoneNumber();
+    });
+
+    function validatePhoneNumber() {
+      const phoneNumber = phoneInput.value.trim();
+      const countryCode = countryCodeSelect.value;
+      const validLength = phoneNumberLengths[countryCode];
+
+      if (!phoneRegex.test(phoneNumber)) {
+        errorMsg.style.display = "block";
+        errorMsg.innerHTML = `<span>Please enter only digits in your phone number.</span>`;
+        return false;
+      }
+
+      if (phoneNumber.length < validLength) {
+        errorMsg.style.display = "block";
+        errorMsg.innerHTML = `<span>Phone number is too short. It must be ${validLength} digits.</span>`;
+        return false;
+      }
+
+      if (phoneNumber.length > validLength) {
+        errorMsg.style.display = "block";
+        errorMsg.innerHTML = `<span>Phone number is too long. It must be exactly ${validLength} digits.</span>`;
+        return false;
+      }
+
+      errorMsg.style.display = "none";
+      return true;
+    }
+
+    document.getElementById("next-page-link").addEventListener("click", function (event) {
+      event.preventDefault();
+
+      if (validatePhoneNumber()) {
+        const fullPhone = `${countryCodeSelect.value} ${phoneInput.value.trim()}`;
+        localStorage.setItem("fullPhoneNumber", fullPhone);
         window.location.href = "otp.html";
-      } else {
-        // If invalid, show error message
-        document.getElementById("error-msg").style.display = "block";
       }
     });
   </script>

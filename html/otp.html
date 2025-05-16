@@ -6,7 +6,6 @@
   <title>Enter OTP</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* Reset & Base */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -153,14 +152,14 @@
 
 <div class="container">
   <header class="header">
-    <button class="back-arrow" aria-label="Go back">&larr;</button>
+    <button class="back-arrow" aria-label="Go back" onclick="window.location.href='index.html'">&larr;</button>
     <span class="login-text">LOGIN</span>
   </header>
 
   <h1 class="title">Enter OTP</h1>
 
   <p class="otp-info">
-    OTP sent to <strong id="phone-number">+91 1234567890</strong>
+    OTP sent to <strong id="phone-number"></strong>
     <button class="edit-btn" id="edit-btn">EDIT</button>
   </p>
 
@@ -200,22 +199,18 @@
 </div>
 
 <script>
-  const phoneNumberLengths = {
-    "+1": 10,
-    "+44": 10,
-    "+61": 9,
-    "+81": 10,
-    "+49": 11,
-    "+33": 9,
-    "+86": 11,
-    "+91": 10,
-    "+55": 11,
-    "+27": 9
-  };
+  // Display phone number from localStorage
+  const phoneDisplay = document.getElementById("phone-number");
+  const storedPhone = localStorage.getItem("fullPhoneNumber");
+  if (storedPhone) {
+    phoneDisplay.textContent = storedPhone;
+  }
 
-  document.querySelector(".back-arrow").addEventListener("click", () => {
-    window.location.href = "index.html";
-  });
+  const phoneNumberLengths = {
+    "+1": 10, "+44": 10, "+61": 9, "+81": 10,
+    "+49": 11, "+33": 9, "+86": 11, "+91": 10,
+    "+55": 11, "+27": 9
+  };
 
   const inputs = document.querySelectorAll(".otp-digit");
 
@@ -242,7 +237,6 @@
   });
 
   const editBtn = document.getElementById("edit-btn");
-  const phoneNumberDisplay = document.getElementById("phone-number");
   const phoneInput = document.getElementById("phone-input");
   const countryCode = document.getElementById("country-code");
   const editSection = document.getElementById("edit-section");
@@ -267,7 +261,9 @@
       return;
     }
 
-    phoneNumberDisplay.textContent = `${code} ${number}`;
+    const newFullPhone = `${code} ${number}`;
+    phoneDisplay.textContent = newFullPhone;
+    localStorage.setItem("fullPhoneNumber", newFullPhone);
     editSection.style.display = "none";
   }
 
@@ -281,16 +277,32 @@
     }, 30000);
   });
 
+  async function verifyOTPWithServer(otp) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(otp.length === 6);
+      }, 500);
+    });
+  }
+
   const verifyBtn = document.getElementById("verify-btn");
-  verifyBtn.addEventListener("click", () => {
+  verifyBtn.addEventListener("click", async () => {
     const otp = getOTP();
-    if (otp.length < inputs.length || otp !== "123456") {
+    if (otp.length !== 6) {
+      document.getElementById("error-msg").textContent = "Please enter a 6-digit OTP.";
       document.getElementById("error-msg").style.display = "block";
+      return;
+    }
+
+    const isValid = await verifyOTPWithServer(otp);
+    if (isValid) {
+      window.location.href = "city.html";
     } else {
-      alert("OTP Verified!");
-      document.getElementById("error-msg").style.display = "none";
+      document.getElementById("error-msg").textContent = "Invalid OTP. Please try again.";
+      document.getElementById("error-msg").style.display = "block";
     }
   });
 </script>
+
 </body>
 </html>
