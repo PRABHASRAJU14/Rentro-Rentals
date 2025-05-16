@@ -1,0 +1,122 @@
+/* Reset & Base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+/* Container */
+.container {
+  background: white;
+  width: 100%;
+  max-width: 430px;
+  height: 100vh;
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.back-arrow {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: #f1f1f1;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 1.5em;
+  color: black;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, border 0.3s;
+}
+
+.back-arrow:hover {
+  background-color: #ddd;
+  border-color: #bbb;
+}
+
+.title {
+  font-size: 1.6em;
+  font-weight: 800;
+}
+
+/* Selection Grid */
+.selection-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.part-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border 0.3s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.part-option img {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 8px;
+}
+
+.part-option span {
+  font-weight: 600;
+  font-size: 0.95em;
+  color: #222;
+}
+
+.part-option.selected {
+  border-color: #FBC02D;
+  background-color: #fffef5;
+}
+
+/* Continue Button */
+.continue-btn {
+  margin-top: auto;
+  padding: 18px;
+  background: #FBC02D;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1.05em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.verify-arrow {
+  font-size: 1.2em;
+  font-weight: bold;
+}
