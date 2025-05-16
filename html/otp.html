@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Enter OTP</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     body {
@@ -18,11 +18,12 @@
       justify-content: center;
       align-items: stretch;
       height: 100vh;
-      background-color: black;
+      background-color: #fffdf3;
+      color: #333;
     }
 
     .container {
-      background: white;
+      background-color: #ffffff;
       width: 100%;
       max-width: 430px;
       height: 100vh;
@@ -30,7 +31,9 @@
       display: flex;
       flex-direction: column;
       gap: 24px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+      border: 2px solid #f4d35e;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     }
 
     .header {
@@ -51,7 +54,6 @@
       font-size: 1.5em;
       color: black;
       cursor: pointer;
-      text-decoration: none;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
       transition: background-color 0.3s, border 0.3s;
     }
@@ -62,89 +64,152 @@
     }
 
     .login-text {
-      font-weight: bold;
+      font-weight: 700;
+      color: #000;
+      font-size: 1rem;
     }
 
     .title {
       text-align: center;
-      margin: 20px 0;
+      color: #000;
+      font-weight: 700;
+      font-size: 2rem;
+      margin-top: 20px;
+    }
+
+    .otp-info {
+      text-align: left;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .edit-btn {
+      background-color: #ffd500;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #000;
+      font-weight: 600;
+      margin-left: 10px;
+      transition: background-color 0.3s;
+    }
+
+    .edit-btn:hover {
+      background-color: #f4a261;
+      color: white;
+    }
+
+    #edit-section {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #country-code, #phone-input {
+      padding: 10px;
+      font-size: 1rem;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      width: 100%;
+    }
+
+    #edit-section button {
+      background-color: #fff;
+      border: 2px solid #000;
+      padding: 10px 20px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #000;
+      transition: background-color 0.3s;
+    }
+
+    #edit-section button:hover {
+      background-color: #f4a261;
+      color: white;
+    }
+
+    .resend-btn {
+      background-color: #ffd500;
+      border: none;
+      color: #000;
+      padding: 12px 0;
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 100%;
+    }
+
+    .resend-btn:hover:not(:disabled) {
+      background-color: #f4a261;
+      color: white;
+    }
+
+    .resend-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     .otp-inputs {
       display: flex;
       justify-content: center;
-      gap: 10px;
+      gap: 14px;
+      margin: 20px 0;
     }
 
     .otp-digit {
-      width: 40px;
-      height: 40px;
+      width: 48px;
+      height: 60px;
       text-align: center;
-      font-size: 1.5em;
-      margin-right: 5px;
-      margin-bottom: 10px;
-      border: 2px solid #FBC02D;
-      border-radius: 6px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      font-size: 1.8em;
+      font-weight: 600;
+      border: 2px solid #f4d35e;
+      border-radius: 18px; /* increased curve */
       outline: none;
+      background-color: #fff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: border-color 0.3s, box-shadow 0.3s;
     }
 
-    .verify-btn, .resend-btn, button {
-      padding: 10px 20px;
-      font-size: 1em;
-      border-radius: 5px;
-      cursor: pointer;
+    .otp-digit:focus {
+      border-color: #f4a261;
+      box-shadow: 0 0 8px rgba(244, 163, 97, 0.6);
     }
 
-    .verify-btn {
-      background-color: #FFD700;
-      color: black;
+    #verify-btn {
+      background-color: #ffd500;
+      color: #000;
       border: none;
-    }
-
-    .resend-btn {
-      background-color: #FFD700;
-      border: 1px solid #ccc;
-      color: black;
-    }
-
-    .edit-btn {
-      color: black;
-      background-color: #FFD700;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
+      padding: 12px 0;
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: 8px;
       cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s;
     }
 
-    #edit-section {
-      display: none;
-      margin-top: 10px;
+    #verify-btn:hover {
+      background-color: #f4a261;
+      color: white;
     }
 
-    #phone-input {
-      width: 80%;
-      padding: 10px;
-      font-size: 1em;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-
-    #country-code {
-      padding: 10px;
-      font-size: 1em;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      margin-right: 10px;
+    #verify-btn .verify-arrow {
+      margin-left: 8px;
+      font-weight: 700;
     }
 
     #error-msg {
-      color: red;
+      color: #d9534f;
       text-align: center;
       margin-top: 10px;
       display: none;
+      font-weight: 600;
     }
   </style>
 </head>
@@ -199,7 +264,6 @@
 </div>
 
 <script>
-  // Display phone number from localStorage
   const phoneDisplay = document.getElementById("phone-number");
   const storedPhone = localStorage.getItem("fullPhoneNumber");
   if (storedPhone) {
@@ -242,7 +306,7 @@
   const editSection = document.getElementById("edit-section");
 
   editBtn.addEventListener("click", () => {
-    editSection.style.display = "block";
+    editSection.style.display = "flex";
     phoneInput.focus();
   });
 
