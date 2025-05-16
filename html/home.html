@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RENTRO RENTALS</title>
+    <style>
+        /* Reset some default styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: white;
+            color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Container for the content */
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 40px;
+            color: #FFD700; /* Yellow color for title */
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+        }
+
+        /* Main content area */
+        .main-content h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Vehicle selection grid */
+        .vehicles {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .vehicle {
+            background-color: #f1f1f1;
+            padding: 20px;
+            border-radius: 12px;
+            width: 45%;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .vehicle img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+
+        .vehicle p {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Vehicle hover effect */
+        .vehicle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer Styles */
+        footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        footer p {
+            font-size: 14px;
+        }
+
+        /* Media Query for Mobile size adjustments */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 35px;
+            }
+
+            .vehicles {
+                flex-direction: column;
+            }
+
+            .vehicle {
+                width: 80%;
+                margin-bottom: 20px;
+            }
+
+            footer {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header>
+            <h1>RENTRO RENTALS</h1>
+        </header>
+        
+        <!-- Main Content Section -->
+        <div class="main-content">
+            <h2>Select Your Vehicle</h2>
+            <div class="vehicles">
+                <div class="vehicle car">
+                    <img src="car-icon.png" alt="Car">
+                    <p>Car</p>
+                </div>
+                <div class="vehicle bike">
+                    <img src="bike-icon.png" alt="Bike">
+                    <p>Bike</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer Section -->
+        <footer>
+            <p>&copy; 2025 RENTRO RENTALS. All Rights Reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
