@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Debit Card Payment</title>
   <link rel="stylesheet" href="/styles/payc.css" />
+  <script src="/scripts/payc1.js"></script>
 </head>
 <body>
   <div class="header">
@@ -58,20 +59,6 @@
       <button class="pay-button">MAKE PAYMENT</button>
     </div>
   </div>
-
-<script>
-  function goBack() {
-    window.history.back();
-  }
-
-  // Display the total amount from sessionStorage
-  document.addEventListener("DOMContentLoaded", () => {
-    const amount = sessionStorage.getItem("totalAmount");
-    if (amount) {
-      document.querySelector(".amount-text strong").textContent = `₹ ${amount}`;
-    }
-  });
-</script>
 
 </body>
 </html>

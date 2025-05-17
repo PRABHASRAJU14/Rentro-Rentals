@@ -1,11 +1,11 @@
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
- background: linear-gradient(to right, #9b8ad0, #fdf3c4);
+  background: #fffdf3; /* soft off-white */
 }
 
 /* .header {
-  background-color: #ffd400;
+  background-color: #f4d35e;  
   padding: 20px;
   position: relative;
   border-bottom-left-radius: 20px;
@@ -22,7 +22,7 @@ body {
   border: 2px solid #ccc;
   border-radius: 12px;
   font-size: 2em;
-  color: black;
+  color: #333; /* changed black to dark gray for softness */
   cursor: pointer;
   text-decoration: none;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
@@ -38,7 +38,6 @@ body {
   transform: scale(1.05);
 }
 
-
 .container {
   padding: 20px;
   max-width: 420px;
@@ -49,22 +48,24 @@ body {
   text-align: center;
   margin-bottom: 20px;
   font-size: 16px;
+  color: #333;
 }
 
 .payment-box {
-  background-color: #fff;
+  background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   padding: 16px;
 }
 
 .payment-header {
-  background-color: #ddd;
+  background-color: #eee;  /* softer gray */
   padding: 12px;
   font-weight: bold;
   text-align: center;
   position: relative;
   border-radius: 6px 6px 0 0;
+  color: #f4a261; /* warm orange header text */
 }
 
 .inner-back-arrow {
@@ -73,6 +74,7 @@ body {
   top: 12px;
   font-size: 20px;
   cursor: pointer;
+  color: #f4a261;
 }
 
 .form-section {
@@ -85,6 +87,7 @@ body {
   display: block;
   margin: 12px 0 6px;
   font-size: 14px;
+  color: #333;
 }
 
 input, select {
@@ -93,6 +96,7 @@ input, select {
   border-radius: 4px;
   border: 1px solid #ccc;
   box-sizing: border-box;
+  color: #333;
 }
 
 .input-box {
@@ -112,11 +116,17 @@ input, select {
 .pay-button {
   margin-top: 16px;
   width: 100%;
-  background-color: #ffd400;
+  background-color: #f4d35e; /* bright yellow */
   border: none;
   padding: 14px;
   font-weight: bold;
   font-size: 16px;
   border-radius: 6px;
   cursor: pointer;
+  color: #333; /* dark text */
+  transition: background-color 0.3s ease;
+}
+
+.pay-button:hover {
+  background-color: #e9c46a; /* muted yellow on hover */
 }

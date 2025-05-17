@@ -6,8 +6,6 @@
   <title>Rent a Ride</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link href="/styles/search.css" rel="stylesheet">
-  <script src="/scripts/search.js"></script>
-
 </head>
 <body>
 
@@ -16,14 +14,15 @@
       <a href="javascript:history.back()" class="back-arrow">&#8592;</a>
     </div>
 
-    <img src="/images/vij.png" alt="Banner" class="banner">
+    <!-- This image will change based on the selected city -->
+    <img src="/images/default-image.jpg" alt="City Banner" class="banner" id="city-banner">
 
     <div class="card">
       <h2>Commuting Made <span>Easy</span></h2>
-      <p>Scooter/Scooty/Bike on Rent in <span id="city-name-text">Vijayawada</span></p>
+      <p>Scooter/Scooty/Bike on Rent in <span id="city-name-text">Default City</span></p>
 
       <div class="input-box" id="location-box" style="cursor: pointer;">
-        <input type="text" id="location" value="Vijayawada" readonly>
+        <input type="text" id="location" value="Default City" readonly>
         <i class="green">&#x1F4CD;</i>
       </div>
 
@@ -45,5 +44,6 @@
     </div>
   </div>
 
+  <script src="/scripts/search.js"></script>
 </body>
 </html>

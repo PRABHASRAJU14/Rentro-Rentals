@@ -74,6 +74,7 @@
       color: #e9c46a;
       text-decoration: none;
       font-weight: bold;
+      cursor: pointer;
     }
 
     .location {
@@ -147,13 +148,35 @@
       border-radius: 8px;
       border: 1px solid #f4d35e;
     }
+
+    .delivery-options label {
+      margin-right: 1.5rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .submit-btn {
+      background-color: #f4d35e;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #333;
+      margin-top: 1rem;
+      box-shadow: 0 2px 8px rgba(244, 211, 94, 0.6);
+      transition: background-color 0.3s;
+    }
+    .submit-btn:hover {
+      background-color: #e9c94b;
+    }
   </style>
 </head>
 <body>
   <div class="container">
 
     <!-- Back Arrow Button -->
-    <button class="back-arrow" onclick="window.history.back();" aria-label="Go back">&larr;</button>
+    <button class="back-arrow" aria-label="Go back" id="backBtn">&larr;</button>
 
     <div class="section">
       <h2>Product Details</h2>
@@ -161,11 +184,8 @@
         <div>
           <strong class="brand">HERO</strong> Glamour <br />
           <span class="fee">Zero Deposit Fee</span> <br />
-          <a href="#" class="rental-link">Rental Details</a>
-          <p class="location">
-            📍 Vijayawada <span>18-May-2025 → 20-May-2025</span>
-            <span class="days">2 Days</span>
-          </p>
+          <a class="rental-link" href="#">Rental Details</a>
+          <p class="location" id="rentalInfo">Loading rental info...</p>
         </div>
         <img src="https://i.imgur.com/Nb0lHBJ.png" alt="Hero Glamour" class="bike-img" />
       </div>
@@ -189,13 +209,13 @@
 
     <div class="section">
       <h2>Mode Of Delivery</h2>
-      <label
-        ><input type="radio" name="delivery" value="home" checked />
-        Home Delivery</label
-      >
+      <div class="delivery-options">
+        <label><input type="radio" name="delivery" value="home" checked /> Home Delivery</label>
+        <label><input type="radio" name="delivery" value="pickup" /> Pickup Delivery</label>
+      </div>
     </div>
 
-    <div class="section address-section">
+    <div class="section address-section" id="addressSection">
       <h2>Delivery Address</h2>
       <button class="add-address" id="addressBtn" onclick="toggleAddressForm()">Add Address</button>
 
@@ -225,14 +245,82 @@
 
       <div class="address-display" id="addressDisplay" style="display: none;"></div>
     </div>
+
+    <button class="submit-btn" id="submitBtn">Submit</button>
+
   </div>
 
   <script>
-    function toggleAddressForm() {
-      document.getElementById('addressForm').style.display = 'flex';
-      document.getElementById('addressBtn').style.display = 'none';
+    // Utility to parse yyyy-mm-dd string to Date
+    function parseDate(str) {
+      const parts = str.split('-');
+      return new Date(parts[0], parts[1] - 1, parts[2]);
     }
 
+    // Calculate inclusive days difference
+    function calculateDays(startStr, endStr) {
+      const start = parseDate(startStr);
+      const end = parseDate(endStr);
+      const diffMs = end - start;
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1;
+      return diffDays > 0 ? diffDays : 1;
+    }
+
+    // Get URL parameters
+    const params = new URLSearchParams(window.location.search);
+    const locationParam = params.get('location') || 'Vijayawada';
+    const pickupDate = params.get('pickupDate') || '2025-05-18';
+    const dropoffDate = params.get('dropoffDate') || '2025-05-20';
+    
+    
+
+    // Update rental info
+    const days = calculateDays(pickupDate, dropoffDate);
+    document.getElementById('rentalInfo').innerHTML = `
+      📍 ${locationParam} <span>${pickupDate} → ${dropoffDate}</span>
+      <span class="days">${days} Day${days > 1 ? 's' : ''}</span>
+    `;
+
+    // Elements references
+    const backBtn = document.getElementById('backBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const addressSection = document.getElementById('addressSection');
+    const addressForm = document.getElementById('addressForm');
+    const addressBtn = document.getElementById('addressBtn');
+    const addressDisplay = document.getElementById('addressDisplay');
+
+    // Radio buttons for delivery mode
+    const deliveryRadios = document.querySelectorAll('input[name="delivery"]');
+
+    // Initially show address section (home delivery checked)
+    addressSection.style.display = 'block';
+
+    // Show/hide address section based on delivery mode
+    deliveryRadios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        if (radio.value === 'home' && radio.checked) {
+          addressSection.style.display = 'flex';
+          // If no address yet, show add address button and hide display
+          if (!addressDisplay.innerHTML.trim()) {
+            addressBtn.style.display = 'inline-block';
+            addressForm.style.display = 'none';
+            addressDisplay.style.display = 'none';
+          }
+        } else if (radio.value === 'pickup' && radio.checked) {
+          // Hide address section for pickup delivery
+          addressSection.style.display = 'none';
+        }
+      });
+    });
+
+    // Toggle address form display
+    function toggleAddressForm() {
+      addressForm.style.display = 'flex';
+      addressBtn.style.display = 'none';
+    }
+    window.toggleAddressForm = toggleAddressForm;
+
+    // Submit address form and display address summary
     function submitAddress() {
       const pincode = document.getElementById('pincode').value.trim();
       const street = document.getElementById('street').value.trim();
@@ -251,18 +339,18 @@
         <strong>State:</strong> ${state}
       `;
 
-      document.getElementById('addressDisplay').innerHTML = address;
-      document.getElementById('addressDisplay').style.display = 'block';
-      document.getElementById('addressForm').style.display = 'none';
+      addressDisplay.innerHTML = address;
+      addressDisplay.style.display = 'block';
+      addressForm.style.display = 'none';
 
-      const btn = document.getElementById('addressBtn');
-      btn.textContent = 'Update Address';
-      btn.style.display = 'inline-block';
+      addressBtn.textContent = 'Update Address';
+      addressBtn.style.display = 'inline-block';
 
-      // Clear message on submit success
       document.getElementById('locationMessage').textContent = '';
     }
+    window.submitAddress = submitAddress;
 
+    // Detect location with geolocation API and reverse geocode
     function detectLocation() {
       const detectBtn = document.querySelector('.address-form button:nth-of-type(1)');
       const messageEl = document.getElementById('locationMessage');
@@ -309,6 +397,47 @@
         }
       );
     }
+    window.detectLocation = detectLocation;
+
+    // Back button goes to search.html with same query params
+    backBtn.addEventListener('click', () => {
+      const searchParams = new URLSearchParams();
+      searchParams.set('location', locationParam);
+      searchParams.set('pickupDate', pickupDate);
+      searchParams.set('dropoffDate', dropoffDate);
+      window.location.href = 'search.html?' + searchParams.toString();
+    });
+
+    // Submit button handler
+    submitBtn.addEventListener('click', () => {
+      // Check delivery mode
+      const selectedDelivery = Array.from(deliveryRadios).find(r => r.checked).value;
+
+      // If home delivery, must have address submitted
+      if (selectedDelivery === 'home') {
+        if (!addressDisplay.innerHTML.trim()) {
+          alert('Please add and submit your delivery address before proceeding.');
+          return;
+        }
+      }
+
+      // Prepare URL params for vehicle page
+      const vehicleParams = new URLSearchParams();
+      vehicleParams.set('location', locationParam);
+      vehicleParams.set('pickupDate', pickupDate);
+      vehicleParams.set('dropoffDate', dropoffDate);
+      vehicleParams.set('deliveryMode', selectedDelivery);
+
+      if (selectedDelivery === 'home') {
+        // Include address fields
+        vehicleParams.set('pincode', document.getElementById('pincode').value.trim());
+        vehicleParams.set('street', document.getElementById('street').value.trim());
+        vehicleParams.set('city', document.getElementById('city').value.trim());
+        vehicleParams.set('state', document.getElementById('state').value.trim());
+      }
+
+      window.location.href = 'vehicle.html?' + vehicleParams.toString();
+    });
   </script>
 </body>
 </html>

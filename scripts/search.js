@@ -1,4 +1,30 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => { 
+  // Load selected city data from localStorage
+  const cityDataStr = localStorage.getItem('selectedCity');
+  if (cityDataStr) {
+    try {
+      const cityData = JSON.parse(cityDataStr);
+
+      // Update banner image
+      const bannerImg = document.getElementById("city-banner");
+      if (bannerImg && cityData.image) {
+        bannerImg.src = cityData.image;
+        bannerImg.alt = cityData.name;
+      }
+
+      // Update city name text
+      const cityNameText = document.getElementById('city-name-text');
+      if (cityNameText && cityData.name) cityNameText.textContent = cityData.name;
+
+      // Update location input value (editable)
+      const locationInput = document.getElementById('location');
+      if (locationInput && cityData.name) locationInput.value = cityData.name;
+    } catch (e) {
+      console.warn('Error parsing selectedCity data:', e);
+    }
+  }
+
+  // Initialize date/time inputs min values
   const pickupDateInput = document.getElementById("pickupDate");
   const dropoffDateInput = document.getElementById("dropoffDate");
   const pickupTimeInput = document.getElementById("pickupTime");
@@ -10,10 +36,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   pickupDateInput.addEventListener("change", () => {
     updateMinTime(pickupDateInput, pickupTimeInput);
+    updateDuration();
   });
 
   dropoffDateInput.addEventListener("change", () => {
     updateMinTime(dropoffDateInput, dropoffTimeInput);
+    updateDuration();
   });
 
   ["pickupDate", "pickupTime", "dropoffDate", "dropoffTime"].forEach(id => {
@@ -21,6 +49,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("searchBtn").addEventListener("click", handleSearch);
+
+  // Initial duration update
   updateDuration();
 });
 
@@ -82,7 +112,7 @@ function handleSearch() {
   const pickupTime = document.getElementById("pickupTime").value;
   const dropoffDate = document.getElementById("dropoffDate").value;
   const dropoffTime = document.getElementById("dropoffTime").value;
-  const pickupLocation = document.getElementById("location").value;
+  const pickupLocation = document.getElementById("location").value.trim();
 
   const pickup = new Date(`${pickupDate}T${pickupTime}`);
   const dropoff = new Date(`${dropoffDate}T${dropoffTime}`);
@@ -111,6 +141,8 @@ function handleSearch() {
     location: pickupLocation
   });
 
-  sessionStorage.setItem("vehicleFormData", JSON.stringify(params));
-  window.location.href = `vehicle.html?${params.toString()}`;
+  // Store form data if you want (optional)
+  sessionStorage.setItem("vehicleFormData", JSON.stringify(Object.fromEntries(params.entries())));
+
+  window.location.href = `del.html?${params.toString()}`;
 }

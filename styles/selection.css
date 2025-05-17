@@ -1,18 +1,18 @@
-body {
+body { 
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background-color: #f9f9f9;
-  color: #222;
+  background-color: #fffdf3;
+  color: #333;
 }
 
 .container {
   max-width: 420px;
   margin: auto;
-  background-color: #fff;
+  background-color: #ffffff;
 }
 
 .header {
-  background-color: #ffd400;
+  background-color: #f4d35e;
   padding: 20px;
   position: relative;
   text-align: center;
@@ -24,6 +24,7 @@ body {
   top: 20px;
   font-size: 24px;
   cursor: pointer;
+  color: #333;
 }
 
 .bike-image {
@@ -35,6 +36,7 @@ body {
   font-size: 20px;
   padding: 16px;
   text-align: center;
+  color: #f4a261;
 }
 
 .booking-section {
@@ -42,7 +44,7 @@ body {
 }
 
 .booking-card {
-  background-color: #fff3cc;
+  background-color: #fff7cc;
   border-radius: 10px;
   padding: 16px;
   margin-bottom: 20px;
@@ -57,15 +59,17 @@ body {
 .date p {
   margin: 0;
   font-size: 14px;
+  color: #888;
 }
 
 .date strong {
   font-size: 16px;
+  color: #333;
 }
 
 .arrow {
   font-size: 24px;
-  color: purple;
+  color: #f4a261;
 }
 
 .location-info {
@@ -77,10 +81,11 @@ body {
   margin: 4px 0;
   display: flex;
   justify-content: space-between;
+  color: #333;
 }
 
 .excludes {
-  background-color: #fff;
+  background-color: #ffffff;
   padding: 12px;
   border-radius: 10px;
   box-shadow: 0 0 4px rgba(0,0,0,0.1);
@@ -89,6 +94,7 @@ body {
 
 .excludes h4 {
   margin-top: 0;
+  color: #f4a261;
 }
 
 .total-amount {
@@ -98,18 +104,22 @@ body {
 
 .total-amount h2 {
   margin: 5px 0;
-  color: #000;
+  color: #333;
 }
 
 .pay-button {
   display: block;
   text-align: center;
   text-decoration: none;
-  color: #000;
-  background-color: #ffd400;
+  color: #333;
+  background-color: #f4d35e;
   padding: 16px;
   border-radius: 8px;
   font-weight: bold;
   width: 100%;
   box-sizing: border-box;
+}
+
+.pay-button:hover {
+  background-color: #e9c46a;
 }
