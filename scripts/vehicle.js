@@ -7,7 +7,7 @@ const scooters = [
   {
     name: "Honda Activa 6G",
     image: "/images/honda activa 6g.png",
-    price: "₹180 (50 km included)"
+    price: "₹100 (80 km included)"
   },
   {
     name: "Honda Dio 125",
@@ -17,12 +17,12 @@ const scooters = [
   {
     name: "Suzuki Access 125 (BS6)",
     image: "/images/suzuki access 125(BS6).png",
-    price: "₹552 (120 km included)"
+    price: "₹150 (120 km included)"
   },
   {
     name: "Honda Activa 5G",
     image: "/images/honda activa 5g.png",
-    price: "₹552 (120 km included)"
+    price: "₹300 (100 km included)"
   }
 ];
 
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Set back link to preserve search inputs
   const backLink = document.getElementById("backLink");
   if (backLink) {
-    backLink.href = `del.html?pickupDate=${encodeURIComponent(pickupDate)}&pickupTime=${encodeURIComponent(pickupTime)}&dropoffDate=${encodeURIComponent(dropoffDate)}&dropoffTime=${encodeURIComponent(dropoffTime)}&location=${encodeURIComponent(pickupLocation)}`;
+    backLink.href = `search.html?pickupDate=${encodeURIComponent(pickupDate)}&pickupTime=${encodeURIComponent(pickupTime)}&dropoffDate=${encodeURIComponent(dropoffDate)}&dropoffTime=${encodeURIComponent(dropoffTime)}&location=${encodeURIComponent(pickupLocation)}`;
   }
 
   // Render the scooters list
@@ -123,7 +123,7 @@ function displayScooters() {
           <small>${scooter.price.split(" ").slice(1).join(" ")}</small>
         </div>
         <button class="book-btn"
-          onclick="window.location.href='confirm.html?${urlParams.toString()}'">
+          onclick="window.location.href='del.html?${urlParams.toString()}'">
           Book
         </button>
       </div>
