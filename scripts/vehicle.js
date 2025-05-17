@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Set back link to preserve search inputs
   const backLink = document.getElementById("backLink");
   if (backLink) {
-    backLink.href = `search.html?pickupDate=${encodeURIComponent(pickupDate)}&pickupTime=${encodeURIComponent(pickupTime)}&dropoffDate=${encodeURIComponent(dropoffDate)}&dropoffTime=${encodeURIComponent(dropoffTime)}&location=${encodeURIComponent(pickupLocation)}`;
+    backLink.href = `del.html?pickupDate=${encodeURIComponent(pickupDate)}&pickupTime=${encodeURIComponent(pickupTime)}&dropoffDate=${encodeURIComponent(dropoffDate)}&dropoffTime=${encodeURIComponent(dropoffTime)}&location=${encodeURIComponent(pickupLocation)}`;
   }
 
   // Render the scooters list

@@ -1,8 +1,8 @@
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(to right, #9b8ad0, #fdf3c4);
-  color: #000;
+  background-color: #fffdf3;
+  color: #333333;
 }
 
 .container {
@@ -11,28 +11,22 @@ body {
   margin: auto;
 }
 
-    .back-btn {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      font-size: 24px;
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
 .back-btn {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 40px;
-  height: 40px;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 24px;
   background-color: #f1f1f1;
   border: 2px solid #ccc;
   border-radius: 8px;
-  font-size: 1.5em;
   color: black;
   cursor: pointer;
   text-decoration: none;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   transition: background-color 0.3s, border 0.3s;
 }
@@ -52,6 +46,7 @@ body {
   font-size: clamp(20px, 5vw, 28px);
   text-align: center;
   font-weight: lighter;
+  color: #f4a261;
 }
 
 .bike-name span {
@@ -59,7 +54,7 @@ body {
 }
 
 .booking-details {
-  background-color: #fff4cc;
+  background-color: #fff7cc;
   border-radius: 12px;
   padding: 16px;
   margin-top: 16px;
@@ -73,6 +68,7 @@ body {
 
 .time {
   font-weight: bold;
+  color: #333333;
 }
 
 .arrow {
@@ -82,13 +78,16 @@ body {
 
 .location-info {
   margin-top: 12px;
+  color: #888888;
 }
 
 .excludes {
-  background-color: #f8f8f8;
+  background-color: #ffffff;
+  border: 2px dashed #f4d35e;
   border-radius: 12px;
   padding: 16px;
   margin-top: 16px;
+  color: #333333;
 }
 
 .total-amount {
@@ -99,22 +98,24 @@ body {
 .total-amount h3 {
   font-size: 24px;
   margin: 8px 0 0;
+  color: #f4a261;
 }
 
 .pay-btn {
   width: 100%;
   padding: 14px;
-  background-color: #ffd000;
+  background-color: #f4d35e;
   border: none;
   border-radius: 8px;
   font-size: 18px;
   font-weight: bold;
   margin-top: 20px;
   cursor: pointer;
+  color: #333333;
 }
 
 .pay-btn:hover {
-  background-color: #f4b700;
+  background-color: #e9c46a;
 }
 
 form#confirmForm {

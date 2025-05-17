@@ -1,17 +1,10 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(to right, #9b8ad0, #fdf3c4);
+  background: #fffdf3;
   height: 100vh;
+  color: #333333;
 }
-
-/* .header {
-  background-color: #ffcc00;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  padding-left: 20px;
-} */
 
 .back-arrow {
   display: inline-flex;
@@ -19,24 +12,23 @@ body {
   align-items: center;
   width: 60px;
   height: 60px;
-  background-color: #f1f1f1;
-  border: 2px solid #ccc;
+  background-color: #ffffff;
+  border: 2px solid #f4d35e;
   border-radius: 12px;
   font-size: 2.5em;
-  color: black;
+  color: #333333;
   cursor: pointer;
   text-decoration: none;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s, border 0.3s, transform 0.2s;
-
-  /* Add space around the button */
-  margin: 20px 0 20px 20px; /* Top, Right, Bottom, Left */
+  margin: 20px 0 20px 20px;
 }
 
 .back-arrow:hover {
-  background-color: #ddd;
-  border-color: #bbb;
+  background-color: #f4d35e;
+  border-color: #e9c46a;
   transform: scale(1.05);
+  color: #333333;
 }
 
 .container {
@@ -49,35 +41,38 @@ body {
   font-size: 16px;
   text-align: center;
   margin-bottom: 20px;
+  color: #333333;
 }
 
 .payment-box {
-  background-color: white;      /* white container */
-  border: 1px solid #ddd;
+  background-color: #ffffff;
+  border: 1px solid #f4d35e;
   border-radius: 8px;
   padding: 15px;
   overflow: hidden;
 }
 
 .payment-box h3 {
-  background-color: #eee;
+  background-color: #fff7cc;
   margin: 0 0 10px 0;
   padding: 15px;
   font-size: 16px;
   text-align: center;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #f4d35e;
+  color: #f4a261;
 }
 
 .payment-method {
   padding: 15px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #f4d35e;
   text-align: center;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  color: #333333;
 }
 
 .payment-method:hover {
-  background-color: #f9f9f9;
+  background-color: #fff7cc;
 }
 
 .offer {

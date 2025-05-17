@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -206,12 +206,21 @@
       });
     });
 
-    // Save selected city and redirect
+    // Save selected city name + image URL and redirect to search.html
     const cityCards = document.querySelectorAll('.city-card');
     cityCards.forEach(card => {
       card.addEventListener('click', () => {
         const cityName = card.textContent.trim();
-        localStorage.setItem('selectedCity', cityName);
+        // Get background image URL from inline style, like: background-image: url('/images/t.png')
+        const bgImageStyle = card.style.backgroundImage;
+        // Extract the URL between the quotes
+        const imageUrlMatch = bgImageStyle.match(/url\(["']?(.*?)["']?\)/);
+        const imageUrl = imageUrlMatch ? imageUrlMatch[1] : '';
+
+        // Save object { name, image } to localStorage
+        localStorage.setItem('selectedCity', JSON.stringify({ name: cityName, image: imageUrl }));
+
+        // Redirect to search page
         window.location.href = 'search.html';
       });
     });

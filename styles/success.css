@@ -1,0 +1,146 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fffdf3; /* light cream */
+  color: #333; /* dark gray text */
+}
+
+/* .header {
+  background-color: #f4d35e; 
+  padding: 10px;
+  position: relative;
+} */
+
+.back-arrow {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: #fff7cc;
+  border: 2px solid #f4d35e;
+  border-radius: 8px;
+  font-size: 1.5em;
+  color: #333;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, border 0.3s;
+}
+
+.back-arrow:hover {
+  background-color: #f4d35e;
+  border-color: #e9c46a;
+}
+
+.confirmation {
+  background-color: #e9f8ec; /* very light green */
+  color: #007f3f; /* dark green */
+  padding: 15px;
+  text-align: center;
+}
+
+.success {
+  font-weight: bold;
+  font-size: 18px;
+  color: #f4a261; /* orange-yellow for emphasis */
+}
+
+.info {
+  color: #333; /* dark gray */
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.main-bike img {
+  width: 100%;
+  max-width: 500px; /* larger max width */
+  border-radius: 8px;
+}
+
+.main-bike {
+  text-align: center;
+  background-color: #ffffff;
+  padding: 20px; /* more spacing */
+  border: 2px solid #f4d35e;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08); /* stronger shadow */
+  margin: 20px auto;
+  max-width: 600px; /* limit width on very large screens */
+}
+
+
+.top-picks {
+  padding: 10px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-header h3 {
+  margin: 0;
+  color: #f4a261; /* orange-yellow */
+}
+
+.view-all {
+  font-size: 14px;
+  color: #e9c46a; /* pale yellow */
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.bike-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+
+.bike-card {
+  width: 48%;
+  background: #fff7cc; /* pale yellow background */
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 2px dashed #f4d35e; /* gold dashed border */
+}
+
+.bike-card img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  margin-bottom: 5px;
+  border-radius: 6px;
+}
+
+.bike-card p {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+  color: #333; /* dark gray */
+}
+@media (max-width: 600px) {
+  .bike-card {
+    width: 100%; /* stack cards full width on small screens */
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .view-all {
+    align-self: flex-start;
+  }
+
+  .main-bike img {
+    width: 100%;
+    max-width: none;
+  }
+}

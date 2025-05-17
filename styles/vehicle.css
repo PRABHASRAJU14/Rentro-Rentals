@@ -1,27 +1,27 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fffdf3;
   margin: 0;
-  padding: 1rem;
-  background: linear-gradient(to right, #9b8ad0, #fdf3c4);
-  min-height: 100vh;
+  padding: 2rem;
+  color: #333;
 }
 
 .page-title {
   text-align: center;
   margin-bottom: 2rem;
+  color: #f4a261;
 }
 
 #scooter-container {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  justify-content: flex-start;  /* align cards left */
+  justify-content: flex-start;
   padding: 0 1rem;
 }
 
-/* Card style */
 .card {
-  background-color: white;
+  background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   padding: 1rem;
@@ -69,11 +69,12 @@ body {
 .time {
   font-size: 1rem;
   font-weight: bold;
+  color: #f4a261;
 }
 
 .date {
   font-size: 0.85rem;
-  color: #555;
+  color: #888;
 }
 
 .to-circle {
@@ -95,19 +96,19 @@ body {
 
 .price {
   font-size: 1rem;
-  color: #000;
+  color: #333;
   line-height: 1.2;
   text-align: left;
 }
 
 .price small {
   font-size: 0.75rem;
-  color: #666;
+  color: #888;
 }
 
 .book-btn {
-  background-color: #ffcd3c;
-  color: black;
+  background-color: #e9c46a;
+  color: #333;
   border: none;
   border-radius: 8px;
   padding: 8px 16px;
@@ -117,7 +118,7 @@ body {
 }
 
 .book-btn:hover {
-  background-color: #f4b700;
+  background-color: #f4d35e;
 }
 
 .back-arrow {
@@ -126,11 +127,11 @@ body {
   align-items: center;
   width: 40px;
   height: 40px;
-  background-color: #f1f1f1;
-  border: 2px solid #ccc;
+  background-color: #fff7cc;
+  border: 2px solid #f4d35e;
   border-radius: 8px;
   font-size: 1.5em;
-  color: black;
+  color: #333;
   cursor: pointer;
   text-decoration: none;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -138,27 +139,26 @@ body {
 }
 
 .back-arrow:hover {
-  background-color: #ddd;
-  border-color: #bbb;
+  background-color: #f4d35e;
+  border-color: #e9c46a;
 }
 
 .card h2 {
   text-align: center;
+  color: #f4a261;
 }
 
 /* Responsive adjustments */
 
-/* For tablets */
 @media (max-width: 900px) {
   #scooter-container {
-    justify-content: center;  /* center on smaller screens */
+    justify-content: center;
   }
   .card {
-    max-width: 45%;  /* two cards per row */
+    max-width: 45%;
   }
 }
 
-/* For mobile phones */
 @media (max-width: 600px) {
   #scooter-container {
     flex-direction: column;
@@ -166,7 +166,7 @@ body {
     padding: 0 0.5rem;
   }
   .card {
-    max-width: 100%;  /* full width cards */
+    max-width: 100%;
     margin: 0.5rem 0;
   }
   .bottom-row {
