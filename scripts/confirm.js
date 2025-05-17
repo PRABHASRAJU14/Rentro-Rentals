@@ -13,7 +13,7 @@ function goBack() {
     location
   }));
 
-  window.location.href = "vehicle.html";
+  window.location.href = "del.html";
 }
 
 document.addEventListener("DOMContentLoaded", () => {

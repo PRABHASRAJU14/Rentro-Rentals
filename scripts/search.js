@@ -144,5 +144,5 @@ function handleSearch() {
   // Store form data if you want (optional)
   sessionStorage.setItem("vehicleFormData", JSON.stringify(Object.fromEntries(params.entries())));
 
-  window.location.href = `del.html?${params.toString()}`;
+  window.location.href = `vehicle.html?${params.toString()}`;
 }

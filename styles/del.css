@@ -16,6 +16,29 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
+.back-arrow {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: #f1f1f1;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 1.5em;
+  color: black;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, border 0.3s;
+  margin-bottom: 1rem;
+}
+
+.back-arrow:hover {
+  background-color: #ddd;
+  border-color: #bbb;
+}
+
 .section {
   margin-bottom: 2rem;
 }
@@ -45,6 +68,7 @@ h2 {
   color: #e9c46a;
   text-decoration: none;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .location {
@@ -80,8 +104,8 @@ h2 {
 
 .address-section {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .add-address {
@@ -92,9 +116,59 @@ h2 {
   border-radius: 8px;
   cursor: pointer;
   color: #333;
+  width: fit-content;
 }
 
-input[type="radio"] {
-  margin-right: 6px;
-  accent-color: #f4d35e;
+.address-form {
+  display: none;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.address-form input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.address-form label {
+  font-weight: bold;
+}
+
+.address-display {
+  background-color: #fff7cc;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #f4d35e;
+}
+
+.delivery-options label {
+  margin-right: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.submit-btn {
+  background-color: #f4d35e;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #333;
+  margin-top: 1rem;
+  box-shadow: 0 2px 8px rgba(244, 211, 94, 0.6);
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #e9c94b;
+}
+
+.message {
+  color: #b45309;
+  font-weight: bold;
+  min-height: 1.2em;
+  margin-top: 0.5rem;
 }
