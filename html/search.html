@@ -5,7 +5,158 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rent a Ride</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <link href="/styles/search.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fffdf3;
+      margin: 0;
+      padding: 2rem;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      height: 100%;
+    }
+
+    .main-container {
+      max-width: 430px;
+      width: 100%;
+      background-color: #ffffff;
+      border: 2px solid #f4d35e;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      height: 100%;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1rem;
+      border-radius: 0; /* no radius on header */
+    }
+
+    .back-arrow {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      background-color: #f1f1f1;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      font-size: 1.5em;
+      color: black;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s, border 0.3s;
+    }
+
+    .back-arrow:hover {
+      background-color: #ddd;
+      border-color: #bbb;
+      transform: none;
+    }
+
+    .banner {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+    }
+
+    .card {
+      flex: 1;
+    }
+
+    .card h2 {
+      color: #f4a261;
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+    }
+
+    .card h2 span {
+      color: #f4a261;
+    }
+
+    .card p {
+      font-size: 1rem;
+      color: #555;
+      margin-bottom: 1.5rem;
+    }
+
+    .input-box {
+      display: flex;
+      align-items: center;
+      border: 2px solid #f4d35e;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 1rem;
+      background-color: #fff7cc;
+      cursor: pointer;
+      transition: border-color 0.3s ease;
+    }
+
+    .input-box:focus-within {
+      border-color: #f4a261;
+      box-shadow: 0 0 8px rgba(244, 163, 97, 0.5);
+      outline: none;
+    }
+
+    .input-box input {
+      border: none;
+      background: transparent;
+      font-size: 1rem;
+      flex: 1;
+      outline: none;
+      color: #333;
+      cursor: pointer;
+    }
+
+    .input-box input[readonly] {
+      cursor: pointer;
+    }
+
+    .input-box i {
+      margin-left: 10px;
+      font-size: 1.2rem;
+      color: #f4a261;
+    }
+
+    .duration {
+      font-size: 1rem;
+      color: #555;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-btn {
+      background-color: #f4d35e;
+      color: #333;
+      padding: 14px;
+      text-align: center;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      width: 100%;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(244, 211, 94, 0.6);
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .search-btn:hover {
+      background-color: #f4a261;
+      color: white;
+      transform: translateY(-2px);
+    }
+  </style>
 </head>
 <body>
 
