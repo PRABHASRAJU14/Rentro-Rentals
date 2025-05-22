@@ -1,22 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => { 
-  // Load selected city data from localStorage
   const cityDataStr = localStorage.getItem('selectedCity');
   if (cityDataStr) {
     try {
       const cityData = JSON.parse(cityDataStr);
 
-      // Update banner image
       const bannerImg = document.getElementById("city-banner");
       if (bannerImg && cityData.image) {
         bannerImg.src = cityData.image;
         bannerImg.alt = cityData.name;
       }
 
-      // Update city name text
       const cityNameText = document.getElementById('city-name-text');
       if (cityNameText && cityData.name) cityNameText.textContent = cityData.name;
 
-      // Update location input value (editable)
       const locationInput = document.getElementById('location');
       if (locationInput && cityData.name) locationInput.value = cityData.name;
     } catch (e) {
@@ -24,7 +20,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Initialize date/time inputs min values
+  // Update back arrow to go to city.html
+document.querySelector('.back-arrow')?.addEventListener("click", (e) => {
+  e.preventDefault();
+  window.location.href = "city.html";
+});
+
+
   const pickupDateInput = document.getElementById("pickupDate");
   const dropoffDateInput = document.getElementById("dropoffDate");
   const pickupTimeInput = document.getElementById("pickupTime");
@@ -50,7 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("searchBtn").addEventListener("click", handleSearch);
 
-  // Initial duration update
   updateDuration();
 });
 
@@ -141,8 +142,6 @@ function handleSearch() {
     location: pickupLocation
   });
 
-  // Store form data if you want (optional)
   sessionStorage.setItem("vehicleFormData", JSON.stringify(Object.fromEntries(params.entries())));
-
   window.location.href = `vehicle.html?${params.toString()}`;
 }

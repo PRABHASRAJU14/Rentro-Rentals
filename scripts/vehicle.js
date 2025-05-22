@@ -34,23 +34,9 @@ let pickupTime = params.get("pickupTime") || "N/A";
 let dropoffDate = params.get("dropoffDate") || "N/A";
 let dropoffTime = params.get("dropoffTime") || calculateDropoffTime(pickupTime);
 
-if (pickupDate !== "N/A" && !isNaN(Date.parse(pickupDate))) {
-  const date = new Date(pickupDate);
-  const day = date.getDate().toString().padStart(2, "0");
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const year = date.getFullYear();
-  pickupDate = `${day}-${month}-${year}`;
-}
-
-console.log(dropoffDate)
-
-if (dropoffDate !== "N/A" && !isNaN(Date.parse(dropoffDate))) {
-  const date = new Date(dropoffDate);
-  const day = date.getDate().toString().padStart(2, "0");
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const year = date.getFullYear();
-  dropoffDate = `${day}-${month}-${year}`;
-}
+// Format pickup and dropoff dates
+pickupDate = formatDate(pickupDate);
+dropoffDate = formatDate(dropoffDate);
 
 // On DOM ready, try to load saved form data, set back link and render scooters
 document.addEventListener("DOMContentLoaded", () => {
@@ -59,9 +45,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (storedFormData) {
     try {
       const data = JSON.parse(storedFormData);
-      if (data.pickupDate) pickupDate = data.pickupDate;
+      if (data.pickupDate) pickupDate = formatDate(data.pickupDate);
       if (data.pickupTime) pickupTime = data.pickupTime;
-      if (data.dropoffDate) dropoffDate = data.dropoffDate;
+      if (data.dropoffDate) dropoffDate = formatDate(data.dropoffDate);
       if (data.dropoffTime) dropoffTime = data.dropoffTime;
       if (data.location) pickupLocation = data.location;
     } catch (e) {
@@ -131,6 +117,16 @@ function displayScooters() {
 
     container.appendChild(card);
   });
+}
+
+// Helper: Format date to DD-MM-YYYY
+function formatDate(dateStr) {
+  if (!dateStr || isNaN(Date.parse(dateStr))) return "N/A";
+  const date = new Date(dateStr);
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
 }
 
 // Calculate dropoff time (default +1h30m)
