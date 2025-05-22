@@ -1,35 +1,28 @@
-/* Reset & Base */
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
 }
 
-html, body {
-  height: 100%;
-  width: 100%;
-  background: black;
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fffcee;
 }
 
-/* Main White Panel */
 .container {
-  background: white;
-  width: 100%;
-  max-width: 430px;
-  height: 100vh;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-  overflow-y: auto;
+  background: #fff;
+  border: 2px solid #f9d97a;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  max-width: 450px;
+  width: 90%;
+  margin: 50px auto;
+  padding: 20px;
+  position: relative;
 }
 
-/* Styled Back Arrow (Box style) */
-.back-button {
+/* Back arrow inside container */
+.back-arrow {
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -43,73 +36,82 @@ html, body {
   cursor: pointer;
   text-decoration: none;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s, border-color 0.3s;
-  font-weight: bold;
+  transition: background-color 0.3s, border 0.3s;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
 }
 
-.back-button:hover {
+.back-arrow:hover {
   background-color: #ddd;
   border-color: #bbb;
 }
 
-/* Top Section with Background Image */
 .top-image {
   width: 100%;
-  height: 180px;
-  background-image: url('/images/bp.jpg'); /* Ensure this path is correct */
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  margin-bottom: 10px;
-}
-
-/* Title */
-h2 {
-  font-size: 1.5em;
-  font-weight: 600;
-  color: #000;
-  text-align: center;
+  height: auto;
+  border-radius: 8px;
   margin-bottom: 20px;
 }
 
-/* Form Styling */
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.form input {
-  padding: 14px;
-  font-size: 1em;
-  border: none;
-  border-radius: 8px;
-  background-color: #ffde59;
-  color: #000;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  outline: none;
-}
-
-/* Submit Button */
-/* Submit Button Styled Exactly as Shown */
-.submit-btn {
-  padding: 14px;
-  width: 100%;
-  background-color: #ffcc00;
-  border: none;
-  border-radius: 12px;
-  font-size: 1.4em;
-  font-weight: bold;
-  color: black;
-  text-transform: uppercase;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  cursor: pointer;
+h2 {
+  color: #ff914d;
+  margin-bottom: 20px;
   text-align: center;
 }
 
-
-
-.form .submit-btn:hover {
-  background-color: #f1c40f;
+form input,
+form select,
+form button {
+  width: 100%;
+  padding: 12px;
+  font-size: 1em;
+  margin-bottom: 15px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  transition: 0.3s;
 }
 
+input:focus,
+select:focus {
+  border-color: #ffc107;
+  outline: none;
+}
+
+.input-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+#country-code {
+  width: 35%;
+  background-color: #fff6cc;
+  border-color: #f0d361;
+  cursor: pointer;
+}
+
+input[type="tel"] {
+  flex: 1;
+}
+
+.submit-btn {
+  background-color: #ffcc47;
+  border: none;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #ffc107;
+}
+
+.error {
+  color: red;
+  font-size: 0.85em;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}

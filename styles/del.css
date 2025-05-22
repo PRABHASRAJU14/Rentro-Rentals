@@ -143,29 +143,6 @@ h2 {
   border: 1px solid #f4d35e;
 }
 
-.delivery-options label {
-  margin-right: 1.5rem;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.submit-btn {
-  background-color: #f4d35e;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  font-size: 1.1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  color: #333;
-  margin-top: 1rem;
-  box-shadow: 0 2px 8px rgba(244, 211, 94, 0.6);
-  transition: background-color 0.3s;
-}
-
-.submit-btn:hover {
-  background-color: #e9c94b;
-}
-
 .message {
   color: #b45309;
   font-weight: bold;
