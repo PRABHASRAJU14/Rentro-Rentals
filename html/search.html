@@ -37,7 +37,7 @@
       align-items: center;
       gap: 12px;
       margin-bottom: 1rem;
-      border-radius: 0; /* no radius on header */
+      border-radius: 0;
     }
 
     .back-arrow {
@@ -55,6 +55,7 @@
       text-decoration: none;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
       transition: background-color 0.3s, border 0.3s;
+      margin-bottom: 1rem;
     }
 
     .back-arrow:hover {
@@ -70,10 +71,6 @@
       border-bottom: 1px solid #eee;
       margin-bottom: 1rem;
       border-radius: 8px;
-    }
-
-    .card {
-      flex: 1;
     }
 
     .card h2 {
@@ -124,12 +121,6 @@
       cursor: pointer;
     }
 
-    .input-box i {
-      margin-left: 10px;
-      font-size: 1.2rem;
-      color: #f4a261;
-    }
-
     .duration {
       font-size: 1rem;
       color: #555;
@@ -160,33 +151,43 @@
 </head>
 <body>
 
-  <!-- Back arrow -->
-  <a href="javascript:history.back()" class="back-arrow" aria-label="Go back">&#8592;</a>
+  <div class="main-container">
 
-  <!-- Top banner image -->
- <img src="/images/default-image.jpg" alt="City Banner" class="banner contain-fit" id="city-banner" />
+    <!-- Back arrow -->
+    <a href="javascript:history.back()" class="back-arrow" aria-label="Go back">&#8592;</a>
 
+    <!-- Top banner image -->
+    <img src="/images/default-image.jpg" alt="City Banner" class="banner" id="city-banner" />
 
-  <!-- Main content -->
-  <div class="content">
-    <h2>Commuting Made <span>Easy</span></h2>
-    <p>Scooter/Scooty/Bike on Rent in <span id="city-name-text">Default City</span></p>
+    <!-- Main content -->
+    <div class="card">
+      <h2>Commuting Made <span>Easy</span></h2>
+      <p>Scooter/Scooty/Bike on Rent in <span id="city-name-text">Default City</span></p>
 
-    <input type="text" id="location" value="Default City" readonly />
+      <div class="input-box">
+        <input type="text" id="location" value="Default City" readonly />
+      </div>
 
-    <div class="date-time-group">
-      <div><input type="date" id="pickupDate" /></div>
-      <div><input type="time" id="pickupTime" /></div>
+      <div class="input-box">
+        <input type="date" id="pickupDate" />
+      </div>
+
+      <div class="input-box">
+        <input type="time" id="pickupTime" />
+      </div>
+
+      <div class="input-box">
+        <input type="date" id="dropoffDate" />
+      </div>
+
+      <div class="input-box">
+        <input type="time" id="dropoffTime" />
+      </div>
+
+      <div class="duration" id="duration">Duration: </div>
+
+      <button class="search-btn" id="searchBtn">Search</button>
     </div>
-
-    <div class="date-time-group">
-      <div><input type="date" id="dropoffDate" /></div>
-      <div><input type="time" id="dropoffTime" /></div>
-    </div>
-
-    <div id="duration">Duration: </div>
-
-    <button id="searchBtn">Search</button>
   </div>
 
   <script src="/scripts/search.js"></script>
