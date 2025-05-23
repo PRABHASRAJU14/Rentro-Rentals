@@ -53,7 +53,7 @@ function updateCity(city) {
 
     const cityKey = normalizeCityName(city);
     const imageFile = cityImages[cityKey] || 'default.png';
-    banner.src = `/images/${imageFile}`;
+    banner.src = `../images/${imageFile}`;
     banner.alt = cityKey + " Banner";
 }
 

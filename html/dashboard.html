@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Provider Dashboard</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Dashboard CSS -->
+  <link rel="stylesheet" href="../styles/dashboard.css" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <button class="nav-btn active" data-section="about"><i class="fas fa-info-circle"></i> About</button>
+      <button class="nav-btn" data-section="providers"><i class="fas fa-user-tie"></i> Providers</button>
+      <button class="nav-btn" data-section="addVehicle"><i class="fas fa-plus"></i> Add Vehicle</button>
+      <button class="nav-btn" data-section="vehicles"><i class="fas fa-car"></i> Vehicles</button>
+      <button class="nav-btn" data-section="bookings"><i class="fas fa-calendar-check"></i> Bookings</button>
+      <button class="nav-btn" data-section="earnings"><i class="fas fa-dollar-sign"></i> Earnings</button>
+    </aside>
+
+    <main class="main-content">
+      <!-- About Section -->
+      <section id="about" class="content-section active">
+        <div class="about-wrapper">
+          <h1 class="header">About Us</h1>
+          <div class="section"><h2>Our Story</h2><p>We started with a simple idea  to provide outstanding services that empower our clients to succeed.
+      Our team is committed to delivering innovative and reliable solutions tailored to your needs.
+    </p></div>
+          <div class="section"><h2>Our Mission</h2><p>
+      To build lasting partnerships through trust, transparency, and exceptional service quality.
+      We aim to lead the market with forward-thinking strategies.
+    </p></div>
+        </div>
+      </section>
+
+      <!-- Providers Section -->
+<section id="providers" class="content-section">
+  <h2>Provider Details</h2>
+  <!-- <form id="providerForm"> -->
+    <div class="form-group">
+      <label for="providerName">Name:</label>
+      <input type="text" id="providerName" required />
+    </div>
+    <div class="form-group">
+      <label for="providerEmail">Email:</label>
+      <input type="email" id="providerEmail" required />
+    </div>
+    <div class="form-group">
+      <label for="providerPhone">Phone:</label>
+      <input type="tel" id="providerPhone" required />
+    </div>
+    <div class="form-group">
+      <label for="providerCompany">Company Name:</label>
+      <input type="text" id="providerCompany" />
+    </div>
+    <div class="form-group">
+  <label for="providerAddress">Address:</label>
+  <input type="text" id="providerAddress" />
+</div>
+
+    <button type="submit" class="submit-btn">Save </button>
+    <p id="providerMessage"></p>
+  <!-- </form> -->
+   <!-- Existing inputs and save button here -->
+
+<h2 style="margin-top: 30px;">Previous Providers</h2>
+<div id="providerCardContainer" style="margin-top: 10px;"></div>
+
+</section>
+
+
+
+      <!-- Add Vehicle Section -->
+      <section id="addVehicle" class="content-section">
+        <h2>Add Vehicle</h2>
+        <!-- <form id="addVehicleForm"> -->
+          <div class="form-group">
+            <label for="vehicleName"> Company Name:</label>
+            <input type="text" id="vehicleName" required />
+          </div>
+          <div class="form-group">
+            <label for="vehicleType">Type:</label>
+            <select id="vehicleType" required>
+              <option value="">Select type</option>
+              <option value="Scooter">Scooter</option>
+              <option value="Bike">Bike</option>
+              <option value="Bicycle">Bicycle</option>
+              <option value="Car">Car</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="vehiclePrice">Price ($):</label>
+            <input type="number" id="vehiclePrice" min="0" step="0.01" required />
+          </div>
+          <div class="form-group">
+            <label for="vehicleImage">Image URL:</label>
+            <input type="url" id="vehicleImage" placeholder="Optional" />
+          </div>
+          <button type="submit" class="submit-btn">Add Vehicle</button>
+          <p id="addVehicleMessage"></p>
+        <!-- </form> -->
+      </section>
+
+      <!-- Vehicles Section -->
+<section id="vehicles" class="content-section">
+  <h2>Vehicles</h2>
+  <section id="scooters" class="vehicle-section">
+    <h3>Scooters</h3>
+    <div class="vehicle-container" id="scooter-container"></div>
+  </section>
+
+  <section id="bikes" class="vehicle-section">
+    <h3>Bikes</h3>
+    <div class="vehicle-container" id="bike-container"></div>
+  </section>
+
+  <section id="bicycles" class="vehicle-section">
+    <h3>Bicycles</h3>
+    <div class="vehicle-container" id="bicycle-container"></div>
+  </section>
+
+  <section id="cars" class="vehicle-section">
+    <h3>Cars</h3>
+    <div class="vehicle-container" id="car-container"></div>
+  </section>
+</section>
+
+
+      <!-- Bookings Section -->
+      <section id="bookings" class="content-section">
+        <h2>Bookings</h2>
+        <div id="bookingsContainer"></div>
+      </section>
+
+      <!-- Earnings Section -->
+      <section id="earnings" class="content-section">
+        <h2>Earnings Summary</h2>
+        <div id="earningsSummary"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../scripts/dashboard.js"></script>
+</body>
+</html>

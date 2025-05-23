@@ -22,7 +22,7 @@ body, html {
 
 /* Main background section */
 .get-started {
-  background: url("/images/bg.jpg") no-repeat center center/cover;
+  background: url("../images/bg.jpg") no-repeat center center/cover;
   height: 100%;
   position: relative;
 }
@@ -165,3 +165,13 @@ body, html {
   text-transform: lowercase;
   cursor: pointer;
 }
+#error-msg {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 8px;
+  display: none;
+}
+#error-msg span {
+  font-weight: 600;
+}
+

@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Enter OTP</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     * {
       margin: 0;
@@ -317,7 +316,7 @@
 
 <div class="container" role="main" aria-label="OTP Verification container">
   <header class="header">
-    <button class="back-arrow" aria-label="Go back" onclick="window.location.href='index.html'">&larr;</button>
+    <button class="back-arrow" aria-label="Go back" onclick="window.location.href='start.html'">&larr;</button>
     <span class="login-text">LOGIN</span>
   </header>
 
@@ -364,6 +363,7 @@
 </div>
 
 <script>
+  // Your entire JavaScript as is (no external paths)
   const phoneDisplay = document.getElementById("phone-number");
   const storedPhone = localStorage.getItem("fullPhoneNumber");
   if (storedPhone) {
