@@ -11,7 +11,8 @@
 
   <div class="container" role="main" aria-label="City selection container">
     <div class="header">
-      <a href="javascript:history.back()" class="back-arrow" aria-label="Go back">&#8592;</a>
+      <!-- Back arrow without href; JS will set href dynamically -->
+      <a href="#" id="back-arrow" class="back-arrow" aria-label="Go back">&#8592;</a>
       <h2 class="title">Select City</h2>
     </div>
 
@@ -21,7 +22,7 @@
     </div>
 
     <div class="grid" id="city-grid" role="list">
-      <!-- Existing 12 cities -->
+      <!-- City cards as you had them -->
       <div class="city-card" role="listitem" style="background-image: url('/images/t.png');"><span>TIRUPATI</span></div>
       <div class="city-card" role="listitem" style="background-image: url('/images/ag.png');"><span>AGRA</span></div>
       <div class="city-card" role="listitem" style="background-image: url('/images/vij.png');"><span>VIJAYAWADA</span></div>
@@ -35,7 +36,6 @@
       <div class="city-card" role="listitem" style="background-image: url('/images/jai.png');"><span>JAIPUR</span></div>
       <div class="city-card" role="listitem" style="background-image: url('/images/hyd.png');"><span>HYDERABAD</span></div>
 
-      <!-- 12 more cities added below -->
       <div class="city-card" role="listitem" style="background-image: url('/images/pune.png');"><span>PUNE</span></div>
       <div class="city-card" role="listitem" style="background-image: url('/images/lucknow.png');"><span>LUCKNOW</span></div>
       <div class="city-card" role="listitem" style="background-image: url('/images/ahmedabad.png');"><span>AHMEDABAD</span></div>
@@ -52,6 +52,19 @@
   </div>
 
   <script>
+    // Example condition: userLoggedIn boolean from localStorage or elsewhere
+    // Replace this condition with your actual logic
+    const userLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+
+    // Set back arrow href dynamically based on condition
+    const backArrow = document.getElementById('back-arrow');
+    if (userLoggedIn) {
+      backArrow.href = 'create.html';
+    } else {
+      backArrow.href = 'otp.html';
+    }
+
+    // Search filter code
     const searchInput = document.getElementById('city-search');
     const cityCards = document.querySelectorAll('.city-card');
 
@@ -63,6 +76,7 @@
       });
     });
 
+    // City card click event to save selection and redirect
     cityCards.forEach(card => {
       card.addEventListener('click', () => {
         const cityName = card.textContent.trim();

@@ -1,19 +1,21 @@
-
-body {
+/* Ensure the full height is inherited properly */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
   font-family: 'Segoe UI', sans-serif;
   background-color: #fffdf3;
-  margin: 0;
-  padding: 2rem;
   color: #333;
   display: flex;
   justify-content: center;
   align-items: stretch;
-  height: 100%;
 }
 
+/* Main container centered and full-height */
 .main-container {
   max-width: 430px;
   width: 100%;
+  height: 100%;
   background-color: #ffffff;
   border: 2px solid #f4d35e;
   border-radius: 12px;
@@ -22,7 +24,6 @@ body {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  height: 100%;
 }
 
 .header {
@@ -30,7 +31,6 @@ body {
   align-items: center;
   gap: 12px;
   margin-bottom: 1rem;
-  border-radius: 0; /* no radius on header */
 }
 
 .back-arrow {
@@ -48,17 +48,13 @@ body {
   text-decoration: none;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   transition: background-color 0.3s, border 0.3s;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s, border 0.3s;
 }
 
 .back-arrow:hover {
   background-color: #ddd;
   border-color: #bbb;
-  transform: none;
 }
 
-/* Banner image */
 .banner {
   width: 100%;
   height: 220px;
@@ -78,29 +74,25 @@ body {
   font-size: 1.4rem;
 }
 
-.card h2 span {
-  color: #f4a261;
-}
-
 .content p {
   font-size: 1.1rem;
   margin-bottom: 1.5rem;
 }
 
-/* Location input */
 #location {
   width: 100%;
   padding: 0.75rem 1rem;
   font-size: 1rem;
   color: #555;
   margin-bottom: 1.5rem;
+  border: 2px solid #ccc;
+  border-radius: 8px;
 }
 
 #location:focus {
   border-color: #e9c46a;
 }
 
-/* Date & Time group */
 .date-time-group {
   display: flex;
   align-items: center;
@@ -120,15 +112,15 @@ body {
 }
 
 .input-box input {
-  border: none;
-  background: transparent;
+  width: 100%;
   font-size: 1rem;
-  border-radius: 10px;
   border: 2px solid #f4d35e;
   background-color: #fff7cc;
+  border-radius: 10px;
+  padding: 0.5rem;
+  color: #333;
   outline: none;
   transition: border 0.2s;
-  color: #333;
   cursor: pointer;
 }
 
@@ -151,19 +143,14 @@ body {
 .search-btn {
   background-color: #f4d35e;
   color: #333;
-  padding: 14px;
   text-align: center;
   border: none;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 1.1rem;
-  width: 100%;
-  padding: 0.9rem;
   border-radius: 8px;
+  padding: 0.9rem;
   font-size: 1.1rem;
   font-weight: bold;
-  color: #333;
   cursor: pointer;
+  width: 100%;
   box-shadow: 0 4px 10px rgba(244, 211, 94, 0.6);
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
