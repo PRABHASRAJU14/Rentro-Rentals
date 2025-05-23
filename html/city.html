@@ -21,6 +21,7 @@
     </div>
 
     <div class="grid" id="city-grid" role="list">
+      <!-- Existing 12 cities -->
       <div class="city-card" role="listitem" style="background-image: url('/images/t.png');"><span>TIRUPATI</span></div>
       <div class="city-card" role="listitem" style="background-image: url('/images/ag.png');"><span>AGRA</span></div>
       <div class="city-card" role="listitem" style="background-image: url('/images/vij.png');"><span>VIJAYAWADA</span></div>
@@ -33,6 +34,20 @@
       <div class="city-card" role="listitem" style="background-image: url('/images/ban.png');"><span>BANGALORE</span></div>
       <div class="city-card" role="listitem" style="background-image: url('/images/jai.png');"><span>JAIPUR</span></div>
       <div class="city-card" role="listitem" style="background-image: url('/images/hyd.png');"><span>HYDERABAD</span></div>
+
+      <!-- 12 more cities added below -->
+      <div class="city-card" role="listitem" style="background-image: url('/images/pune.png');"><span>PUNE</span></div>
+      <div class="city-card" role="listitem" style="background-image: url('/images/lucknow.png');"><span>LUCKNOW</span></div>
+      <div class="city-card" role="listitem" style="background-image: url('/images/ahmedabad.png');"><span>AHMEDABAD</span></div>
+      <div class="city-card" role="listitem" style="background-image: url('/images/kanpur.png');"><span>KANPUR</span></div>
+      <div class="city-card" role="listitem" style="background-image: url('/images/nagpur.png');"><span>NAGPUR</span></div>
+      <div class="city-card" role="listitem" style="background-image: url('/images/thane.png');"><span>THANE</span></div>
+      <div class="city-card" role="listitem" style="background-image: url('/images/bhopal.png');"><span>BHOPAL</span></div>
+      <div class="city-card" role="listitem" style="background-image: url('/images/visakhapatnam.png');"><span>VISAKHAPATNAM</span></div>
+      <div class="city-card" role="listitem" style="background-image: url('/images/patna.png');"><span>PATNA</span></div>
+      <div class="city-card" role="listitem" style="background-image: url('/images/bhubaneswar.png');"><span>BHUBANESWAR</span></div>
+      <div class="city-card" role="listitem" style="background-image: url('/images/coimbatore.png');"><span>COIMBATORE</span></div>
+      <div class="city-card" role="listitem" style="background-image: url('/images/indore.png');"><span>INDORE</span></div>
     </div>
   </div>
 
@@ -51,16 +66,11 @@
     cityCards.forEach(card => {
       card.addEventListener('click', () => {
         const cityName = card.textContent.trim();
-        // Get background image URL from inline style, like: background-image: url('/images/t.png')
         const bgImageStyle = card.style.backgroundImage;
-        // Extract the URL between the quotes
         const imageUrlMatch = bgImageStyle.match(/url\(["']?(.*?)["']?\)/);
         const imageUrl = imageUrlMatch ? imageUrlMatch[1] : '';
 
-        // Save object { name, image } to localStorage
         localStorage.setItem('selectedCity', JSON.stringify({ name: cityName, image: imageUrl }));
-
-        // Redirect to search page
         window.location.href = 'search.html';
       });
     });

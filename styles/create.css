@@ -14,11 +14,12 @@ body {
   border: 2px solid #f9d97a;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  max-width: 450px;
   width: 90%;
+  max-width: 450px;
   margin: 50px auto;
   padding: 20px;
   position: relative;
+  transition: all 0.3s ease;
 }
 
 /* Back arrow inside container */
@@ -114,4 +115,24 @@ input[type="tel"] {
   font-size: 0.85em;
   margin-top: -10px;
   margin-bottom: 10px;
+}
+
+/* Laptop-specific: widen and center the container */
+@media screen and (min-width: 1024px) {
+  .container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 40px;
+  }
+
+  h2 {
+    font-size: 2em;
+  }
+
+  form input,
+  form select,
+  form button {
+    font-size: 1.1em;
+    padding: 14px;
+  }
 }
