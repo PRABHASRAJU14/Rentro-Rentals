@@ -1,0 +1,415 @@
+// Utility functions
+function getVehicles() {
+  return JSON.parse(localStorage.getItem('vehicles') || '[]');
+}
+
+function saveVehicles(vehicles) {
+  localStorage.setItem('vehicles', JSON.stringify(vehicles));
+}
+
+function getBookings() {
+  return JSON.parse(localStorage.getItem('bookings') || '[]');
+}
+
+// Navigation logic
+const navButtons = document.querySelectorAll('.nav-btn');
+const sections = document.querySelectorAll('.content-section');
+
+navButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    navButtons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const target = btn.getAttribute('data-section');
+    sections.forEach(section => {
+      section.classList.toggle('active', section.id === target);
+    });
+
+    if (target === 'vehicles') loadVehicles();
+    else if (target === 'bookings') loadBookings();
+    else if (target === 'earnings') loadEarnings();
+  });
+});
+
+// Add Vehicle logic
+const addVehicleForm = document.getElementById('addVehicleForm');
+const addVehicleMessage = document.getElementById('addVehicleMessage');
+
+function clearAddVehicleInputs() {
+  document.getElementById('vehicleName').value = '';
+  document.getElementById('vehicleType').value = '';
+  document.getElementById('vehiclePrice').value = '';
+  document.getElementById('vehicleImage').value = '';
+}
+
+function handleAddVehicleSubmit(e) {
+  if (e) e.preventDefault();
+
+  const name = document.getElementById('vehicleName').value.trim();
+  const type = document.getElementById('vehicleType').value;
+  const price = parseFloat(document.getElementById('vehiclePrice').value);
+  const image = document.getElementById('vehicleImage').value.trim();
+
+  if (!name || !type || isNaN(price) || price < 0) {
+    addVehicleMessage.textContent = 'Please fill all fields correctly.';
+    addVehicleMessage.style.color = 'red';
+    return;
+  }
+
+  const vehicles = getVehicles();
+  vehicles.push({ id: Date.now(), name, type, price, image });
+  saveVehicles(vehicles);
+
+  addVehicleMessage.textContent = `Added "${name}" successfully!`;
+  addVehicleMessage.style.color = 'green';
+
+  clearAddVehicleInputs();
+
+  loadVehicles();
+}
+
+if (addVehicleForm) {
+  addVehicleForm.addEventListener('submit', handleAddVehicleSubmit);
+} else {
+  const addVehicleBtn = document.querySelector('#addVehicle .submit-btn');
+  if (addVehicleBtn) {
+    addVehicleBtn.addEventListener('click', handleAddVehicleSubmit);
+  }
+}
+
+// Load Vehicles
+let editingVehicleId = null; // Track if editing
+
+function getVehicles() {
+  return JSON.parse(localStorage.getItem('vehicles') || '[]');
+}
+
+function saveVehicles(vehicles) {
+  localStorage.setItem('vehicles', JSON.stringify(vehicles));
+}
+
+function clearAddVehicleInputs() {
+  document.getElementById('vehicleName').value = '';
+  document.getElementById('vehicleType').value = '';
+  document.getElementById('vehiclePrice').value = '';
+  document.getElementById('vehicleImage').value = '';
+}
+
+function handleAddVehicleSubmit() {
+  const name = document.getElementById('vehicleName').value.trim();
+  const type = document.getElementById('vehicleType').value;
+  const price = parseFloat(document.getElementById('vehiclePrice').value);
+  const image = document.getElementById('vehicleImage').value.trim();
+  const message = document.getElementById('addVehicleMessage');
+
+  if (!name || !type || isNaN(price) || price < 0) {
+    message.textContent = 'Please fill all fields correctly.';
+    message.style.color = 'red';
+    return;
+  }
+
+  const vehicles = getVehicles();
+
+  if (editingVehicleId) {
+    const index = vehicles.findIndex(v => v.id === editingVehicleId);
+    if (index !== -1) {
+      vehicles[index] = { id: editingVehicleId, name, type, price, image };
+      message.textContent = `Updated "${name}" successfully!`;
+      message.style.color = 'green';
+    }
+    editingVehicleId = null;
+  } else {
+    vehicles.push({ id: Date.now(), name, type, price, image });
+    message.textContent = `Added "${name}" successfully!`;
+    message.style.color = 'green';
+  }
+
+  saveVehicles(vehicles);
+  clearAddVehicleInputs();
+  loadVehicles();
+}
+
+document.getElementById('addVehicleBtn').addEventListener('click', handleAddVehicleSubmit);
+
+function loadVehicles() {
+  const vehicles = getVehicles();
+  const containers = {
+    scooter: document.getElementById('scooter-container'),
+    bike: document.getElementById('bike-container'),
+    bicycle: document.getElementById('bicycle-container'),
+    car: document.getElementById('car-container')
+  };
+
+  Object.values(containers).forEach(c => c.innerHTML = '');
+
+  if (vehicles.length === 0) {
+    Object.values(containers).forEach(c => c.innerHTML = '<p class="no-data">No vehicles added yet.</p>');
+    return;
+  }
+
+  vehicles.forEach(v => {
+    const div = document.createElement('div');
+    div.className = 'vehicle-card';
+    div.style.position = 'relative';
+
+    const imgSrc = v.image || 'https://via.placeholder.com/280x140?text=No+Image';
+
+    div.innerHTML = `
+      <img src="${imgSrc}" alt="${v.name}" />
+      <div class="vehicle-info">
+        <h3>${v.name}</h3>
+        <p><strong>Type:</strong> ${v.type}</p>
+        <p><strong>Price:</strong> $${v.price.toFixed(2)}</p>
+      </div>
+      <div class="card-actions" style="display:none; position:absolute; top:10px; right:10px; background:#fff; border:1px solid #ccc; border-radius:4px; padding:5px;">
+        <button class="edit-btn">Edit</button>
+        <button class="delete-btn" style="margin-left:5px; color:red;">Delete</button>
+      </div>
+    `;
+
+    // Toggle card actions
+    div.addEventListener('click', e => {
+      if (e.target.classList.contains('edit-btn') || e.target.classList.contains('delete-btn')) return;
+      document.querySelectorAll('.card-actions').forEach(ca => ca.style.display = 'none');
+      const actions = div.querySelector('.card-actions');
+      actions.style.display = actions.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Edit handler
+    div.querySelector('.edit-btn').addEventListener('click', e => {
+      e.stopPropagation();
+
+      editingVehicleId = v.id;
+      document.getElementById('vehicleName').value = v.name;
+      document.getElementById('vehicleType').value = v.type;
+      document.getElementById('vehiclePrice').value = v.price;
+      document.getElementById('vehicleImage').value = v.image;
+
+      document.getElementById('addVehicleMessage').textContent = `Editing "${v.name}". Make changes and click save.`;
+      document.getElementById('addVehicleMessage').style.color = 'blue';
+
+      // Activate Vehicles tab
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('.nav-btn[data-section="vehicles"]').classList.add('active');
+      document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+      document.getElementById('vehicles').classList.add('active');
+
+      div.querySelector('.card-actions').style.display = 'none';
+    });
+
+    // Delete handler
+    div.querySelector('.delete-btn').addEventListener('click', e => {
+      e.stopPropagation();
+      if (confirm(`Delete "${v.name}"?`)) {
+        const newList = getVehicles().filter(item => item.id !== v.id);
+        saveVehicles(newList);
+        loadVehicles();
+
+        if (editingVehicleId === v.id) {
+          editingVehicleId = null;
+          document.getElementById('addVehicleMessage').textContent = '';
+          clearAddVehicleInputs();
+        }
+      }
+    });
+
+    const target = containers[v.type.toLowerCase()];
+    if (target) target.appendChild(div);
+  });
+}
+
+// Hide card actions when clicking elsewhere
+document.addEventListener('click', e => {
+  if (!e.target.closest('.vehicle-card')) {
+    document.querySelectorAll('.card-actions').forEach(ca => ca.style.display = 'none');
+  }
+});
+
+// Load on startup
+loadVehicles();
+
+
+
+// Load Bookings
+const bookingsContainer = document.getElementById('bookingsContainer');
+function loadBookings() {
+  const bookings = getBookings();
+  bookingsContainer.innerHTML = '';
+
+  if (bookings.length === 0) {
+    bookingsContainer.innerHTML = '<p class="no-data">No bookings made yet.</p>';
+    return;
+  }
+
+  bookings.forEach(b => {
+    const div = document.createElement('div');
+    div.className = 'booking-card';
+
+    div.innerHTML = `
+      <h4>Booking ID: ${b.id}</h4>
+      <div class="booking-info">
+        <span><strong>Vehicle:</strong> ${b.vehicleName}</span>
+        <span><strong>Type:</strong> ${b.vehicleType}</span>
+        <span><strong>Price:</strong> $${b.price.toFixed(2)}</span><br />
+        <span><strong>Customer:</strong> ${b.customerName || 'N/A'}</span><br />
+        <span><strong>Date:</strong> ${b.date || 'N/A'}</span>
+      </div>
+    `;
+
+    bookingsContainer.appendChild(div);
+  });
+}
+
+// Load Earnings
+const earningsSummary = document.getElementById('earningsSummary');
+function loadEarnings() {
+  const bookings = getBookings();
+  if (bookings.length === 0) {
+    earningsSummary.innerHTML = '<p class="no-data">No earnings yet.</p>';
+    return;
+  }
+
+  const earningsByType = {};
+  let total = 0;
+
+  bookings.forEach(b => {
+    if (!earningsByType[b.vehicleType]) earningsByType[b.vehicleType] = 0;
+    earningsByType[b.vehicleType] += b.price;
+    total += b.price;
+  });
+
+  let html = '';
+  for (const [type, amount] of Object.entries(earningsByType)) {
+    html += `<div class="earning-item"><span class="earning-label">${type}:</span> $${amount.toFixed(2)}</div>`;
+  }
+  html += `<div class="total">Total Earnings: $${total.toFixed(2)}</div>`;
+
+  earningsSummary.innerHTML = html;
+}
+
+// Provider logic
+// Track providers in-memory (or replace with localStorage if needed)
+let providers = [];
+let editingProviderId = null;
+
+const providerName = document.getElementById('providerName');
+const providerEmail = document.getElementById('providerEmail');
+const providerPhone = document.getElementById('providerPhone');
+const providerCompany = document.getElementById('providerCompany');
+const providerAddress = document.getElementById('providerAddress');
+
+const providerMessage = document.getElementById('providerMessage');
+const providerCardContainer = document.getElementById('providerCardContainer');
+
+const saveBtn = document.querySelector('#providers .submit-btn');
+
+saveBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+
+  const name = providerName.value.trim();
+  const email = providerEmail.value.trim();
+  const phone = providerPhone.value.trim();
+  const company = providerCompany.value.trim();
+  const address = providerAddress.value.trim();
+
+  // Simple validation
+  if (!name || !email || !phone) {
+    providerMessage.textContent = 'Please fill Name, Email, and Phone.';
+    providerMessage.style.color = 'red';
+    return;
+  }
+
+  if (editingProviderId) {
+    // Update existing provider
+    const idx = providers.findIndex(p => p.id === editingProviderId);
+    if (idx !== -1) {
+      providers[idx] = { id: editingProviderId, name, email, phone, company, address };
+      providerMessage.textContent = `Updated provider "${name}" successfully!`;
+      providerMessage.style.color = 'green';
+    }
+    editingProviderId = null;
+  } else {
+    // Add new provider
+    const newProvider = {
+      id: Date.now(),
+      name,
+      email,
+      phone,
+      company,
+      address
+    };
+    providers.push(newProvider);
+    providerMessage.textContent = `Added provider "${name}" successfully!`;
+    providerMessage.style.color = 'green';
+  }
+
+  clearInputs();
+  renderProviderCards();
+});
+
+function clearInputs() {
+  providerName.value = '';
+  providerEmail.value = '';
+  providerPhone.value = '';
+  providerCompany.value = '';
+  providerAddress.value = '';
+}
+
+function renderProviderCards() {
+  providerCardContainer.innerHTML = '';
+
+  if (providers.length === 0) {
+    providerCardContainer.innerHTML = '<p>No previous providers added yet.</p>';
+    return;
+  }
+
+  providers.forEach(provider => {
+    const card = document.createElement('div');
+    card.className = 'provider-card';
+
+    card.innerHTML = `
+      <h3>${provider.name}</h3>
+      <p><strong>Email:</strong> ${provider.email}</p>
+      <p><strong>Phone:</strong> ${provider.phone}</p>
+      <p><strong>Company:</strong> ${provider.company || '-'}</p>
+      <p><strong>Address:</strong> ${provider.address || '-'}</p>
+      <div class="card-actions">
+        <button class="edit-btn">Edit</button>
+        <button class="delete-btn">Delete</button>
+      </div>
+    `;
+
+    // Edit button
+    card.querySelector('.edit-btn').addEventListener('click', () => {
+      editingProviderId = provider.id;
+      providerName.value = provider.name;
+      providerEmail.value = provider.email;
+      providerPhone.value = provider.phone;
+      providerCompany.value = provider.company;
+      providerAddress.value = provider.address;
+
+      providerMessage.textContent = `Editing provider "${provider.name}". Make changes and save.`;
+      providerMessage.style.color = 'blue';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Delete button
+    card.querySelector('.delete-btn').addEventListener('click', () => {
+      if (confirm(`Delete provider "${provider.name}"?`)) {
+        providers = providers.filter(p => p.id !== provider.id);
+        if (editingProviderId === provider.id) {
+          editingProviderId = null;
+          clearInputs();
+          providerMessage.textContent = '';
+        }
+        renderProviderCards();
+      }
+    });
+
+    providerCardContainer.appendChild(card);
+  });
+}
+
+// Initial render
+renderProviderCards();
