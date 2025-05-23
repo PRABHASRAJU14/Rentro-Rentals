@@ -1,27 +1,27 @@
 const scooters = [ 
   {
     name: "TVS Jupiter",
-    image: "/images/tvs jupiter.png",
+    image: "../images/tvs jupiter.png",
     price: "₹180 (50 km included)"
   },
   {
     name: "Honda Activa 6G",
-    image: "/images/honda activa 6g.png",
+    image: "../images/honda activa 6g.png",
     price: "₹100 (80 km included)"
   },
   {
     name: "Honda Dio 125",
-    image: "/images/honda dio 125.png",
+    image: "../images/honda dio 125.png",
     price: "₹552 (120 km included)"
   },
   {
     name: "Suzuki Access 125 (BS6)",
-    image: "/images/suzuki access 125(BS6).png",
+    image: "../images/suzuki access 125(BS6).png",
     price: "₹150 (120 km included)"
   },
   {
     name: "Honda Activa 5G",
-    image: "/images/honda activa 5g.png",
+    image: "../images/honda activa 5g.png",
     price: "₹300 (100 km included)"
   }
 ];
