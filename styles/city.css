@@ -11,7 +11,7 @@ body {
 
 .container {
   background-color: white;
-  max-width: 1000px; /* increased width for laptops and above */
+  max-width: 1000px; 
   width: 100%;
   display: flex;
   flex-direction: column;
