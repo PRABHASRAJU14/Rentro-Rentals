@@ -23,7 +23,7 @@ body {
 }
 
 /* Back arrow inside container */
-.back-arrow {
+.back-button {
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -44,7 +44,7 @@ body {
   z-index: 10;
 }
 
-.back-arrow:hover {
+.back-button:hover {
   background-color: #ddd;
   border-color: #bbb;
 }
