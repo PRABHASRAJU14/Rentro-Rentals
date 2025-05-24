@@ -116,6 +116,12 @@ input[type="tel"] {
   margin-top: -10px;
   margin-bottom: 10px;
 }
+.logo {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
 
 /* Laptop-specific: widen and center the container */
 @media screen and (min-width: 1024px) {
