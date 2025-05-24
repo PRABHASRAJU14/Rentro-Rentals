@@ -1,5 +1,5 @@
 # Rentro Rentals Web App
-Welcome ! this is a simple and responsive web application that allows users to rent scooters in different cities.
+Welcome ! this is a simple and responsive web application that allows users to rent vehicles in different cities.
 
 ### Objective:
 To provide a reliable and easy-to-access vehicles, rental platform that helps people quickly find transportation, especially during emergencies.
