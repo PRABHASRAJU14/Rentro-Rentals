@@ -1,49 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Order Confirmation</title>
-  <link rel="stylesheet" href="../styles/success.css" />
-  <script defer src="../scripts/success.js"></script>
+  <meta charset="UTF-8">
+  <title>Booking Success</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fffbea; /* light yellowish background */
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      text-align: center;
+      padding: 50px 30px;
+      background: #ffffff;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+      border-radius: 20px;
+      max-width: 500px;
+      width: 90%;
+      border: 2px solid #ffe08a;
+    }
+
+    .icon {
+      font-size: 70px;
+      margin-bottom: 25px;
+      color: #ffc107; /* rich yellow */
+    }
+
+    h1 {
+      color: #ffb347; /* orange-yellow */
+      margin-bottom: 15px;
+      font-size: 28px;
+    }
+
+    p {
+      margin: 12px 0;
+      color: #444;
+      font-size: 16px;
+    }
+
+    .vehicle-name {
+      font-size: 1.6rem;
+      font-weight: bold;
+      margin: 25px 0;
+      color: #2e7d32;
+    }
+
+    .home-link {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 12px 24px;
+      background-color: #ffc107;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    .home-link:hover {
+      background-color: #e6ac00;
+    }
+  </style>
 </head>
 <body>
-
-  <div class="header">
-    <span class="back-arrow" onclick="window.location.href='vehicle.html'">←</span>
+  <div class="container">
+    <div class="icon">🛵</div>
+    <h1>Order Placed Successfully!</h1>
+    <div class="vehicle-name" id="vehicleName">Vehicle Name</div>
+    <p>Thank you for your booking.</p>
+    <p>A confirmation will be sent to your email.</p>
+    <a href="vehicle.html" class="home-link">← Back to Home</a>
   </div>
 
-  <div class="confirmation">
-    <div class="success">✔ Order placed, thank you!</div>
-    <p class="info">Confirmation will be sent to your email.</p>
-  </div>
-
-  <!-- New main-scooter container for dynamic bike -->
-  <div class="main-scooter">
-    <img src="/images/placeholder-bike.png" alt="Selected Scooter" />
-    <p><strong>Selected Scooter Name</strong></p>
-  </div>
-
-  <div class="top-picks">
-    <div class="section-header">
-      <h3>User's Top Picks</h3>
-      <a href="#" class="view-all">VIEW ALL</a>
-    </div>
-    <div class="bike-grid">
-      <div class="bike-card">
-        <img src="../images/suzuki access 125(BS6).png" alt="suzuki access 125(BS6)" />
-        <p>suzuki access 125(BS6)</p>
-      </div>
-      <div class="bike-card">
-        <img src="../images/tvs jupiter.png" alt="tvs jupiter" />
-        <p>tvs jupiter</p>
-      </div>
-      <div class="bike-card">
-        <img src="../images/honda dio 125.png" alt="honda dio 125" />
-        <p>honda dio 125</p>
-      </div>
-    </div>
-  </div>
-
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const vehicle = urlParams.get('vehicle');
+    if (vehicle) {
+      document.getElementById('vehicleName').textContent = decodeURIComponent(vehicle);
+    }
+  </script>
 </body>
 </html>
