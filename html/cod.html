@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cash on Delivery Payment</title>
+  <link rel="stylesheet" href="../styles/payc.css" />
+</head>
+<body>
+  <div class="container">
+    <p class="amount-text">Total Payable Amount: <strong>₹ 1780.54</strong></p>
+
+    <div class="payment-box">
+      <div class="payment-header">
+        CHOOSE PAYMENT METHOD
+      </div>
+
+      <div class="form-section">
+        <p>Please confirm your order will be paid by <strong>Cash on Delivery</strong>.</p>
+
+        <div class="input-box">
+          <label>
+            <input type="checkbox" id="cod-confirm" />
+            I agree to pay the amount in cash upon delivery.
+          </label>
+        </div>
+      </div>
+
+      <button class="pay-button" id="cod-pay-button" disabled>CONFIRM ORDER</button>
+    </div>
+  </div>
+
+  <script>
+    // Enable button only if checkbox is checked
+    const checkbox = document.getElementById('cod-confirm');
+    const button = document.getElementById('cod-pay-button');
+
+    checkbox.addEventListener('change', () => {
+      button.disabled = !checkbox.checked;
+    });
+  </script>
+</body>
+</html>

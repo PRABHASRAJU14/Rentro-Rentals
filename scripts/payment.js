@@ -6,24 +6,30 @@ function goBack() {
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
   const price = params.get("price") || "0.00";
-
-  // Display only price with ₹ sign
   document.getElementById("amount").textContent = `₹ ${price}`;
-
-  // Store price in a variable for later use in debit card click
   const totalAmount = price;
 
   const paymentMethods = document.querySelectorAll(".payment-method");
-  paymentMethods.forEach((method) => {
-    if (method.textContent.trim() === "Debit Card") {
-      method.addEventListener("click", () => {
-        // Pass total amount as 'total' query param to payc1.html
-        window.location.href = `payc1.html?total=${totalAmount}`;
-      });
-    }
+
+  // Define destinations by index
+  const paymentPages = [
+    "payc1.html",   // 0 - Debit Card
+    "payc2.html",   // 1 - Credit Card
+    "cod.html",     // 2 - COD
+    "upi.html",     // 3 - UPI Payment
+    "mob.html",     // 4 - Mobikwik (image only)
+    "paytm.html"    // 5 - Paytm (image only)
+  ];
+
+  paymentMethods.forEach((method, index) => {
+    method.addEventListener("click", () => {
+      const targetPage = paymentPages[index];
+      if (targetPage) {
+        window.location.href = `${targetPage}?total=${totalAmount}`;
+      }
+    });
   });
 
-  // Back arrow listener
   const backArrow = document.querySelector(".back-arrow");
   if (backArrow) {
     backArrow.addEventListener("click", goBack);

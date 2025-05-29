@@ -4,18 +4,23 @@ function parseDate(str) {
 }
 
 function calculateDays(startStr, endStr) {
-  const start = parseDate(startStr);
-  const end = parseDate(endStr);
-  const diffMs = end - start;
+  const start = new Date(startStr);
+  const end = new Date(endStr);
+
+  // Calculate time difference using UTC to avoid time zone issues
+  const utcStart = Date.UTC(start.getFullYear(), start.getMonth(), start.getDate());
+  const utcEnd = Date.UTC(end.getFullYear(), end.getMonth(), end.getDate());
+
+  const diffMs = utcEnd - utcStart;
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1;
   return diffDays > 0 ? diffDays : 1;
 }
 
 const params = new URLSearchParams(window.location.search);
-const locationParam = params.get("location") || "Vijayawada";
-const pickupDate = params.get("pickupDate") || "2025-05-18";
-const dropoffDate = params.get("dropoffDate") || "2025-05-20";
-const name = params.get("name") || "Glamour";
+const locationParam = params.get("location") || "Default City";
+const pickupDate = params.get("pickupDate") || "2025-06-01";
+const dropoffDate = params.get("dropoffDate") || "2025-06-10";
+const name = params.get("name") || "TVS Jupiter";
 const brand = params.get("brand") || "HERO";
 const image = params.get("image") || "https://i.imgur.com/Nb0lHBJ.png";
 

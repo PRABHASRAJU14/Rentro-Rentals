@@ -6,31 +6,6 @@ body {
   color: #333333;
 }
 
-.back-arrow {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 60px;
-  height: 60px;
-  background-color: #ffffff;
-  border: 2px solid #f4d35e;
-  border-radius: 12px;
-  font-size: 2.5em;
-  color: #333333;
-  cursor: pointer;
-  text-decoration: none;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s, border 0.3s, transform 0.2s;
-  margin: 20px 0 20px 20px;
-}
-
-.back-arrow:hover {
-  background-color: #f4d35e;
-  border-color: #e9c46a;
-  transform: scale(1.05);
-  color: #333333;
-}
-
 .container {
   padding: 20px;
   max-width: 480px;
@@ -95,10 +70,6 @@ body {
   .payment-method {
     font-size: 14px;
     padding: 12px;
-  }
-
-  .back-arrow {
-    font-size: 20px;
   }
 
   .amount {
