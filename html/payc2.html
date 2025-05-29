@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Credit Card Payment</title>
+  <link rel="stylesheet" href="../styles/payc.css" />
+  <script src="../scripts/payc2.js"></script>
+</head>
+<body>
+  <div class="container">
+    <p class="amount-text">Total Payable Amount: <strong>₹ 1780.54</strong></p>
+
+    <div class="payment-box">
+      <div class="payment-header">
+        CHOOSE PAYMENT METHOD
+      </div>
+
+      <div class="form-section">
+        <label for="card-type">Enter your credit card details</label>
+        <select id="card-type">
+          <option>Choose your credit card type</option>
+          <option>Visa</option>
+          <option>MasterCard</option>
+          <option>American Express</option>
+        </select>
+
+        <div class="input-box">
+          <label>Card Number</label>
+          <input type="text" placeholder="Enter your card number" />
+        </div>
+
+        <div class="input-box">
+          <label>Name on the card</label>
+          <input type="text" placeholder="Enter name on the card" />
+        </div>
+
+        <div class="row">
+          <div class="input-small">
+            <label>Expiry</label>
+            <input type="text" placeholder="M" maxlength="2" />
+          </div>
+          <div class="input-small">
+            <label>&nbsp;</label>
+            <input type="text" placeholder="Y" maxlength="2" />
+          </div>
+          <div class="input-small">
+            <label>CVV</label>
+            <input type="password" placeholder="CVV" maxlength="4" />
+          </div>
+        </div>
+      </div>
+
+      <button class="pay-button">MAKE PAYMENT</button>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Netbanking Payment</title>
+  <link rel="stylesheet" href="../styles/payc.css" />
+  <script src="../scripts/payc2.js"></script>
+</head>
+<body>
+  <div class="container">
+    <p class="amount-text">Total Payable Amount: <strong>₹ 1780.54</strong></p>
+
+    <div class="payment-box">
+      <div class="payment-header">
+        CHOOSE PAYMENT METHOD
+      </div>
+
+      <div class="form-section">
+        <label for="bank-select">Select your bank</label>
+        <select id="bank-select">
+          <option>Choose your bank</option>
+          <option>State Bank of India</option>
+          <option>HDFC Bank</option>
+          <option>ICICI Bank</option>
+          <option>Axis Bank</option>
+          <option>Punjab National Bank</option>
+          <option>Canara Bank</option>
+          <!-- Add more banks as needed -->
+        </select>
+
+        <div class="input-box">
+          <label>Account Holder Name</label>
+          <input type="text" placeholder="Enter account holder name" />
+        </div>
+
+        <div class="input-box">
+          <label>Account Number</label>
+          <input type="text" placeholder="Enter account number" />
+        </div>
+
+        <div class="input-box">
+          <label>IFSC Code</label>
+          <input type="text" placeholder="Enter IFSC code" maxlength="11" />
+        </div>
+      </div>
+
+      <button class="pay-button">MAKE PAYMENT</button>
+    </div>
+  </div>
+</body>
+</html>

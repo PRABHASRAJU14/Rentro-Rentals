@@ -20,10 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
     amountText.textContent = `₹ ${total}`;
   }
 
-  // Attach goBack function to all back arrows
-  document.querySelectorAll('.back-arrow, .inner-back-arrow').forEach(el => {
-    el.addEventListener('click', goBack);
-  });
 
   // Handle make payment button click
   const payBtn = document.querySelector('.pay-button');
