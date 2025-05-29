@@ -1,152 +1,88 @@
 body {
-  margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background-color: #fffdf3;
-  color: #333;
-}
-
-.back-arrow {
-  display: inline-flex;
+  background-color: #fffbea;
+  margin: 0;
+  padding: 0;
+  display: flex;
   justify-content: center;
   align-items: center;
-  width: 40px;
-  height: 40px;
-  background-color: #fff7cc;
-  border: 2px solid #f4d35e;
-  border-radius: 8px;
-  font-size: 1.5em;
-  color: #333;
-  cursor: pointer;
-  text-decoration: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s, border 0.3s;
+  height: 100vh;
 }
 
-.back-arrow:hover {
-  background-color: #f4d35e;
-  border-color: #e9c46a;
-}
-
-.confirmation {
-  background-color: #e9f8ec;
-  color: #007f3f;
-  padding: 15px;
+.container {
   text-align: center;
+  padding: 50px 30px;
+  background: #ffffff;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+  border-radius: 20px;
+  max-width: 500px;
+  width: 90%;
+  border: 2px solid #ffe08a;
+  position: relative;
+  overflow: hidden;
 }
 
-.success {
-  font-weight: bold;
-  font-size: 18px;
-  color: #f4a261;
-}
-
-.info {
-  color: #333;
-  margin-top: 5px;
-  font-size: 14px;
-}
-
-/* Main scooter container - centered and large */
-.main-scooter {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 30px auto;
-  max-width: 320px;
-  padding: 15px;
-  background-color: #fff7cc;
-  border: 2px dashed #f4d35e;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-.main-scooter img {
+.track {
+  position: relative;
+  height: 70px;
   width: 100%;
-  max-width: 280px;
-  height: auto;
-  object-fit: contain;
-  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.icon {
+  font-size: 60px;
+  color: #ffc107;
+  position: relative;
+  margin-bottom: 10px;
+  filter: drop-shadow(0px 5px 5px rgba(0, 0, 0, 0.2));
+}
+
+.icon::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 10px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+h1 {
+  color: #ffb347;
   margin-bottom: 15px;
+  font-size: 28px;
 }
 
-.main-scooter p {
-  font-size: 22px;
-  font-weight: 700;
-  color: #333;
-  margin: 0;
+p {
+  margin: 12px 0;
+  color: #444;
+  font-size: 16px;
 }
 
-/* Rest of your styles */
-
-.top-picks {
-  padding: 10px;
+.vehicle-name {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin: 25px 0;
+  color: #2e7d32;
 }
 
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.home-link {
+  display: inline-block;
+  margin-top: 25px;
+  padding: 12px 24px;
+  background-color: #ffc107;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
 }
 
-.section-header h3 {
-  margin: 0;
-  color: #f4a261;
-}
-
-.view-all {
-  font-size: 14px;
-  color: #e9c46a;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.bike-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.bike-card {
-  width: 48%;
-  background: #fff7cc;
-  border-radius: 8px;
-  padding: 10px;
-  text-align: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border: 2px dashed #f4d35e;
-}
-
-.bike-card img {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
-  margin-bottom: 5px;
-  border-radius: 6px;
-}
-
-.bike-card p {
-  font-size: 14px;
-  font-weight: 500;
-  margin: 0;
-  color: #333;
-}
-
-/* Responsive */
-
-@media (max-width: 600px) {
-  .bike-card {
-    width: 100%;
-  }
-
-  .section-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-
-  .view-all {
-    align-self: flex-start;
-  }
+.home-link:hover {
+  background-color: #e6ac00;
 }
