@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Menu</title>
+  <link rel="stylesheet" href="../styles/hamburger.css" />
+</head>
+<body>
+  <nav class="hamburger-menu">
+    <ul>
+      <li>
+        <a href="city.html">
+          <span class="icon">
+            <svg width="24" height="24" fill="none" stroke="#f4a261" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 4l9 8"/><path d="M9 21V12h6v9"/></svg>
+          </span>
+          Home
+        </a>
+      </li>
+      <li>
+        <a href="#" id="profile-link">
+          <span class="icon">
+            <svg width="24" height="24" fill="none" stroke="#f4a261" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 8-4 8-4s8 0 8 4"/></svg>
+          </span>
+          Profile / My Account
+        </a>
+      </li>
+      <li>
+        <a href="#" id="orders-link">
+          <span class="icon">
+            <svg width="24" height="24" fill="none" stroke="#f4a261" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6M9 13h6M9 17h3"/></svg>
+          </span>
+          My Orders
+        </a>
+      </li>
+
+      <li>
+        <a href="#" id="notifications-link">
+          <span class="icon">
+            <svg width="24" height="24" fill="none" stroke="#f4a261" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </span>
+          Notifications
+        </a>
+      </li>
+      <li>
+        <a href="#" id="payments-link">
+          <span class="icon">
+            <svg width="24" height="24" fill="none" stroke="#f4a261" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="10" rx="2"/><path d="M2 11h20"/></svg>
+          </span>
+          Payments
+        </a>
+      </li>
+      <li>
+        <a href="#" id="address-link">
+          <span class="icon" style="background-color:#f4d35e;border-radius:50%;padding:3px;">
+            <svg width="20" height="20" fill="none" stroke="#f4a261" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 19s7-7.58 7-11.5A7 7 0 1 0 3 7.5C3 11.42 10 19 10 19z"/>
+              <circle cx="10" cy="7.5" r="2.5" fill="#f4a261"/>
+            </svg>
+          </span>
+          Address
+        </a>
+      </li>
+      <li>
+        <a href="../index.html" id="logout-link">
+          <span class="icon">
+            <svg width="24" height="24" fill="none" stroke="#f4a261" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </span>
+          Logout
+        </a>
+      </li>
+      <li>
+        <a href="dashboard.html" class="provider">
+          <span class="icon" style="background-color:#f4d35e;border-radius:50%;padding:3px;">
+            <svg width="20" height="20" fill="none" stroke="#f4a261" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="9" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+          </span>
+          Provider
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Profile Modal -->
+  <div id="profile-modal" class="profile-modal">
+    <div class="profile-content">
+      <button class="close-profile" id="close-profile" title="Close">&times;</button>
+      <h2 style="color:#f4a261;">My Profile</h2>
+      <div id="profile-details">
+        <p><strong>Name:</strong> <span id="profile-name"></span></p>
+        <p><strong>Email:</strong> <span id="profile-email"></span></p>
+        <p><strong>Phone:</strong> <span id="profile-phone"></span></p>
+      </div>
+      <div id="profile-message" style="color: #b45309; margin-top: 1rem;"></div>
+    </div>
+  </div>
+
+  <!-- Orders Modal -->
+  <div id="orders-modal" class="orders-modal">
+    <div class="orders-content">
+      <button class="close-orders" id="close-orders" title="Close">&times;</button>
+      <h2 style="color:#f4a261;">My Orders</h2>
+      <div id="orders-list"></div>
+    </div>
+  </div>
+
+  <!-- Cart Modal -->
+  <div id="cart-modal" class="cart-modal">
+    <div class="cart-content">
+      <button class="close-cart" id="close-cart" title="Close">&times;</button>
+      <h2 style="color:#f4a261;">My Cart</h2>
+      <div id="cart-list"></div>
+    </div>
+  </div>
+
+  <!-- Wishlist Modal -->
+  <div id="wishlist-modal" class="wishlist-modal">
+    <div class="wishlist-content">
+      <button class="close-wishlist" id="close-wishlist" title="Close">&times;</button>
+      <h2 style="color:#f4a261;">My Wishlist</h2>
+      <div id="wishlist-list"></div>
+    </div>
+  </div>
+
+  <!-- Notifications Modal -->
+  <div id="notifications-modal" class="notifications-modal">
+        <div class="notifications-content">
+          <button class="close-notifications" id="close-notifications" title="Close">&times;</button>
+          <h2 style="color:#f4a261;">Notifications</h2>
+          <div style="display:flex;align-items:center;gap:1em;margin-bottom:1em;">
+            <label for="notification-toggle" style="font-size:1.1em;">Enable Notifications</label>
+            <label class="switch">
+              <input type="checkbox" id="notification-toggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div id="notifications-list" style="display:none;padding:0;margin:0;"></div>
+          <div id="notification-status-msg" style="margin-top:1em;font-weight:500;"></div>
+        </div>
+      </div>
+
+  <!-- Payments Modal -->
+  <div id="payments-modal" class="payments-modal">
+    <div class="payments-content">
+      <button class="close-payments" id="close-payments" title="Close">&times;</button>
+      <h2 style="color:#f4a261;">Payments</h2>
+      <div id="payments-list"></div>
+    </div>
+  </div>
+
+  <!-- Address Modal -->
+  <div id="address-modal" class="address-modal">
+    <div class="address-content">
+      <button class="close-address" id="close-address" title="Close">&times;</button>
+      <h2 style="color:#f4a261;">My Address</h2>
+      <div id="address-view"></div>
+      <form id="address-form" style="display:none;">
+        <div>
+          <label for="address-line1">Address Line 1:</label><br/>
+          <input type="text" id="address-line1" required/>
+        </div>
+        <div>
+          <label for="street">Street:</label><br/>
+          <input type="text" id="street" required/>
+        </div>
+        <div>
+          <label for="city">City:</label><br/>
+          <input type="text" id="city" required/>
+        </div>
+        <div>
+          <label for="state">State:</label><br/>
+          <input type="text" id="state" required/>
+        </div>
+        <div>
+          <label for="pincode">Pincode:</label><br/>
+          <input type="text" id="pincode" required pattern="\d{6}" maxlength="6" inputmode="numeric"/>
+        </div>
+        <button type="submit" class="address-save">Save</button>
+      </form>
+      <div id="address-message" style="color:#b45309; margin-top: 1rem;"></div>
+    </div>
+  </div>
+
+  <script src="../scripts/hamburger.js"></script>
+</body>
+</html>
+
+
+      <!-- <li>
+        <a href="#" id="cart-link">
+          <span class="icon">
+            <svg width="24" height="24" fill="none" stroke="#f4a261" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1"/><circle cx="17" cy="20" r="1"/><path d="M5 6h2l1 7h8l1-7h2"/></svg>
+          </span>
+          My Cart
+        </a>
+      </li>
+      <li>
+        <a href="#" id="wishlist-link">
+          <span class="icon">
+            <svg width="24" height="24" fill="none" stroke="#f4a261" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.35-7-10A5 5 0 0 1 12 6a5 5 0 0 1 7 5c0 5.65-7 10-7 10z"/></svg>
+          </span>
+          Wishlist
+        </a>
+      </li> -->

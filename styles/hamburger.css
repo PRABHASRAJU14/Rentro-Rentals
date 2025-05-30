@@ -1,0 +1,337 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fffdf3;
+  margin: 0;
+  padding: 0;
+  color: #333;
+  min-height: 100vh;
+}
+.hamburger-menu {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  background-color: #fffdf3;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.hamburger-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.hamburger-menu li {
+  margin: 0;
+  flex: 1;
+}
+.hamburger-menu a {
+  display: flex;
+  align-items: center;
+  height: calc(100vh / 11);
+  min-height: 56px;
+  font-size: 1.15rem;
+  color: #333;
+  text-decoration: none;
+  transition: background 0.18s, color 0.18s;
+  background: #fffdf3;
+  padding-left: 10vw;
+  padding-right: 10vw;
+  box-sizing: border-box;
+}
+.hamburger-menu a:hover,
+.hamburger-menu a:focus {
+  background: #fff7cc;
+  color: #f4a261;
+}
+.hamburger-menu .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  text-align: center;
+  margin-right: 18px;
+  flex-shrink: 0;
+}
+.hamburger-menu .provider {
+  font-weight: bold;
+  color: #f4a261;
+}
+.hamburger-menu .provider .icon {
+  color: #f4a261;
+}
+.profile-modal,
+.orders-modal,
+.cart-modal,
+.wishlist-modal,
+.address-modal,
+.notifications-modal,
+.payments-modal {
+  display: none;
+  position: fixed;
+  z-index: 1001;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  background: rgba(244, 211, 94, 0.13);
+  backdrop-filter: blur(2px);
+  align-items: center;
+  justify-content: center;
+}
+.profile-modal.active,
+.orders-modal.active,
+.cart-modal.active,
+.wishlist-modal.active,
+.address-modal.active,
+.notifications-modal.active,
+.payments-modal.active {
+  display: flex;
+}
+.profile-content,
+.orders-content,
+.cart-content,
+.wishlist-content,
+.address-content,
+.notifications-content,
+.payments-content {
+  background: #fffdf3;
+  border: 2px solid #f4d35e;
+  border-radius: 12px;
+  padding: 2rem 2.5rem 1.5rem 2.5rem;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.09);
+  min-width: 320px;
+  max-width: 90vw;
+  margin: auto;
+  position: relative;
+  animation: fadeInProfile 0.25s ease;
+}
+@keyframes fadeInProfile {
+  from { transform: translateY(-30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.close-profile,
+.close-orders,
+.close-cart,
+.close-wishlist,
+.close-address,
+.close-notifications,
+.close-payments {
+  position: absolute;
+  top: 10px;
+  right: 18px;
+  font-size: 1.7rem;
+  background: none;
+  border: none;
+  color: #f4a261;
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.2s;
+}
+.close-profile:hover,
+.close-orders:hover,
+.close-cart:hover,
+.close-wishlist:hover,
+.close-address:hover,
+.close-notifications:hover,
+.close-payments:hover {
+  color: #d2691e;
+}
+#profile-details p {
+  margin: 0.6em 0;
+  font-size: 1.13em;
+}
+.order-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.2em;
+  background: #fff7cc;
+  border-radius: 10px;
+  padding: 1em;
+  box-shadow: 0 2px 6px rgba(244, 211, 94, 0.13);
+}
+.order-img {
+  width: 80px;
+  height: 60px;
+  object-fit: contain;
+  margin-right: 1.2em;
+  border-radius: 8px;
+  border: 1px solid #f4d35e;
+  background: #fff;
+}
+.order-info {
+  font-size: 1.1em;
+}
+.order-rent {
+  color: #f4a261;
+  font-weight: bold;
+}
+#address-view {
+  margin-bottom: 1.2em;
+}
+#address-view .address-box {
+  background: #fff7cc;
+  border: 1px solid #f4d35e;
+  border-radius: 8px;
+  padding: 1em;
+  margin-bottom: 0.8em;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+#address-view .address-actions {
+  display: flex;
+  gap: 0.6em;
+  margin-top: 0.7em;
+}
+#address-view button.edit-address,
+#address-view button.delete-address {
+  background-color: #f4d35e;
+  border: none;
+  padding: 0.4em 1.1em;
+  border-radius: 6px;
+  color: #333;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#address-view button.edit-address:hover,
+#address-view button.delete-address:hover {
+  background-color: #f4a261;
+  color: #fff;
+}
+#address-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+}
+#address-form input {
+  padding: 0.4em;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1em;
+  background: #fff;
+}
+#address-form button.address-save {
+  background-color: #f4d35e;
+  border: none;
+  padding: 0.5em 1.3em;
+  border-radius: 6px;
+  color: #333;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 0.5em;
+  align-self: flex-start;
+  transition: background 0.2s;
+}
+#address-form button.address-save:hover {
+  background-color: #f4a261;
+  color: #fff;
+}
+#notifications-list p {
+  font-size: 1.1em;
+  margin: 0.7em 0;
+}
+.payment-card {
+  background: #fff7cc;
+  border-radius: 10px;
+  border: 1px solid #f4d35e;
+  box-shadow: 0 2px 6px rgba(244, 211, 94, 0.13);
+  padding: 1em 1.3em;
+  margin-bottom: 1em;
+  font-size: 1.1em;
+}
+.payment-card .amount {
+  color: #f4a261;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+.payment-card .date {
+  font-size: 0.98em;
+  color: #555;
+}
+.payment-card .mode {
+  font-size: 0.99em;
+  color: #1d3557;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+  vertical-align: middle;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: .2s;
+  border-radius: 24px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px; width: 18px;
+  left: 3px; bottom: 3px;
+  background-color: white;
+  transition: .2s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: #f4a261;
+}
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+@media (max-width: 600px) {
+  .hamburger-menu a {
+    font-size: 1rem;
+    padding-left: 4vw;
+    padding-right: 4vw;
+  }
+  .hamburger-menu .icon {
+    margin-right: 12px;
+    width: 28px;
+    height: 28px;
+  }
+  .profile-content,
+  .orders-content,
+  .cart-content,
+  .wishlist-content,
+  .address-content,
+  .notifications-content,
+  .payments-content {
+    padding: 1.3rem 0.9rem 0.9rem 0.9rem;
+    min-width: 0;
+    width: 94vw;
+  }
+}
+.profile-edit-btn, .profile-delete-btn, .profile-create-btn, .profile-save-btn, .profile-cancel-btn {
+  background: #f4a261;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5em 1.2em;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+}
+.profile-delete-btn {
+  background: #e76f51;
+}
+.profile-cancel-btn {
+  background: #aaa;
+  color: #333;
+}
