@@ -53,7 +53,7 @@
       <input type="tel" id="providerPhone" required />
     </div>
     <div class="form-group">
-      <label for="providerCompany">Company Name:</label>
+      <label for="providerCompany">Vehicle type:</label>
       <input type="text" id="providerCompany" />
     </div>
     <div class="form-group">
@@ -74,36 +74,40 @@
 
 
       <!-- Add Vehicle Section -->
-      <section id="addVehicle" class="content-section">
-        <h2>Add Vehicle</h2>
-        <!-- <form id="addVehicleForm"> -->
-          <div class="form-group">
-            <label for="vehicleName"> Company Name:</label>
-            <input type="text" id="vehicleName" required />
-          </div>
-          <div class="form-group">
-            <label for="vehicleType">Type:</label>
-            <select id="vehicleType" required>
-              <option value="">Select type</option>
-              <option value="Scooter">Scooter</option>
-              <option value="Bike">Bike</option>
-              <option value="Bicycle">Bicycle</option>
-              <option value="Car">Car</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="vehiclePrice">Price ($):</label>
-            <input type="number" id="vehiclePrice" min="0" step="0.01" required />
-          </div>
-          <div class="form-group">
-            <label for="vehicleImage">Image URL:</label>
-            <input type="url" id="vehicleImage" placeholder="Optional" />
-          </div>
-          <button type="submit" class="submit-btn">Add Vehicle</button>
-          <p id="addVehicleMessage"></p>
-        <!-- </form> -->
-      </section>
+<section id="addVehicle" class="content-section">
+  <h2>Add Vehicle</h2>
+  <!-- <form id="addVehicleForm"> -->
+    <div class="form-group">
+      <label for="vehicleName">Vehicle Name:</label>
+      <input type="text" id="vehicleName" required />
+    </div>
+    <div class="form-group">
+      <label for="vehicleType">Type:</label>
+      <select id="vehicleType" required>
+        <option value="">Select type</option>
+        <option value="Scooter">Scooter</option>
+        <option value="Bike">Bike</option>
+        <option value="Bicycle">Bicycle</option>
+        <option value="Car">Car</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="vehiclePrice">Price (Rs/hr):</label>
+      <input type="number" id="vehiclePrice" min="0" step="0.01" required />
+    </div>
 
+    <div class="form-group">
+      <label for="vehicleLocation">Location (City):</label>
+      <input type="text" id="vehicleLocation" required placeholder="e.g. VIZAG" />
+    </div>
+        <div class="form-group">
+      <label for="vehicleImage">Image URL:</label>
+      <input type="url" id="vehicleImage" placeholder="Optional" />
+    </div>
+    <button type="submit" class="submit-btn">Add Vehicle</button>
+    <p id="addVehicleMessage"></p>
+  <!-- </form> -->
+</section>
       <!-- Vehicles Section -->
 <section id="vehicles" class="content-section">
   <h2>Vehicles</h2>

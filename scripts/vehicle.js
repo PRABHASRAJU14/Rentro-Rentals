@@ -1,32 +1,3 @@
-const scooters = [ 
-  {
-    name: "TVS Jupiter",
-    image: "../images/tvs jupiter.png",
-    price: "₹180 (50 km included)"
-  },
-  {
-    name: "Honda Activa 6G",
-    image: "../images/honda activa 6g.png",
-    price: "₹100 (80 km included)"
-  },
-  {
-    name: "Honda Dio 125",
-    image: "../images/honda dio 125.png",
-    price: "₹552 (120 km included)"
-  },
-  {
-    name: "Suzuki Access 125 (BS6)",
-    image: "../images/suzuki access 125(BS6).png",
-    price: "₹150 (120 km included)"
-  },
-  {
-    name: "Honda Activa 5G",
-    image: "../images/honda activa 5g.png",
-    price: "₹300 (100 km included)"
-  }
-];
-
-// Read URL parameters initially
 const params = new URLSearchParams(window.location.search);
 let pickupLocation = params.get("location") || "N/A";
 let pickupDate = params.get("pickupDate") || "N/A";
@@ -34,13 +5,10 @@ let pickupTime = params.get("pickupTime") || "N/A";
 let dropoffDate = params.get("dropoffDate") || "N/A";
 let dropoffTime = params.get("dropoffTime") || calculateDropoffTime(pickupTime);
 
-// Format pickup and dropoff dates
 pickupDate = formatDate(pickupDate);
 dropoffDate = formatDate(dropoffDate);
 
-// On DOM ready, try to load saved form data, set back link and render scooters
 document.addEventListener("DOMContentLoaded", () => {
-  // Check sessionStorage for saved data from confirm page
   const storedFormData = sessionStorage.getItem("vehicleFormData");
   if (storedFormData) {
     try {
@@ -51,96 +19,192 @@ document.addEventListener("DOMContentLoaded", () => {
       if (data.dropoffTime) dropoffTime = data.dropoffTime;
       if (data.location) pickupLocation = data.location;
     } catch (e) {
-      console.warn("Failed to parse vehicleFormData from sessionStorage", e);
+      console.warn("Failed to parse vehicleFormData", e);
     }
   }
 
-  // Set back link to preserve search inputs
-  const backLink = document.getElementById("backLink");
-  if (backLink) {
-    backLink.href = `search.html?pickupDate=${encodeURIComponent(pickupDate)}&pickupTime=${encodeURIComponent(pickupTime)}&dropoffDate=${encodeURIComponent(dropoffDate)}&dropoffTime=${encodeURIComponent(dropoffTime)}&location=${encodeURIComponent(pickupLocation)}`;
-  }
+  populateLocationDropdown();
+  renderVehicles(pickupLocation);
 
-  // Render the scooters list
-  displayScooters();
+  document.getElementById("backBtn").addEventListener("click", () => {
+    window.location.href = `search.html?pickupDate=${encodeURIComponent(pickupDate)}&pickupTime=${encodeURIComponent(pickupTime)}&dropoffDate=${encodeURIComponent(dropoffDate)}&dropoffTime=${encodeURIComponent(dropoffTime)}&location=${encodeURIComponent(pickupLocation)}`;
+  });
+
+  document.getElementById("locationSelect").addEventListener("change", (e) => {
+    pickupLocation = e.target.value;
+    renderVehicles(pickupLocation);
+  });
 });
 
-// Render scooter cards dynamically
-function displayScooters() {
-  const container = document.getElementById("scooter-container");
-  container.innerHTML = ""; // Clear previous content if any
+function populateLocationDropdown() {
+  const select = document.getElementById("locationSelect");
+  select.innerHTML = ""; // Clear old options
 
-  scooters.forEach((scooter) => {
-    const formattedPickupDate = pickupDate;
-    const formattedDropDate = dropoffDate;
+  const storedVehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
+  let uniqueLocations = [...new Set(storedVehicles.map(v => v.location).filter(Boolean))];
 
-    const card = document.createElement("div");
-    card.className = "card";
+  // Remove the pickupLocation (case insensitive) from the rest, if present
+  uniqueLocations = uniqueLocations.filter(
+    loc => loc.toLowerCase() !== (pickupLocation || "").toLowerCase()
+  );
 
-    const urlParams = new URLSearchParams({
-      name: scooter.name,
-      image: scooter.image,
-      price: scooter.price,
-      location: pickupLocation,
-      pickupDate: formattedPickupDate,
-      pickupTime: pickupTime,
-      dropoffDate: formattedDropDate,
-      dropoffTime: dropoffTime,
-    });
+  // First option: city from search page (pickupLocation)
+  if (pickupLocation && pickupLocation !== "N/A") {
+    const firstOption = document.createElement("option");
+    firstOption.value = pickupLocation;
+    firstOption.textContent = pickupLocation;
+    firstOption.selected = true;
+    select.appendChild(firstOption);
+  }
 
-    card.innerHTML = `
-      <h2>${scooter.name}</h2>
-      <img src="${scooter.image}" alt="${scooter.name}" class="scooter-img"/>
-      <div class="location-name"><strong>Location:</strong> ${pickupLocation}</div>
-      <div class="time-row">
-        <div class="time-block">
-          <div class="time">${pickupTime}</div>
-          <div class="date">${formattedPickupDate}</div>
-        </div>
-        <div class="to-circle">to</div>
-        <div class="time-block">
-          <div class="time">${dropoffTime}</div>
-          <div class="date">${formattedDropDate}</div>
-        </div>
-      </div>
-      <div class="bottom-row">
-        <div class="price">
-          ₹ <strong>${scooter.price.split(" ")[0].replace("₹", "")}</strong><br>
-          <small>${scooter.price.split(" ").slice(1).join(" ")}</small>
-        </div>
-        <button class="book-btn"
-          onclick="window.location.href='del.html?${urlParams.toString()}'">
-          Book
-        </button>
-      </div>
-    `;
-
-    container.appendChild(card);
+  // Then add the rest
+  uniqueLocations.forEach(loc => {
+    const option = document.createElement("option");
+    option.value = loc;
+    option.textContent = loc;
+    select.appendChild(option);
   });
 }
 
-// Helper: Format date to DD-MM-YYYY
-function formatDate(dateStr) {
-  if (!dateStr || isNaN(Date.parse(dateStr))) return "N/A";
-  const date = new Date(dateStr);
-  const day = date.getDate().toString().padStart(2, "0");
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const year = date.getFullYear();
+// --- Helper functions for time calculation ---
+function parseDateTime(dateStr, timeStr) {
+  // dateStr: "dd-mm-yyyy", timeStr: "HH:mm"
+  if (!dateStr || !timeStr || dateStr === "N/A" || timeStr === "N/A") return null;
+  const [day, month, year] = dateStr.split("-").map(Number);
+  const [hour, minute] = timeStr.split(":").map(Number);
+  return new Date(year, month - 1, day, hour, minute);
+}
+function calculateTotalHours(startDateStr, startTimeStr, endDateStr, endTimeStr) {
+  const start = parseDateTime(startDateStr, startTimeStr);
+  const end = parseDateTime(endDateStr, endTimeStr);
+  if (!start || !end) return 0;
+  let diffMs = end - start;
+  if (diffMs < 0) diffMs = 0;
+  const totalHours = diffMs / (1000 * 60 * 60);
+  return Math.ceil(totalHours); // always round up
+}
+
+// --- Render vehicles with total price for selected period ---
+function renderVehicles(location) {
+  const container = document.getElementById("vehicles-container");
+  container.innerHTML = "";
+
+  const storedVehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
+  const filtered = storedVehicles.filter(
+    v => v.location && v.location.toLowerCase() === location.toLowerCase()
+  );
+
+  const types = ["Scooter", "Bike", "Bicycle", "Car"];
+  const grouped = {};
+
+  // Group vehicles by type (case-insensitive)
+  types.forEach(type => {
+    grouped[type] = filtered.filter(
+      v => v.type && v.type.toLowerCase() === type.toLowerCase()
+    );
+  });
+
+  let hasVehicles = false;
+
+  types.forEach(type => {
+    const vehicles = grouped[type];
+    if (vehicles.length > 0) {
+      hasVehicles = true;
+      const groupDiv = document.createElement("div");
+      groupDiv.className = "vehicle-group";
+
+      const heading = document.createElement("h2");
+      heading.textContent = type + "s";
+      groupDiv.appendChild(heading);
+
+      vehicles.forEach((vehicle, index) => {
+        const card = document.createElement("div");
+        card.className = "card fade-in";
+        card.style.animationDelay = `${index * 0.1}s`;
+
+        // Calculate total price
+        let totalAmount = "-";
+        let totalAmountNumber = 0;
+        if (
+          vehicle.price &&
+          !isNaN(Number(vehicle.price)) &&
+          pickupDate !== "N/A" && pickupTime !== "N/A" &&
+          dropoffDate !== "N/A" && dropoffTime !== "N/A"
+        ) {
+          const totalHours = calculateTotalHours(
+            pickupDate,
+            pickupTime,
+            dropoffDate,
+            dropoffTime
+          );
+          totalAmountNumber = Number(vehicle.price) * totalHours;
+          totalAmount = "₹" + totalAmountNumber;
+        }
+
+        // --- ADDED FUNCTIONALITY: Pass totalAmount as 'total' in URL ---
+        const urlParams = new URLSearchParams({
+          name: vehicle.name,
+          image: vehicle.image,
+          price: vehicle.price,
+          location: location,
+          pickupDate,
+          pickupTime,
+          dropoffDate,
+          dropoffTime,
+          total: totalAmountNumber // <-- total amount as a number, no currency symbol
+        });
+
+card.innerHTML = `
+  <h3>${vehicle.name}</h3>
+  <img src="${vehicle.image}" alt="${vehicle.name}" class="scooter-img"/>
+  <div class="location-name"><strong>Location:</strong> ${location}</div>
+  <div class="time-row">
+    <div class="time-block">
+      <div class="time">${pickupTime}</div>
+      <div class="date">${pickupDate}</div>
+    </div>
+    <div class="to-circle">to</div>
+    <div class="time-block">
+      <div class="time">${dropoffTime}</div>
+      <div class="date">${dropoffDate}</div>
+    </div>
+  </div>
+  <div class="price">₹ <strong>${Number(vehicle.price).toFixed(2)}</strong> <span class="per-hour">/hr</span></div>
+  <div class="card-bottom">
+    <div class="total-amount">
+      <strong>Total: </strong>
+      <span>${totalAmount}</span>
+    </div>
+    <button class="book-btn" onclick="window.location.href='del.html?${urlParams.toString()}'">Book</button>
+  </div>
+`;
+        groupDiv.appendChild(card);
+      });
+
+      container.appendChild(groupDiv);
+    }
+  });
+
+  if (!hasVehicles) {
+    container.innerHTML = `<p class="no-vehicles">🚫 No vehicles available in <strong>${location}</strong>.</p>`;
+  }
+}
+
+function formatDate(dateString) {
+  if (!dateString || dateString === "N/A") return "N/A";
+  const d = new Date(dateString);
+  if (isNaN(d.getTime())) return dateString;
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+  const year = d.getFullYear();
   return `${day}-${month}-${year}`;
 }
 
-// Calculate dropoff time (default +1h30m)
-function calculateDropoffTime(pickupTimeStr) {
-  if (!pickupTimeStr || pickupTimeStr === "N/A") return "00:00";
-  const [hourStr, minuteStr] = pickupTimeStr.split(":");
-  let hour = parseInt(hourStr, 10);
-  const minute = parseInt(minuteStr, 10);
-
-  let totalMinutes = hour * 60 + minute + 90;
-  totalMinutes = totalMinutes % (24 * 60);
-
-  const adjustedHour = Math.floor(totalMinutes / 60);
-  const adjustedMinute = totalMinutes % 60;
-
-  return `${adjustedHour.toString().padStart(2, '0')}:${adjustedMinute.toString().padStart(2, '0')}`;
+function calculateDropoffTime(pickupTime) {
+  if (!pickupTime || !/^\d{2}:\d{2}$/.test(pickupTime)) return pickupTime;
+  let [hours, minutes] = pickupTime.split(":").map(Number);
+  hours += 2;
+  if (hours >= 24) hours -= 24;
+  // Pad with leading zeros if needed
+  return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
 }

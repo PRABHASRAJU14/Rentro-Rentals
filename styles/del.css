@@ -149,3 +149,13 @@ h2 {
   min-height: 1.2em;
   margin-top: 0.5rem;
 }
+.submit-btn {
+  background-color: #f4d35e;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #333;
+  width: fit-content;
+}

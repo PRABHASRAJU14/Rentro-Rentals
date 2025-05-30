@@ -158,3 +158,8 @@ form#confirmForm {
     padding: 12px;
   }
 }
+
+.currency-symbol {
+  font-size: 1em; /* or any size you want */
+  margin-right: 2px;
+}

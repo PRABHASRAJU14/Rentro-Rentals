@@ -17,8 +17,6 @@ function goBack() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("Confirm page loaded");
-
   const params = new URLSearchParams(window.location.search);
 
   let name = params.get("name");
@@ -29,7 +27,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let pickupTime = params.get("pickupTime");
   let dropoffDate = params.get("dropoffDate");
   let dropoffTime = params.get("dropoffTime");
+  let total = params.get("total"); // <--- get 'total' from URL
 
+  // Use sessionStorage fallback if data is missing
   if (!name || !price) {
     const stored = JSON.parse(sessionStorage.getItem("bookingDetails") || "{}");
     name = name || stored.name || "Unknown";
@@ -40,8 +40,10 @@ document.addEventListener("DOMContentLoaded", () => {
     pickupTime = pickupTime || stored.pickupTime || "N/A";
     dropoffDate = dropoffDate || stored.dropoffDate || pickupDate;
     dropoffTime = dropoffTime || stored.dropoffTime || pickupTime;
+    total = total || stored.total || "";
   }
 
+  // Save booking details
   const bookingDetails = {
     name,
     image,
@@ -50,11 +52,12 @@ document.addEventListener("DOMContentLoaded", () => {
     pickupDate,
     pickupTime,
     dropoffDate,
-    dropoffTime
+    dropoffTime,
+    total
   };
   sessionStorage.setItem("bookingDetails", JSON.stringify(bookingDetails));
-  console.log("Booking details saved to sessionStorage:", bookingDetails);
 
+  // Render details
   const [brand, ...modelParts] = name.split(" ");
   const model = modelParts.join(" ");
   let kmIncluded = "N/A";
@@ -73,12 +76,18 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("location").textContent = location;
   document.getElementById("kmIncluded").textContent = kmIncluded;
 
-  const formattedPrice = price.startsWith('₹') ? price : `₹${price}`;
-  document.getElementById("price").textContent = formattedPrice;
+  // Show the Total Amount from the card, as passed in URL
+const totalAmountElem = document.getElementById("totalAmount");
+if (totalAmountElem && total !== undefined && total !== "") {
+  totalAmountElem.textContent = `₹${total}`; // Always include the symbol!
+} else if(totalAmountElem) {
+  totalAmountElem.textContent = "₹";
+}
 
   document.getElementById("pay-btn").addEventListener("click", (e) => {
     e.preventDefault();
-    const encodedPrice = encodeURIComponent(formattedPrice.replace(/₹\s?/, ""));
-    window.location.href = `payment.html?price=${encodedPrice}`;
+    const encodedPrice = encodeURIComponent(price.replace(/₹\s?/, ""));
+    const encodedTotalAmount = encodeURIComponent(total || "");
+    window.location.href = `payment.html?price=${encodedPrice}&totalAmount=${encodedTotalAmount}`;
   });
 });
