@@ -1,57 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Order Confirmation</title>
-  <link rel="stylesheet" href="../styles/success.css" />
-  <script defer src="../scripts/success.js"></script>
+  <meta charset="UTF-8">
+  <title>Booking Success</title>
+  <link rel="stylesheet" href="../styles/success.css">
 </head>
 <body>
+  <div class="container">
+    <div class="track">
+      <div class="icon">🛵</div>
+    </div>
+    <h1>Order Placed Successfully!</h1>
+    <div class="vehicle-name" id="vehicleName">Vehicle Name</div>
+    <p>Thank you for your booking.</p>
+    <p>A confirmation will be sent to your email.</p>
+    <a href="city.html" class="home-link">← Back to Home</a>
+  </div>
 
-  <header class="header">
-    <!-- <button class="back-arrow" aria-label="Go back to vehicle selection">←</button> -->
-  </header>
-
-  <main>
-    <section class="confirmation">
-      <div class="success" role="alert" aria-live="assertive">✔ Order placed, thank you!</div>
-      <p class="info">Confirmation will be sent to your email.</p>
-    </section>
-
-    <!-- Dynamic Selected Vehicle Section -->
-    <section class="main-scooter" aria-label="Selected scooter details">
-      <img src="/images/default-image.jpg" alt="Selected vehicle" />
-      <div class="vehicle-details">
-        <p><strong class="vehicle-name">Selected vehicle Name</strong></p>
-        <p class="vehicle-type">Type: N/A</p>
-        <p class="vehicle-price">Price: $0.00</p>
-        <p class="customer-name">Customer: Guest</p>
-        <p class="booking-date">Date: N/A</p>
-      </div>
-    </section>
-
-    <section class="top-picks" aria-label="User's Top Picks">
-      <div class="section-header">
-        <h3>User's Top Picks</h3>
-        <a href="#" class="view-all">VIEW ALL</a>
-      </div>
-      <div class="bike-grid">
-        <article class="bike-card">
-          <img src="../images/suzuki access 125(BS6).png" alt="Suzuki Access 125 (BS6)" />
-          <p>Suzuki Access 125 (BS6)</p>
-        </article>
-        <article class="bike-card">
-          <img src="../images/tvs jupiter.png" alt="TVS Jupiter" />
-          <p>TVS Jupiter</p>
-        </article>
-        <article class="bike-card">
-          <img src="../images/honda dio 125.png" alt="Honda Dio 125" />
-          <p>Honda Dio 125</p>
-        </article>
-      </div>
-    </section>
-  </main>
-
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const vehicle = urlParams.get('vehicle');
+    if (vehicle) {
+      document.getElementById('vehicleName').textContent = decodeURIComponent(vehicle);
+    }
+  </script>
 </body>
 </html>
