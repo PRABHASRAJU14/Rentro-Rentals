@@ -40,31 +40,48 @@ function clearAddVehicleInputs() {
   document.getElementById('vehicleType').value = '';
   document.getElementById('vehiclePrice').value = '';
   document.getElementById('vehicleImage').value = '';
+  document.getElementById('vehicleLocation').value = '';
 }
+
+let editingVehicleId = null; // Track if editing
 
 function handleAddVehicleSubmit(e) {
   if (e) e.preventDefault();
 
   const name = document.getElementById('vehicleName').value.trim();
-  const type = document.getElementById('vehicleType').value;
+  let type = document.getElementById('vehicleType').value.trim();
   const price = parseFloat(document.getElementById('vehiclePrice').value);
   const image = document.getElementById('vehicleImage').value.trim();
+  const location = document.getElementById('vehicleLocation').value.trim();
+  const message = document.getElementById('addVehicleMessage');
 
-  if (!name || !type || isNaN(price) || price < 0) {
-    addVehicleMessage.textContent = 'Please fill all fields correctly.';
-    addVehicleMessage.style.color = 'red';
+  // Normalize type (capitalize first letter)
+  type = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+
+  if (!name || !type || isNaN(price) || price < 0 || !location) {
+    message.textContent = 'Please fill all fields correctly.';
+    message.style.color = 'red';
     return;
   }
 
   const vehicles = getVehicles();
-  vehicles.push({ id: Date.now(), name, type, price, image });
+
+  if (editingVehicleId) {
+    const index = vehicles.findIndex(v => v.id === editingVehicleId);
+    if (index !== -1) {
+      vehicles[index] = { id: editingVehicleId, name, type, price, image, location };
+      message.textContent = `Updated "${name}" successfully!`;
+      message.style.color = 'green';
+    }
+    editingVehicleId = null;
+  } else {
+    vehicles.push({ id: Date.now(), name, type, price, image, location });
+    message.textContent = `Added "${name}" successfully!`;
+    message.style.color = 'green';
+  }
+
   saveVehicles(vehicles);
-
-  addVehicleMessage.textContent = `Added "${name}" successfully!`;
-  addVehicleMessage.style.color = 'green';
-
   clearAddVehicleInputs();
-
   loadVehicles();
 }
 
@@ -78,58 +95,9 @@ if (addVehicleForm) {
 }
 
 // Load Vehicles
-let editingVehicleId = null; // Track if editing
-
-function getVehicles() {
-  return JSON.parse(localStorage.getItem('vehicles') || '[]');
+function isValidImageUrl(url) {
+  return url && /^https?:\/\/.+/i.test(url.trim());
 }
-
-function saveVehicles(vehicles) {
-  localStorage.setItem('vehicles', JSON.stringify(vehicles));
-}
-
-function clearAddVehicleInputs() {
-  document.getElementById('vehicleName').value = '';
-  document.getElementById('vehicleType').value = '';
-  document.getElementById('vehiclePrice').value = '';
-  document.getElementById('vehicleImage').value = '';
-}
-
-function handleAddVehicleSubmit() {
-  const name = document.getElementById('vehicleName').value.trim();
-  const type = document.getElementById('vehicleType').value;
-  const price = parseFloat(document.getElementById('vehiclePrice').value);
-  const image = document.getElementById('vehicleImage').value.trim();
-  const message = document.getElementById('addVehicleMessage');
-
-  if (!name || !type || isNaN(price) || price < 0) {
-    message.textContent = 'Please fill all fields correctly.';
-    message.style.color = 'red';
-    return;
-  }
-
-  const vehicles = getVehicles();
-
-  if (editingVehicleId) {
-    const index = vehicles.findIndex(v => v.id === editingVehicleId);
-    if (index !== -1) {
-      vehicles[index] = { id: editingVehicleId, name, type, price, image };
-      message.textContent = `Updated "${name}" successfully!`;
-      message.style.color = 'green';
-    }
-    editingVehicleId = null;
-  } else {
-    vehicles.push({ id: Date.now(), name, type, price, image });
-    message.textContent = `Added "${name}" successfully!`;
-    message.style.color = 'green';
-  }
-
-  saveVehicles(vehicles);
-  clearAddVehicleInputs();
-  loadVehicles();
-}
-
-document.getElementById('addVehicleBtn').addEventListener('click', handleAddVehicleSubmit);
 
 function loadVehicles() {
   const vehicles = getVehicles();
@@ -152,14 +120,18 @@ function loadVehicles() {
     div.className = 'vehicle-card';
     div.style.position = 'relative';
 
-    const imgSrc = v.image || 'https://via.placeholder.com/280x140?text=No+Image';
+    // Image logic: show valid URL, else fallback to placeholder
+    const imgSrc = isValidImageUrl(v.image)
+      ? v.image
+      : 'https://via.placeholder.com/280x140?text=No+Image';
 
     div.innerHTML = `
       <img src="${imgSrc}" alt="${v.name}" />
       <div class="vehicle-info">
         <h3>${v.name}</h3>
         <p><strong>Type:</strong> ${v.type}</p>
-        <p><strong>Price:</strong> $${v.price.toFixed(2)}</p>
+        <p><strong>Price:</strong> ₹ ${Number(v.price).toFixed(2)}</p>
+        <p><strong>Location:</strong> ${v.location}</p>
       </div>
       <div class="card-actions" style="display:none; position:absolute; top:10px; right:10px; background:#fff; border:1px solid #ccc; border-radius:4px; padding:5px;">
         <button class="edit-btn">Edit</button>
@@ -178,12 +150,12 @@ function loadVehicles() {
     // Edit handler
     div.querySelector('.edit-btn').addEventListener('click', e => {
       e.stopPropagation();
-
       editingVehicleId = v.id;
       document.getElementById('vehicleName').value = v.name;
       document.getElementById('vehicleType').value = v.type;
       document.getElementById('vehiclePrice').value = v.price;
       document.getElementById('vehicleImage').value = v.image;
+      document.getElementById('vehicleLocation').value = v.location;
 
       document.getElementById('addVehicleMessage').textContent = `Editing "${v.name}". Make changes and click save.`;
       document.getElementById('addVehicleMessage').style.color = 'blue';
@@ -228,10 +200,9 @@ document.addEventListener('click', e => {
 // Load on startup
 loadVehicles();
 
-
-
 // Load Bookings
 const bookingsContainer = document.getElementById('bookingsContainer');
+
 function loadBookings() {
   const bookings = getBookings();
   bookingsContainer.innerHTML = '';
@@ -242,53 +213,53 @@ function loadBookings() {
   }
 
   bookings.forEach(b => {
-    const div = document.createElement('div');
-    div.className = 'booking-card';
+    const card = document.createElement('div');
+    card.className = 'booking-card';
 
-    div.innerHTML = `
-      <h4>Booking ID: ${b.id}</h4>
+    card.innerHTML = `
+      <img src="${b.image || 'https://via.placeholder.com/150'}" alt="${b.vehicleName}" class="booking-image" />
       <div class="booking-info">
-        <span><strong>Vehicle:</strong> ${b.vehicleName}</span>
-        <span><strong>Type:</strong> ${b.vehicleType}</span>
-        <span><strong>Price:</strong> $${b.price.toFixed(2)}</span><br />
-        <span><strong>Customer:</strong> ${b.customerName || 'N/A'}</span><br />
-        <span><strong>Date:</strong> ${b.date || 'N/A'}</span>
+        <h3>${b.vehicleName}</h3>
+        <p><strong>Type:</strong> ${b.vehicleType}</p>
+        <p><strong>Price:</strong> ₹${Number(b.price).toFixed(2)}</p>
+        <p><strong>Customer:</strong> ${b.customerName}</p>
+        <p><strong>Date:</strong> ${b.date}</p>
+        <p><strong>Booking ID:</strong> ${b.id}</p>
       </div>
     `;
 
-    bookingsContainer.appendChild(div);
+    bookingsContainer.appendChild(card);
   });
 }
 
-// Load Earnings
-const earningsSummary = document.getElementById('earningsSummary');
-function loadEarnings() {
+// Load bookings when the bookings tab button is clicked
+document.querySelector('.nav-btn[data-section="bookings"]').addEventListener('click', loadBookings);
+
+// Earnings tab content load on page ready
+window.addEventListener('DOMContentLoaded', () => {
+  const earningsSummary = document.getElementById('earningsSummary');
   const bookings = getBookings();
-  if (bookings.length === 0) {
-    earningsSummary.innerHTML = '<p class="no-data">No earnings yet.</p>';
-    return;
+
+  // Calculate total earnings by summing prices
+  const totalEarnings = bookings.reduce((sum, booking) => sum + (booking.price || 0), 0);
+
+  // Build earnings HTML
+  let html = `<p><strong>Total Earnings:</strong> ₹${totalEarnings.toFixed(2)}</p>`;
+
+  if (bookings.length > 0) {
+    html += '<h3>Bookings Details:</h3><ul>';
+    bookings.forEach(b => {
+      html += `<li>${b.vehicleName} - ₹${Number(b.price).toFixed(2)} (Date: ${b.date})</li>`;
+    });
+    html += '</ul>';
+  } else {
+    html += '<p>No bookings yet.</p>';
   }
-
-  const earningsByType = {};
-  let total = 0;
-
-  bookings.forEach(b => {
-    if (!earningsByType[b.vehicleType]) earningsByType[b.vehicleType] = 0;
-    earningsByType[b.vehicleType] += b.price;
-    total += b.price;
-  });
-
-  let html = '';
-  for (const [type, amount] of Object.entries(earningsByType)) {
-    html += `<div class="earning-item"><span class="earning-label">${type}:</span> $${amount.toFixed(2)}</div>`;
-  }
-  html += `<div class="total">Total Earnings: $${total.toFixed(2)}</div>`;
 
   earningsSummary.innerHTML = html;
-}
+});
 
 // Provider logic
-// Track providers in-memory (or replace with localStorage if needed)
 let providers = [];
 let editingProviderId = null;
 

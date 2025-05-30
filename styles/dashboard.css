@@ -1,3 +1,4 @@
+/* Base styles */
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -8,6 +9,7 @@ body {
 .container {
   display: flex;
   height: 100vh;
+  flex-direction: row;
 }
 
 .sidebar {
@@ -102,7 +104,7 @@ input:focus, select:focus {
   background-color: #f4d35e;
 }
 
-#addVehicleMessage {
+#addVehicleMessage, #providerMessage {
   margin-top: 1rem;
   font-weight: 600;
 }
@@ -143,6 +145,7 @@ input:focus, select:focus {
   color: #999;
   margin-top: 1rem;
 }
+
 .vehicle-container {
   display: flex;
   flex-wrap: wrap;
@@ -220,6 +223,7 @@ input:focus, select:focus {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  margin-left: 6px;
 }
 
 .card-actions button:hover {
@@ -233,4 +237,83 @@ input:focus, select:focus {
 
 .card-actions .delete-btn:hover {
   background-color: #a71d2a;
+}
+
+.booking-card {
+  display: flex;
+  gap: 1rem;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  background: #fff;
+  align-items: center;
+}
+
+.booking-image {
+  width: 120px;
+  height: auto;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.booking-info h3 {
+  margin: 0 0 0.5rem 0;
+}
+
+.booking-info p {
+  margin: 0.2rem 0;
+}
+
+/* -------- Responsive -------- */
+@media (max-width: 1024px) {
+  .container {
+    flex-direction: column;
+    height: auto;
+  }
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+  }
+  .nav-btn {
+    flex: 1 0 auto;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    justify-content: center;
+  }
+  .main-content {
+    padding: 1rem;
+    height: auto;
+  }
+  .vehicle-container {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .vehicle-card {
+    width: 140px;
+  }
+  .booking-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .booking-image {
+    width: 100%;
+    max-height: 200px;
+    margin-bottom: 1rem;
+  }
+  .card-actions {
+    position: static;
+    margin-top: 10px;
+    text-align: right;
+  }
+  .nav-btn {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.8rem;
+  }
+  form {
+    max-width: 100%;
+  }
 }

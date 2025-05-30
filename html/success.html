@@ -2,48 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Order Confirmation</title>
   <link rel="stylesheet" href="../styles/success.css" />
   <script defer src="../scripts/success.js"></script>
 </head>
 <body>
 
-  <div class="header">
-    <span class="back-arrow" onclick="window.location.href='vehicle.html'">←</span>
-  </div>
+  <header class="header">
+    <!-- <button class="back-arrow" aria-label="Go back to vehicle selection">←</button> -->
+  </header>
 
-  <div class="confirmation">
-    <div class="success">✔ Order placed, thank you!</div>
-    <p class="info">Confirmation will be sent to your email.</p>
-  </div>
+  <main>
+    <section class="confirmation">
+      <div class="success" role="alert" aria-live="assertive">✔ Order placed, thank you!</div>
+      <p class="info">Confirmation will be sent to your email.</p>
+    </section>
 
-  <!-- New main-scooter container for dynamic bike -->
-  <div class="main-scooter">
-    <img src="../images/placeholder-bike.png" alt="Selected Scooter" />
-    <p><strong>Selected Scooter Name</strong></p>
-  </div>
+    <!-- Dynamic Selected Vehicle Section -->
+    <section class="main-scooter" aria-label="Selected scooter details">
+      <img src="/images/default-image.jpg" alt="Selected vehicle" />
+      <div class="vehicle-details">
+        <p><strong class="vehicle-name">Selected vehicle Name</strong></p>
+        <p class="vehicle-type">Type: N/A</p>
+        <p class="vehicle-price">Price: $0.00</p>
+        <p class="customer-name">Customer: Guest</p>
+        <p class="booking-date">Date: N/A</p>
+      </div>
+    </section>
 
-  <div class="top-picks">
-    <div class="section-header">
-      <h3>User's Top Picks</h3>
-      <a href="#" class="view-all">VIEW ALL</a>
-    </div>
-    <div class="bike-grid">
-      <div class="bike-card">
-        <img src="../images/suzuki access 125(BS6).png" alt="suzuki access 125(BS6)" />
-        <p>suzuki access 125(BS6)</p>
+    <section class="top-picks" aria-label="User's Top Picks">
+      <div class="section-header">
+        <h3>User's Top Picks</h3>
+        <a href="#" class="view-all">VIEW ALL</a>
       </div>
-      <div class="bike-card">
-        <img src="../images/tvs jupiter.png" alt="tvs jupiter" />
-        <p>tvs jupiter</p>
+      <div class="bike-grid">
+        <article class="bike-card">
+          <img src="../images/suzuki access 125(BS6).png" alt="Suzuki Access 125 (BS6)" />
+          <p>Suzuki Access 125 (BS6)</p>
+        </article>
+        <article class="bike-card">
+          <img src="../images/tvs jupiter.png" alt="TVS Jupiter" />
+          <p>TVS Jupiter</p>
+        </article>
+        <article class="bike-card">
+          <img src="../images/honda dio 125.png" alt="Honda Dio 125" />
+          <p>Honda Dio 125</p>
+        </article>
       </div>
-      <div class="bike-card">
-        <img src="../images/honda dio 125.png" alt="honda dio 125" />
-        <p>honda dio 125</p>
-      </div>
-    </div>
-  </div>
+    </section>
+  </main>
 
 </body>
 </html>
