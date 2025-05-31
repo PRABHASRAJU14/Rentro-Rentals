@@ -9,7 +9,6 @@
 <body>
 
   <div class="container">
-    <!-- <a href="start.html" class="back-button">←</a> -->
     <img src="../images/bp.jpg" alt="picture" class="logo" />
     <h2>CREATE ACCOUNT</h2>
     <form class="form" id="create-account-form" novalidate>
@@ -45,7 +44,6 @@
     const name = document.getElementById("name");
     const number = document.getElementById("number");
     const email = document.getElementById("email");
-
     const nameError = document.getElementById("name-error");
     const numberError = document.getElementById("number-error");
     const emailError = document.getElementById("email-error");
@@ -106,6 +104,13 @@
       }
 
       if (isValid) {
+        // Save the user profile to localStorage
+        const userProfile = {
+          name: nameVal,
+          email: mail,
+          phone: code + " " + phone
+        };
+        localStorage.setItem('userProfile', JSON.stringify(userProfile));
         window.location.href = "city.html";
       }
     });

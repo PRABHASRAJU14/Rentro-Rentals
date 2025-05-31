@@ -6,13 +6,14 @@
   <title>Select City</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../styles/city.css" />
+
 </head>
 <body>
 
   <div class="container" role="main" aria-label="City selection container">
     <div class="header">
-      <!-- Back arrow without href; JS will set href dynamically -->
-      <a href="#" id="back-arrow" class="back-arrow" aria-label="Go back">&#8592;</a>
+      <!-- Hamburger icon at top right -->
+      <button class="hamburger" aria-label="Open menu">&#9776;</button>
       <h2 class="title">Select City</h2>
     </div>
 
@@ -22,7 +23,7 @@
     </div>
 
     <div class="grid" id="city-grid" role="list">
-      <!-- Existing 12 cities -->
+      <!-- Cities list unchanged ... -->
       <div class="city-card" role="listitem" style="background-image: url('../images/t.png');"><span>TIRUPATI</span></div>
       <div class="city-card" role="listitem" style="background-image: url('../images/ag.png');"><span>AGRA</span></div>
       <div class="city-card" role="listitem" style="background-image: url('../images/vij.png');"><span>VIJAYAWADA</span></div>
@@ -35,8 +36,6 @@
       <div class="city-card" role="listitem" style="background-image: url('../images/ban.png');"><span>BANGALORE</span></div>
       <div class="city-card" role="listitem" style="background-image: url('../images/jai.png');"><span>JAIPUR</span></div>
       <div class="city-card" role="listitem" style="background-image: url('../images/hyd.png');"><span>HYDERABAD</span></div>
-
-      <!-- 12 more cities added below -->
       <div class="city-card" role="listitem" style="background-image: url('../images/pune.png');"><span>PUNE</span></div>
       <div class="city-card" role="listitem" style="background-image: url('../images/lucknow.png');"><span>LUCKNOW</span></div>
       <div class="city-card" role="listitem" style="background-image: url('../images/ahmedabad.png');"><span>AHMEDABAD</span></div>
@@ -53,18 +52,6 @@
   </div>
 
   <script>
-    // Example condition: userLoggedIn boolean from localStorage or elsewhere
-    // Replace this condition with your actual logic
-    const userLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
-
-    // Set back arrow href dynamically based on condition
-    const backArrow = document.getElementById('back-arrow');
-    if (userLoggedIn) {
-      backArrow.href = 'create.html';
-    } else {
-      backArrow.href = 'otp.html';
-    }
-
     // Search filter code
     const searchInput = document.getElementById('city-search');
     const cityCards = document.querySelectorAll('.city-card');
@@ -89,12 +76,11 @@
         window.location.href = 'search.html';
       });
     });
-//     document.querySelectorAll('.city-btn').forEach(btn => {
-//   btn.addEventListener('click', () => {
-//     const city = btn.getAttribute('data-city');
-//     window.location.href = `dashboard.html?location=${encodeURIComponent(city)}`;
-//   });
-// });
+
+    // Hamburger button click: open hamburger.html
+    document.querySelector('.hamburger').addEventListener('click', function() {
+      window.location.href = 'hamburger.html';
+    });
   </script>
 
 </body>
