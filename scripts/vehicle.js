@@ -43,12 +43,10 @@ function populateLocationDropdown() {
   const storedVehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
   let uniqueLocations = [...new Set(storedVehicles.map(v => v.location).filter(Boolean))];
 
-  // Remove the pickupLocation (case insensitive) from the rest, if present
   uniqueLocations = uniqueLocations.filter(
     loc => loc.toLowerCase() !== (pickupLocation || "").toLowerCase()
   );
 
-  // First option: city from search page (pickupLocation)
   if (pickupLocation && pickupLocation !== "N/A") {
     const firstOption = document.createElement("option");
     firstOption.value = pickupLocation;
@@ -57,7 +55,6 @@ function populateLocationDropdown() {
     select.appendChild(firstOption);
   }
 
-  // Then add the rest
   uniqueLocations.forEach(loc => {
     const option = document.createElement("option");
     option.value = loc;
@@ -66,14 +63,13 @@ function populateLocationDropdown() {
   });
 }
 
-// --- Helper functions for time calculation ---
 function parseDateTime(dateStr, timeStr) {
-  // dateStr: "dd-mm-yyyy", timeStr: "HH:mm"
   if (!dateStr || !timeStr || dateStr === "N/A" || timeStr === "N/A") return null;
   const [day, month, year] = dateStr.split("-").map(Number);
   const [hour, minute] = timeStr.split(":").map(Number);
   return new Date(year, month - 1, day, hour, minute);
 }
+
 function calculateTotalHours(startDateStr, startTimeStr, endDateStr, endTimeStr) {
   const start = parseDateTime(startDateStr, startTimeStr);
   const end = parseDateTime(endDateStr, endTimeStr);
@@ -81,10 +77,9 @@ function calculateTotalHours(startDateStr, startTimeStr, endDateStr, endTimeStr)
   let diffMs = end - start;
   if (diffMs < 0) diffMs = 0;
   const totalHours = diffMs / (1000 * 60 * 60);
-  return Math.ceil(totalHours); // always round up
+  return Math.ceil(totalHours);
 }
 
-// --- Render vehicles with total price for selected period ---
 function renderVehicles(location) {
   const container = document.getElementById("vehicles-container");
   container.innerHTML = "";
@@ -97,7 +92,6 @@ function renderVehicles(location) {
   const types = ["Scooter", "Bike", "Bicycle", "Car"];
   const grouped = {};
 
-  // Group vehicles by type (case-insensitive)
   types.forEach(type => {
     grouped[type] = filtered.filter(
       v => v.type && v.type.toLowerCase() === type.toLowerCase()
@@ -122,7 +116,6 @@ function renderVehicles(location) {
         card.className = "card fade-in";
         card.style.animationDelay = `${index * 0.1}s`;
 
-        // Calculate total price
         let totalAmount = "-";
         let totalAmountNumber = 0;
         if (
@@ -141,7 +134,6 @@ function renderVehicles(location) {
           totalAmount = "₹" + totalAmountNumber;
         }
 
-        // --- ADDED FUNCTIONALITY: Pass totalAmount as 'total' in URL ---
         const urlParams = new URLSearchParams({
           name: vehicle.name,
           image: vehicle.image,
@@ -151,33 +143,33 @@ function renderVehicles(location) {
           pickupTime,
           dropoffDate,
           dropoffTime,
-          total: totalAmountNumber // <-- total amount as a number, no currency symbol
+          total: totalAmountNumber
         });
 
-card.innerHTML = `
-  <h3>${vehicle.name}</h3>
-  <img src="${vehicle.image}" alt="${vehicle.name}" class="scooter-img"/>
-  <div class="location-name"><strong>Location:</strong> ${location}</div>
-  <div class="time-row">
-    <div class="time-block">
-      <div class="time">${pickupTime}</div>
-      <div class="date">${pickupDate}</div>
-    </div>
-    <div class="to-circle">to</div>
-    <div class="time-block">
-      <div class="time">${dropoffTime}</div>
-      <div class="date">${dropoffDate}</div>
-    </div>
-  </div>
-  <div class="price">₹ <strong>${Number(vehicle.price).toFixed(2)}</strong> <span class="per-hour">/hr</span></div>
-  <div class="card-bottom">
-    <div class="total-amount">
-      <strong>Total: </strong>
-      <span>${totalAmount}</span>
-    </div>
-    <button class="book-btn" onclick="window.location.href='del.html?${urlParams.toString()}'">Book</button>
-  </div>
-`;
+        card.innerHTML = `
+          <h3>${vehicle.name}</h3>
+          <img src="${vehicle.image}" alt="${vehicle.name}" class="scooter-img"/>
+          <div class="location-name"><strong>Location:</strong> ${location}</div>
+          <div class="time-row">
+            <div class="time-block">
+              <div class="time">${pickupTime}</div>
+              <div class="date">${pickupDate}</div>
+            </div>
+            <div class="to-circle">to</div>
+            <div class="time-block">
+              <div class="time">${dropoffTime}</div>
+              <div class="date">${dropoffDate}</div>
+            </div>
+          </div>
+          <div class="price">₹ <strong>${Number(vehicle.price).toFixed(2)}</strong> <span class="per-hour">/hr</span></div>
+          <div class="card-bottom">
+            <div class="total-amount">
+              <strong>Total: </strong>
+              <span>${totalAmount}</span>
+            </div>
+            <button class="book-btn" onclick="window.location.href='del.html?${urlParams.toString()}'">Book</button>
+          </div>
+        `;
         groupDiv.appendChild(card);
       });
 
@@ -195,7 +187,7 @@ function formatDate(dateString) {
   const d = new Date(dateString);
   if (isNaN(d.getTime())) return dateString;
   const day = String(d.getDate()).padStart(2, "0");
-  const month = String(d.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+  const month = String(d.getMonth() + 1).padStart(2, "0");
   const year = d.getFullYear();
   return `${day}-${month}-${year}`;
 }
@@ -205,6 +197,5 @@ function calculateDropoffTime(pickupTime) {
   let [hours, minutes] = pickupTime.split(":").map(Number);
   hours += 2;
   if (hours >= 24) hours -= 24;
-  // Pad with leading zeros if needed
   return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
 }
