@@ -8,7 +8,7 @@
 </head>
 <body>
   <div class="container">
-    <p class="amount-text">Total Payable Amount: <strong>₹ 1780.54</strong></p>
+    <p class="amount-text">Total Payable Amount: <strong id="totalAmount">₹ 0.00</strong></p>
 
     <div class="payment-box">
       <div class="payment-header">
@@ -31,13 +31,26 @@
   </div>
 
   <script>
-    // Enable button only if checkbox is checked
-    const checkbox = document.getElementById('cod-confirm');
-    const button = document.getElementById('cod-pay-button');
+    document.addEventListener("DOMContentLoaded", () => {
+      // Read total from URL and display
+      const params = new URLSearchParams(window.location.search);
+      const total = parseFloat(params.get("total")) || 0;
+      document.getElementById("totalAmount").textContent = `₹ ${total.toFixed(2)}`;
 
-    checkbox.addEventListener('change', () => {
-      button.disabled = !checkbox.checked;
+      const checkbox = document.getElementById('cod-confirm');
+      const button = document.getElementById('cod-pay-button');
+
+      // Enable/disable button based on checkbox
+      checkbox.addEventListener('change', () => {
+        button.disabled = !checkbox.checked;
+      });
+
+      // Redirect on confirm
+      button.addEventListener('click', () => {
+        window.location.href = "success.html";
+      });
     });
   </script>
 </body>
 </html>
+   

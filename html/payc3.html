@@ -5,11 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Netbanking Payment</title>
   <link rel="stylesheet" href="../styles/payc.css" />
-  <script src="../scripts/payc2.js"></script>
 </head>
 <body>
   <div class="container">
-    <p class="amount-text">Total Payable Amount: <strong>₹ 1780.54</strong></p>
+    <p class="amount-text">Total Payable Amount: <strong id="totalAmount">₹ 0.00</strong></p>
 
     <div class="payment-box">
       <div class="payment-header">
@@ -45,8 +44,23 @@
         </div>
       </div>
 
-      <button class="pay-button">MAKE PAYMENT</button>
+      <button class="pay-button" id="pay-button">MAKE PAYMENT</button>
     </div>
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search);
+      const total = parseFloat(params.get("total")) || 0;
+      document.getElementById("totalAmount").textContent = `₹ ${total.toFixed(2)}`;
+
+      document.getElementById("pay-button").addEventListener("click", () => {
+        // Optional: add form validation here
+
+        // Redirect to success page
+        window.location.href = "success.html";
+      });
+    });
+  </script>
 </body>
 </html>

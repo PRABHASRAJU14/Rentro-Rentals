@@ -5,21 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Payment Page</title>
   <link rel="stylesheet" href="../styles/payment.css" />
-  <script src="../scripts/payment.js"></script>
 </head>
 <body>
   <div class="container">
-    <p class="amount">Total Payable Amount: <strong id="amount">₹ </strong></p>
+    <p class="amount">Total Payable Amount: <strong id="amount">₹0.00</strong></p>
 
     <form id="form">
       <div class="payment-box">
         <h3>CHOOSE PAYMENT METHOD</h3>
         <div class="payment-method">Debit Card</div>
         <div class="payment-method">Credit Card</div>
-        <!-- <div class="payment-method">Net Banking</div> -->
         <div class="payment-method">COD</div>
         <div class="payment-method">UPI Payment</div>
-
         <div class="payment-method offer">
           <img src="../images/mob.png" alt="Mobikwik Logo" />
           <span>Offer available</span>
@@ -30,5 +27,38 @@
       </div>
     </form>
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search);
+      const price = parseFloat(params.get("price")) || 0; // price per hour
+      const hours = parseFloat(params.get("hours")) || 0; // total hours
+
+      const totalAmount = price * hours;
+
+      document.getElementById("amount").textContent = `₹ ${totalAmount.toFixed(2)}`;
+
+      const paymentMethods = document.querySelectorAll(".payment-method");
+
+      const paymentPages = [
+        "payc1.html",   // Debit Card
+        "payc2.html",   // Credit Card
+        "cod.html",     // COD
+        "upi.html",     // UPI Payment
+        "mob.html",     // Mobikwik
+        "paytm.html"    // Paytm
+      ];
+
+      paymentMethods.forEach((method, index) => {
+        method.addEventListener("click", () => {
+          const targetPage = paymentPages[index];
+          if (targetPage) {
+            // Pass total amount as total query param (optional)
+            window.location.href = `${targetPage}?total=${totalAmount.toFixed(2)}`;
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>

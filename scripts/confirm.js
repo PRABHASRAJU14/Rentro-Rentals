@@ -1,93 +1,48 @@
-function goBack() {
-  const pickupDate = document.getElementById("pickupDate").textContent || "";
-  const pickupTime = document.getElementById("pickupTime").textContent || "";
-  const dropoffDate = document.getElementById("dropoffDate").textContent || "";
-  const dropoffTime = document.getElementById("dropoffTime").textContent || "";
-  const location = document.getElementById("location").textContent || "";
-
-  sessionStorage.setItem("vehicleFormData", JSON.stringify({
-    pickupDate,
-    pickupTime,
-    dropoffDate,
-    dropoffTime,
-    location
-  }));
-
-  window.location.href = "del.html";
+function parseDateTime(dateStr, timeStr) {
+  const [day, month, year] = dateStr.split("-").map(Number);
+  const [hour, minute] = timeStr.split(":").map(Number);
+  return new Date(year, month - 1, day, hour, minute);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const params = new URLSearchParams(window.location.search);
-
-  let name = params.get("name");
-  let image = params.get("image");
-  let price = params.get("price");
-  let location = params.get("location");
-  let pickupDate = params.get("pickupDate");
-  let pickupTime = params.get("pickupTime");
-  let dropoffDate = params.get("dropoffDate");
-  let dropoffTime = params.get("dropoffTime");
-  let total = params.get("total"); // <--- get 'total' from URL
-
-  // Use sessionStorage fallback if data is missing
-  if (!name || !price) {
-    const stored = JSON.parse(sessionStorage.getItem("bookingDetails") || "{}");
-    name = name || stored.name || "Unknown";
-    image = image || stored.image || "default.jpg";
-    price = price || stored.price || "0.00";
-    location = location || stored.location || "N/A";
-    pickupDate = pickupDate || stored.pickupDate || "N/A";
-    pickupTime = pickupTime || stored.pickupTime || "N/A";
-    dropoffDate = dropoffDate || stored.dropoffDate || pickupDate;
-    dropoffTime = dropoffTime || stored.dropoffTime || pickupTime;
-    total = total || stored.total || "";
-  }
-
-  // Save booking details
-  const bookingDetails = {
-    name,
-    image,
-    price,
-    location,
-    pickupDate,
-    pickupTime,
-    dropoffDate,
-    dropoffTime,
-    total
-  };
-  sessionStorage.setItem("bookingDetails", JSON.stringify(bookingDetails));
-
-  // Render details
-  const [brand, ...modelParts] = name.split(" ");
-  const model = modelParts.join(" ");
-  let kmIncluded = "N/A";
-  const kmMatch = price.match(/\(([^)]+)\)/);
-  if (kmMatch && kmMatch[1]) {
-    kmIncluded = kmMatch[1];
-  }
-
-  document.getElementById("bikeBrand").textContent = brand;
-  document.getElementById("bikeModel").textContent = model;
-  document.getElementById("bikeImage").src = image;
-  document.getElementById("pickupDate").textContent = pickupDate;
-  document.getElementById("pickupTime").textContent = pickupTime;
-  document.getElementById("dropoffDate").textContent = dropoffDate;
-  document.getElementById("dropoffTime").textContent = dropoffTime;
-  document.getElementById("location").textContent = location;
-  document.getElementById("kmIncluded").textContent = kmIncluded;
-
-  // Show the Total Amount from the card, as passed in URL
-const totalAmountElem = document.getElementById("totalAmount");
-if (totalAmountElem && total !== undefined && total !== "") {
-  totalAmountElem.textContent = `₹${total}`; // Always include the symbol!
-} else if(totalAmountElem) {
-  totalAmountElem.textContent = "₹";
+function calculateTotalHours(start, end) {
+  const diffMs = end - start;
+  return Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60)));
 }
 
-  document.getElementById("pay-btn").addEventListener("click", (e) => {
-    e.preventDefault();
-    const encodedPrice = encodeURIComponent(price.replace(/₹\s?/, ""));
-    const encodedTotalAmount = encodeURIComponent(total || "");
-    window.location.href = `payment.html?price=${encodedPrice}&totalAmount=${encodedTotalAmount}`;
-  });
-});
+function toDDMMYYYY(str) {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+    const [yyyy, mm, dd] = str.split("-");
+    return `${dd}-${mm}-${yyyy}`;
+  }
+  return str;
+}
+
+const params = new URLSearchParams(window.location.search);
+const pickupDateRaw = params.get("pickupDate") || "2025-05-18";
+const dropoffDateRaw = params.get("dropoffDate") || "2025-05-20";
+const pickupTime = params.get("pickupTime") || "10:00";
+const dropoffTime = params.get("dropoffTime") || "10:00";
+const pricePerHour = parseFloat(params.get("price")) || 0;
+const location = params.get("location") || "N/A";
+const brand = params.get("brand") || "Unknown";
+const name = params.get("name") || "";
+const image = params.get("image") || "";
+
+const pickupDate = toDDMMYYYY(pickupDateRaw);
+const dropoffDate = toDDMMYYYY(dropoffDateRaw);
+
+document.getElementById("bikeImage").src = image;
+document.getElementById("bikeBrand").textContent = brand;
+document.getElementById("bikeModel").textContent = name;
+document.getElementById("pickupDate").textContent = pickupDate;
+document.getElementById("dropoffDate").textContent = dropoffDate;
+document.getElementById("pickupTime").textContent = pickupTime;
+document.getElementById("dropoffTime").textContent = dropoffTime;
+document.getElementById("location").textContent = location;
+
+const start = parseDateTime(pickupDate, pickupTime);
+const end = parseDateTime(dropoffDate, dropoffTime);
+const totalHours = calculateTotalHours(start, end);
+const totalAmount = pricePerHour * totalHours;
+
+document.getElementById("totalAmount").innerHTML = `₹${totalAmount.toFixed(2)}`;
