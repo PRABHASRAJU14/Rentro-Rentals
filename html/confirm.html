@@ -1,17 +1,26 @@
-<!DOCTYPE html>  
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Booking Confirmation</title>
-  <link rel="stylesheet" href="../styles/confirm.css" />
-  <script src="../scripts/confirm.js"></script>
+   <link rel="stylesheet" href="../styles/confirm.css" />
+  <style>
+    #pay-btn {
+      background-color: #FFD700;
+      color: black;
+      border: none;
+      padding: 12px 25px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+  </style>
 </head>
 <body>
-  <!-- <button class="back-btn" onclick="goBack()">←</button> -->
-
   <div class="container">
-    <form id="confirmForm">
+    <form id="confirmForm" onsubmit="return false;">
       <div class="bike-image">
         <img id="bikeImage" src="" alt="Bike" />
       </div>
@@ -25,18 +34,18 @@
       <div class="booking-details">
         <div class="date-time">
           <div>
-            <p id="pickupDate">07 May 2025</p>
-            <p class="time" id="pickupTime">02:00 PM</p>
+            <p id="pickupDate">N/A</p>
+            <p class="time" id="pickupTime">N/A</p>
           </div>
           <span class="arrow">→</span>
           <div>
-            <p id="dropoffDate">08 May 2025</p>
-            <p class="time" id="dropoffTime">02:00 PM</p>
+            <p id="dropoffDate">N/A</p>
+            <p class="time" id="dropoffTime">N/A</p>
           </div>
         </div>
         <div class="location-info">
-          <p><strong>Location:</strong> <span id="location">Mogalarajapuram</span></p>
-          <p><strong>km :</strong> <span id="kmIncluded">192 km</span></p>
+          <p><strong>Location:</strong> <span id="location">N/A</span></p>
+          <p><strong>km :</strong> <span id="kmIncluded">N/A</span></p>
         </div>
       </div>
 
@@ -48,15 +57,73 @@
         </ul>
       </div>
 
-<div class="total-amount">
-  <p>Total Payable Amount</p>
-  <h3 id="totalAmount"></h3>
-</div>
-      <button class="pay-btn" id="pay-btn">PROCEED TO PAY</button>
-     
+      <div class="total-amount">
+        <p>Total Payable Amount</p>
+        <h3 id="totalAmount">₹0.00</h3>
+      </div>
+
+      <button type="button" id="pay-btn">PROCEED TO PAY</button>
     </form>
   </div>
 
-  
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      function parseDateTime(dateStr, timeStr) {
+        const [day, month, year] = dateStr.split("-").map(Number);
+        const [hour, minute] = timeStr.split(":").map(Number);
+        return new Date(year, month - 1, day, hour, minute);
+      }
+
+      function calculateTotalHours(start, end) {
+        const diffMs = end - start;
+        return Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60)));
+      }
+
+      function toDDMMYYYY(str) {
+        if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+          const [yyyy, mm, dd] = str.split("-");
+          return `${dd}-${mm}-${yyyy}`;
+        }
+        return str;
+      }
+
+      const params = new URLSearchParams(window.location.search);
+
+      const pickupDateRaw = params.get("pickupDate") || "2025-05-18";
+      const dropoffDateRaw = params.get("dropoffDate") || "2025-05-20";
+      const pickupTime = params.get("pickupTime") || "10:00";
+      const dropoffTime = params.get("dropoffTime") || "10:00";
+      const pricePerHour = parseFloat(params.get("price")) || 0;
+      const location = params.get("location") || "N/A";
+      const brand = params.get("brand") || "Unknown";
+      const name = params.get("name") || "";
+      const image = params.get("image") || "";
+
+      const pickupDate = toDDMMYYYY(pickupDateRaw);
+      const dropoffDate = toDDMMYYYY(dropoffDateRaw);
+
+      document.getElementById("bikeImage").src = image;
+      document.getElementById("bikeBrand").textContent = brand;
+      document.getElementById("bikeModel").textContent = name;
+      document.getElementById("pickupDate").textContent = pickupDate;
+      document.getElementById("dropoffDate").textContent = dropoffDate;
+      document.getElementById("pickupTime").textContent = pickupTime;
+      document.getElementById("dropoffTime").textContent = dropoffTime;
+      document.getElementById("location").textContent = location;
+      document.getElementById("kmIncluded").textContent = "N/A";
+
+      const start = parseDateTime(pickupDate, pickupTime);
+      const end = parseDateTime(dropoffDate, dropoffTime);
+      const totalHours = calculateTotalHours(start, end);
+      const totalAmount = pricePerHour * totalHours;
+
+      document.getElementById("totalAmount").textContent = `₹${totalAmount.toFixed(2)}`;
+
+      document.getElementById("pay-btn").addEventListener("click", () => {
+        // Pass price and hours to payment page
+        window.location.href = `payment.html?price=${pricePerHour}&hours=${totalHours}`;
+      });
+    });
+  </script>
 </body>
 </html>

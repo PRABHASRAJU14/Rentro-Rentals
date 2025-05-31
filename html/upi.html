@@ -8,7 +8,7 @@
 </head>
 <body>
   <div class="container">
-    <p class="amount-text">Total Payable Amount: <strong>₹ 1780.54</strong></p>
+    <p class="amount-text">Total Payable Amount: <strong id="totalAmount">₹ 0.00</strong></p>
 
     <div class="payment-box">
       <div class="payment-header">
@@ -25,8 +25,21 @@
         </div>
       </div>
 
-      <button class="pay-button">MAKE PAYMENT</button>
+      <button class="pay-button" id="pay-button">MAKE PAYMENT</button>
     </div>
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search);
+      const total = parseFloat(params.get("total")) || 0;
+      document.getElementById("totalAmount").textContent = `₹ ${total.toFixed(2)}`;
+
+      document.getElementById("pay-button").addEventListener("click", () => {
+        // Optional: add validation here
+        window.location.href = "success.html";
+      });
+    });
+  </script>
 </body>
 </html>

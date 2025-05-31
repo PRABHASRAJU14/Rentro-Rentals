@@ -4,6 +4,14 @@
   <meta charset="UTF-8" />
   <title>Rental Summary</title>
   <link rel="stylesheet" href="../styles/del.css" />
+  <style>
+    #totalAmount {
+      margin-top: 5px;
+      font-weight: bold;
+      color: #333;
+      font-size: 18px;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -17,6 +25,8 @@
           <span class="fee">Zero Deposit Fee</span> <br />
           <a class="rental-link" href="#">Rental Details</a>
           <p class="location" id="rentalInfo">Loading rental info...</p>
+          <!-- Total Amount will appear here -->
+          <div id="totalAmount"></div>
         </div>
         <img src="" alt="vehicle Image" id="bikeImage" class="bike-img" />
       </div>
@@ -75,6 +85,29 @@
 
     <button class="submit-btn" id="submitBtn">Submit</button>
   </div>
+
+  <script>
+    // Extract data from URL
+    const params = new URLSearchParams(window.location.search);
+    const location = params.get("location") || "N/A";
+    const totalAmount = params.get("total");
+    const name = params.get("name");
+    const brand = params.get("brand");
+    const image = params.get("image");
+
+    // Set rental info
+    document.getElementById("rentalInfo").textContent = location;
+
+    // Set brand, name, and image
+    if (name) document.getElementById("name").textContent = name;
+    if (brand) document.getElementById("brand").textContent = brand;
+    if (image) document.getElementById("bikeImage").src = image;
+
+    // Display Total Amount (clean display only)
+    if (totalAmount && !isNaN(totalAmount)) {
+      document.getElementById("totalAmount").textContent = `Total: ₹${parseFloat(totalAmount).toFixed(2)}`;
+    }
+  </script>
 
   <script src="../scripts/del.js"></script>
 </body>
