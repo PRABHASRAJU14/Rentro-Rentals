@@ -16,12 +16,11 @@
     <p>A confirmation will be sent to your email.</p>
     <a href="city.html" class="home-link">← Back to Home</a>
   </div>
-
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const vehicle = urlParams.get('vehicle');
-    if (vehicle) {
-      document.getElementById('vehicleName').textContent = decodeURIComponent(vehicle);
+    // Get vehicle name from localStorage as set by the confirm page
+    const lastVehicleName = localStorage.getItem('lastVehicleName');
+    if (lastVehicleName) {
+      document.getElementById('vehicleName').textContent = lastVehicleName;
     }
   </script>
 </body>
