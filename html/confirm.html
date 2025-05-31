@@ -120,7 +120,35 @@
       document.getElementById("totalAmount").textContent = `₹${totalAmount.toFixed(2)}`;
 
       document.getElementById("pay-btn").addEventListener("click", () => {
-        // Pass price and hours to payment page
+        // Save to orders
+        const orderItem = {
+          name: name,
+          brand: brand,
+          image: image,
+          rent: `₹${totalAmount.toFixed(2)}`,
+          location: location,
+          dates: `${pickupDate} ${pickupTime} → ${dropoffDate} ${dropoffTime}`,
+          pickupDate,
+          dropoffDate,
+          pickupTime,
+          dropoffTime,
+          pricePerHour,
+          totalHours
+        };
+
+        let myOrders = [];
+        try {
+          myOrders = JSON.parse(localStorage.getItem('myOrders')) || [];
+        } catch (e) {
+          myOrders = [];
+        }
+        myOrders.push(orderItem);
+        localStorage.setItem('myOrders', JSON.stringify(myOrders));
+
+        // Save only vehicle name for success page
+        localStorage.setItem('lastVehicleName', name);
+
+        // Proceed to payment page
         window.location.href = `payment.html?price=${pricePerHour}&hours=${totalHours}`;
       });
     });

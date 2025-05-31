@@ -142,31 +142,55 @@ function showProfileEditForm() {
   };
 }
 
-// ... The rest of your code (Orders, Notifications, Payments, Address, Logout) remains the same ...
-// --- (Paste your existing modal handling code for orders, notifications, payments, address, logout below this) ---
+// --- Show My Orders modal on redirect from Confirm page ---
+window.addEventListener('DOMContentLoaded', function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('orderAdded')) {
+    document.getElementById('orders-modal').classList.add('active');
+    renderOrdersModal();
+    // Optionally, clean up the URL:
+    // window.history.replaceState({}, document.title, "hamburger.html");
+  }
+});
 
-// My Orders Modal Handling
-document.getElementById('orders-link').addEventListener('click', function(e) {
-  e.preventDefault();
+// --- UPDATED: Render My Orders Modal with Delete Functionality ---
+function renderOrdersModal() {
   const modal = document.getElementById('orders-modal');
   const ordersListDiv = document.getElementById('orders-list');
-  modal.classList.add('active');
   const orders = JSON.parse(localStorage.getItem('myOrders')) || [];
   if (orders.length === 0) {
     ordersListDiv.innerHTML = "<p style='color:#b45309;'>No orders found.</p>";
-  } else {
-    ordersListDiv.innerHTML = orders.map(order => `
-      <div class="order-item">
-        <img src="${order.image}" alt="${order.name}" class="order-img"/>
-        <div class="order-info">
-          <div><strong>${order.name}</strong> (${order.brand})</div>
-          <div>Rent: <span class="order-rent">${order.rent}</span></div>
-          ${order.location ? `<div>Pickup: <span>${order.location}</span></div>` : ''}
-          ${order.dates ? `<div>Dates: <span>${order.dates}</span></div>` : ''}
-        </div>
-      </div>
-    `).join('');
+    return;
   }
+  ordersListDiv.innerHTML = orders.map((order, idx) => `
+    <div class="order-item" data-order-index="${idx}">
+      <img src="${order.image}" alt="${order.name}" class="order-img"/>
+      <div class="order-info">
+        <div><strong>${order.name}</strong> (${order.brand})</div>
+        <div>Rent: <span class="order-rent">${order.rent}</span></div>
+        ${order.location ? `<div>Pickup: <span>${order.location}</span></div>` : ''}
+        ${order.dates ? `<div>Dates: <span>${order.dates}</span></div>` : ''}
+      </div>
+      <button class="delete-order-btn" style="margin-top:8px;background:#e76f51;color:#fff;border:none;padding:6px 14px;border-radius:5px;cursor:pointer;">Delete</button>
+    </div>
+  `).join('');
+
+  // Add delete functionality
+  ordersListDiv.querySelectorAll('.delete-order-btn').forEach((btn, idx) => {
+    btn.addEventListener('click', function() {
+      let orders = JSON.parse(localStorage.getItem('myOrders')) || [];
+      orders.splice(idx, 1);
+      localStorage.setItem('myOrders', JSON.stringify(orders));
+      renderOrdersModal(); // Re-render modal
+    });
+  });
+}
+
+// Use this render function whenever you open or update the orders modal:
+document.getElementById('orders-link').addEventListener('click', function(e) {
+  e.preventDefault();
+  document.getElementById('orders-modal').classList.add('active');
+  renderOrdersModal();
 });
 document.getElementById('close-orders').addEventListener('click', function() {
   document.getElementById('orders-modal').classList.remove('active');
