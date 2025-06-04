@@ -21,12 +21,10 @@
       <h2>Product Details</h2>
       <div class="product">
         <div>
-          <strong class="brand" id="brand">HERO</strong> <span id="name">Glamour</span><br />
+          <strong class="brand" id="brand">Brand</strong> <span id="name">Name</span><br />
           <span class="fee">Zero Deposit Fee</span> <br />
-          <a class="rental-link" href="#">Rental Details</a>
           <p class="location" id="rentalInfo">Loading rental info...</p>
-          <!-- Total Amount will appear here -->
-          <div id="totalAmount"></div>
+          <div id="totalAmount">Total: ₹0</div>
         </div>
         <img src="" alt="vehicle Image" id="bikeImage" class="bike-img" />
       </div>
@@ -60,7 +58,7 @@
       <h2>Delivery Address</h2>
       <button class="add-address" id="addressBtn" onclick="toggleAddressForm()">Add Address</button>
 
-      <div class="address-form" id="addressForm">
+      <div class="address-form" id="addressForm" style="display: none;">
         <label for="pincode">Pincode:
           <input type="text" id="pincode" placeholder="Enter Pincode" />
         </label>
