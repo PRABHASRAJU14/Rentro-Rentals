@@ -4,19 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Booking Confirmation</title>
-   <link rel="stylesheet" href="../styles/confirm.css" />
-  <style>
-    #pay-btn {
-      background-color: #FFD700;
-      color: black;
-      border: none;
-      padding: 12px 25px;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-  </style>
+  <link rel="stylesheet" href="../styles/confirm.css" />
+  <script src="../scripts/confirm.js" defer></script>
 </head>
 <body>
   <div class="container">
@@ -26,7 +15,6 @@
       </div>
 
       <h2 class="bike-name">
-        <strong id="bikeBrand">Brand</strong>
         <span id="bikeModel">Model</span>
       </h2>
 
@@ -65,93 +53,5 @@
       <button type="button" id="pay-btn">PROCEED TO PAY</button>
     </form>
   </div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      function parseDateTime(dateStr, timeStr) {
-        const [day, month, year] = dateStr.split("-").map(Number);
-        const [hour, minute] = timeStr.split(":").map(Number);
-        return new Date(year, month - 1, day, hour, minute);
-      }
-
-      function calculateTotalHours(start, end) {
-        const diffMs = end - start;
-        return Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60)));
-      }
-
-      function toDDMMYYYY(str) {
-        if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
-          const [yyyy, mm, dd] = str.split("-");
-          return `${dd}-${mm}-${yyyy}`;
-        }
-        return str;
-      }
-
-      const params = new URLSearchParams(window.location.search);
-
-      const pickupDateRaw = params.get("pickupDate") || "2025-05-18";
-      const dropoffDateRaw = params.get("dropoffDate") || "2025-05-20";
-      const pickupTime = params.get("pickupTime") || "10:00";
-      const dropoffTime = params.get("dropoffTime") || "10:00";
-      const pricePerHour = parseFloat(params.get("price")) || 0;
-      const location = params.get("location") || "N/A";
-      const brand = params.get("brand") || "Unknown";
-      const name = params.get("name") || "";
-      const image = params.get("image") || "";
-
-      const pickupDate = toDDMMYYYY(pickupDateRaw);
-      const dropoffDate = toDDMMYYYY(dropoffDateRaw);
-
-      document.getElementById("bikeImage").src = image;
-      document.getElementById("bikeBrand").textContent = brand;
-      document.getElementById("bikeModel").textContent = name;
-      document.getElementById("pickupDate").textContent = pickupDate;
-      document.getElementById("dropoffDate").textContent = dropoffDate;
-      document.getElementById("pickupTime").textContent = pickupTime;
-      document.getElementById("dropoffTime").textContent = dropoffTime;
-      document.getElementById("location").textContent = location;
-      document.getElementById("kmIncluded").textContent = "N/A";
-
-      const start = parseDateTime(pickupDate, pickupTime);
-      const end = parseDateTime(dropoffDate, dropoffTime);
-      const totalHours = calculateTotalHours(start, end);
-      const totalAmount = pricePerHour * totalHours;
-
-      document.getElementById("totalAmount").textContent = `₹${totalAmount.toFixed(2)}`;
-
-      document.getElementById("pay-btn").addEventListener("click", () => {
-        // Save to orders
-        const orderItem = {
-          name: name,
-          brand: brand,
-          image: image,
-          rent: `₹${totalAmount.toFixed(2)}`,
-          location: location,
-          dates: `${pickupDate} ${pickupTime} → ${dropoffDate} ${dropoffTime}`,
-          pickupDate,
-          dropoffDate,
-          pickupTime,
-          dropoffTime,
-          pricePerHour,
-          totalHours
-        };
-
-        let myOrders = [];
-        try {
-          myOrders = JSON.parse(localStorage.getItem('myOrders')) || [];
-        } catch (e) {
-          myOrders = [];
-        }
-        myOrders.push(orderItem);
-        localStorage.setItem('myOrders', JSON.stringify(myOrders));
-
-        // Save only vehicle name for success page
-        localStorage.setItem('lastVehicleName', name);
-
-        // Proceed to payment page
-        window.location.href = `payment.html?price=${pricePerHour}&hours=${totalHours}`;
-      });
-    });
-  </script>
 </body>
 </html>

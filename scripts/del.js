@@ -1,3 +1,5 @@
+document.addEventListener("DOMContentLoaded", function() {
+
 function parseDateTime(dateStr, timeStr) {
   const [day, month, year] = dateStr.split("-").map(Number);
   const [hour, minute] = timeStr.split(":").map(Number);
@@ -194,7 +196,8 @@ document.getElementById("backBtn").addEventListener("click", () => {
   window.location.href = "vehicle.html?" + query;
 });
 
-document.getElementById("submitBtn").addEventListener("click", () => {
+document.getElementById("submitBtn").addEventListener("click", (event) => {
+  event.preventDefault(); // Just in case
   const deliveryMode = document.querySelector('input[name="delivery"]:checked').value;
   if (deliveryMode === "home" && !addressDisplay.innerHTML.trim()) {
     alert("Please submit your address before continuing.");
@@ -223,3 +226,5 @@ document.getElementById("submitBtn").addEventListener("click", () => {
 
   window.location.href = "confirm.html?" + query.toString();
 });
+
+}); // End DOMContentLoaded
