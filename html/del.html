@@ -21,10 +21,12 @@
       <h2>Product Details</h2>
       <div class="product">
         <div>
-          <strong class="brand" id="brand">Brand</strong> <span id="name">Name</span><br />
+          <strong class="brand" id="brand">HERO</strong> <span id="name">Glamour</span><br />
           <span class="fee">Zero Deposit Fee</span> <br />
+          <a class="rental-link" href="#">Rental Details</a>
           <p class="location" id="rentalInfo">Loading rental info...</p>
-          <div id="totalAmount">Total: ₹0</div>
+          <!-- Total Amount will appear here -->
+          <div id="totalAmount"></div>
         </div>
         <img src="" alt="vehicle Image" id="bikeImage" class="bike-img" />
       </div>
@@ -58,7 +60,7 @@
       <h2>Delivery Address</h2>
       <button class="add-address" id="addressBtn" onclick="toggleAddressForm()">Add Address</button>
 
-      <div class="address-form" id="addressForm" style="display: none;">
+      <div class="address-form" id="addressForm">
         <label for="pincode">Pincode:
           <input type="text" id="pincode" placeholder="Enter Pincode" />
         </label>
@@ -85,63 +87,25 @@
   </div>
 
   <script>
+    // Extract data from URL
     const params = new URLSearchParams(window.location.search);
+    const location = params.get("location") || "N/A";
+    const totalAmount = params.get("total");
+    const name = params.get("name");
+    const brand = params.get("brand");
+    const image = params.get("image");
 
-    const pickupLocation = params.get("location") || "N/A";
-    const pickupDate = params.get("pickupDate") || "N/A";
-    const pickupTime = params.get("pickupTime") || "N/A";
-    const dropoffDate = params.get("dropoffDate") || "N/A";
-    const dropoffTime = params.get("dropoffTime") || "N/A";
-    const total = params.get("total") || "0";
-    const name = params.get("name") || "";
-    const brand = params.get("brand") || "";
-    const image = params.get("image") || "";
+    // Set rental info
+    document.getElementById("rentalInfo").textContent = location;
 
-    document.addEventListener("DOMContentLoaded", () => {
-      // Set product details
-      document.getElementById("name").textContent = name;
-      document.getElementById("brand").textContent = brand;
-      document.getElementById("bikeImage").src = image;
-      document.getElementById("rentalInfo").textContent = `${pickupLocation} ${pickupDate} → ${dropoffDate}`;
-      document.getElementById("totalAmount").textContent = `Total: ₹${parseFloat(total).toFixed(2)}`;
+    // Set brand, name, and image
+    if (name) document.getElementById("name").textContent = name;
+    if (brand) document.getElementById("brand").textContent = brand;
+    if (image) document.getElementById("bikeImage").src = image;
 
-      // Back button returns to previous page with params
-      document.getElementById("backBtn").addEventListener("click", () => {
-        window.history.back();
-      });
-    });
-
-    function toggleAddressForm() {
-      const form = document.getElementById("addressForm");
-      form.style.display = form.style.display === "none" ? "block" : "none";
-    }
-
-    function detectLocation() {
-      const message = document.getElementById("locationMessage");
-      message.textContent = "Detecting location...";
-      setTimeout(() => {
-        message.textContent = "Location detected successfully (mock).";
-      }, 1500);
-    }
-
-    function submitAddress() {
-      const pincode = document.getElementById("pincode").value.trim();
-      const street = document.getElementById("street").value.trim();
-      const city = document.getElementById("city").value.trim();
-      const state = document.getElementById("state").value.trim();
-
-      const display = document.getElementById("addressDisplay");
-      if (pincode && street && city && state) {
-        display.innerHTML = `
-          <strong>Address:</strong><br/>
-          ${street}, ${city}, ${state} - ${pincode}
-        `;
-        display.style.display = "block";
-        document.getElementById("addressForm").style.display = "none";
-        document.getElementById("locationMessage").textContent = "Address submitted!";
-      } else {
-        document.getElementById("locationMessage").textContent = "Please fill all address fields.";
-      }
+    // Display Total Amount (clean display only)
+    if (totalAmount && !isNaN(totalAmount)) {
+      document.getElementById("totalAmount").textContent = `Total: ₹${parseFloat(totalAmount).toFixed(2)}`;
     }
   </script>
 
