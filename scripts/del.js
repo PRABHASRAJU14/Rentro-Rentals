@@ -1,3 +1,5 @@
+document.addEventListener("DOMContentLoaded", function() {
+
 function parseDateTime(dateStr, timeStr) {
   const [day, month, year] = dateStr.split("-").map(Number);
   const [hour, minute] = timeStr.split(":").map(Number);
@@ -12,32 +14,29 @@ function setDurationDisplay(startDateStr, startTimeStr, endDateStr, endTimeStr, 
     let diffMs = end - start;
     if (diffMs < 0) diffMs = 0;
 
-    let days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    let hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    let minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+    let totalHours = Math.floor(diffMs / (1000 * 60 * 60));
+    let days = Math.floor(totalHours / 24);
+    let hours = totalHours % 24;
 
-    let durationStr = "Duration: ";
-    if (days > 0) durationStr += `${days} Day${days > 1 ? 's' : ''} `;
-    if (hours > 0) durationStr += `${hours} Hour${hours > 1 ? 's' : ''} `;
-    if (minutes > 0) durationStr += `${minutes} Minute${minutes > 1 ? 's' : ''}`;
-    if (days === 0 && hours === 0 && minutes === 0) durationStr = "Duration: Less than a minute";
+    let durationStr = "";
+    if (days > 0) durationStr += `${days} Day${days > 1 ? 's' : ''}`;
+    if (days > 0 && hours > 0) durationStr += ` ${hours} Hour${hours > 1 ? 's' : ''}`;
+    if (days === 0 && hours > 0) durationStr += `${hours} Hour${hours > 1 ? 's' : ''}`;
+    if (totalHours === 0) durationStr = "Less than an hour";
 
-    durationDisplay.textContent = durationStr.trim();
+    durationDisplay.innerHTML = `<span class="days">${durationStr.trim()}</span>`;
 
     updateTotalAmount(startDateStr, startTimeStr, endDateStr, endTimeStr);
   }
 }
 
-function calculateDays(startStr, endStr) {
-  function parseDate(str) {
-    const [day, month, year] = str.split("-").map(Number);
-    return new Date(year, month - 1, day);
-  }
-  const start = parseDate(startStr);
-  const end = parseDate(endStr);
-  const diffMs = end - start;
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1;
-  return diffDays > 0 ? diffDays : 1;
+function calculateTotalHours(startDateStr, startTimeStr, endDateStr, endTimeStr) {
+  const start = parseDateTime(startDateStr, startTimeStr);
+  const end = parseDateTime(endDateStr, endTimeStr);
+  if (!start || !end) return 0;
+  let diffMs = end - start;
+  if (diffMs < 0) diffMs = 0;
+  return Math.floor(diffMs / (1000 * 60 * 60));
 }
 
 const params = new URLSearchParams(window.location.search);
@@ -63,13 +62,26 @@ function toDDMMYYYY(str) {
 const pickupDate = toDDMMYYYY(pickupDateRaw);
 const dropoffDate = toDDMMYYYY(dropoffDateRaw);
 
-document.getElementById("rentalInfo").innerHTML = `
-  📍 ${locationParam} <span>${pickupDate} → ${dropoffDate}</span>
-  <span class="days">${calculateDays(pickupDate, dropoffDate)} Day(s)</span>
-`;
+// --- HOURS/DAYS LOGIC ---
+const totalHours = calculateTotalHours(pickupDate, pickupTime, dropoffDate, dropoffTime);
+const rentalInfoEl = document.getElementById("rentalInfo");
+let durationStr = "";
+if (totalHours < 24) {
+  durationStr += `${totalHours} Hour(s)`;
+} else {
+  const days = Math.floor(totalHours / 24);
+  const hours = totalHours % 24;
+  durationStr += `${days} Day(s)`;
+  if (hours > 0) durationStr += ` ${hours} Hour(s)`;
+}
+if (totalHours === 0) durationStr = "Less than an hour";
 
-document.getElementById("brand").textContent = brand;
-document.getElementById("name").textContent = name;
+const displayStr = `📍 ${locationParam} <span>${pickupDate} → ${dropoffDate}</span> <span class="days">${durationStr}</span>`;
+rentalInfoEl.innerHTML = displayStr;
+
+// --- VEHICLE NAME IN PLACE OF BRAND ---
+document.getElementById("brand").textContent = name; // Show vehicle name where brand was
+document.getElementById("name").textContent = "";    // Optionally blank the secondary field
 document.getElementById("bikeImage").src = image;
 
 const durationDisplay = document.getElementById("durationDisplay");
@@ -80,15 +92,6 @@ if (durationDisplay) {
 }
 
 // --- TOTAL AMOUNT SECTION ---
-function calculateTotalHours(startDateStr, startTimeStr, endDateStr, endTimeStr) {
-  const start = parseDateTime(startDateStr, startTimeStr);
-  const end = parseDateTime(endDateStr, endTimeStr);
-  if (!start || !end) return 0;
-  let diffMs = end - start;
-  if (diffMs < 0) diffMs = 0;
-  return Math.ceil(diffMs / (1000 * 60 * 60));
-}
-
 function updateTotalAmount(startDateStr, startTimeStr, endDateStr, endTimeStr) {
   const totalAmountEl = document.getElementById("totalAmount");
   if (!totalAmountEl) return;
@@ -193,7 +196,8 @@ document.getElementById("backBtn").addEventListener("click", () => {
   window.location.href = "vehicle.html?" + query;
 });
 
-document.getElementById("submitBtn").addEventListener("click", () => {
+document.getElementById("submitBtn").addEventListener("click", (event) => {
+  event.preventDefault(); // Just in case
   const deliveryMode = document.querySelector('input[name="delivery"]:checked').value;
   if (deliveryMode === "home" && !addressDisplay.innerHTML.trim()) {
     alert("Please submit your address before continuing.");
@@ -222,3 +226,5 @@ document.getElementById("submitBtn").addEventListener("click", () => {
 
   window.location.href = "confirm.html?" + query.toString();
 });
+
+}); // End DOMContentLoaded
