@@ -2,154 +2,156 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Rental Summary</title>
-  <link rel="stylesheet" href="../styles/del.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Booking Confirmation</title>
+   <link rel="stylesheet" href="../styles/confirm.css" />
   <style>
-    #totalAmount {
-      margin-top: 5px;
-      font-weight: bold;
-      color: #333;
-      font-size: 18px;
+    #pay-btn {
+      background-color: #FFD700;
+      color: black;
+      border: none;
+      padding: 12px 25px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <button class="back-arrow" aria-label="Go back" id="backBtn">&larr;</button>
+    <form id="confirmForm" onsubmit="return false;">
+      <div class="bike-image">
+        <img id="bikeImage" src="" alt="Bike" />
+      </div>
 
-    <div class="section">
-      <h2>Product Details</h2>
-      <div class="product">
-        <div>
-          <strong class="brand" id="brand">Brand</strong> <span id="name">Name</span><br />
-          <span class="fee">Zero Deposit Fee</span> <br />
-          <p class="location" id="rentalInfo">Loading rental info...</p>
-          <div id="totalAmount">Total: ₹0</div>
+      <h2 class="bike-name">
+        <strong id="bikeBrand">Brand</strong>
+        <span id="bikeModel">Model</span>
+      </h2>
+
+      <h3>Booking Details</h3>
+      <div class="booking-details">
+        <div class="date-time">
+          <div>
+            <p id="pickupDate">N/A</p>
+            <p class="time" id="pickupTime">N/A</p>
+          </div>
+          <span class="arrow">→</span>
+          <div>
+            <p id="dropoffDate">N/A</p>
+            <p class="time" id="dropoffTime">N/A</p>
+          </div>
         </div>
-        <img src="" alt="vehicle Image" id="bikeImage" class="bike-img" />
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>Additional Details</h2>
-      <div class="charges">
-        <div class="charge-box">
-          💰<br />
-          Excess Km Charges<br />
-          <strong>₹8/km</strong>
-        </div>
-        <div class="charge-box">
-          ⏱️<br />
-          Excess Hourly Charges<br />
-          <strong>₹50/hr</strong>
+        <div class="location-info">
+          <p><strong>Location:</strong> <span id="location">N/A</span></p>
+          <p><strong>km :</strong> <span id="kmIncluded">N/A</span></p>
         </div>
       </div>
-    </div>
 
-    <div class="section">
-      <h2>Mode Of Delivery</h2>
-      <div class="delivery-options">
-        <label><input type="radio" name="delivery" value="home" checked /> Home Delivery</label>
-        <label><input type="radio" name="delivery" value="pickup" /> Pickup Delivery</label>
-      </div>
-    </div>
-
-    <div class="section address-section" id="addressSection">
-      <h2>Delivery Address</h2>
-      <button class="add-address" id="addressBtn" onclick="toggleAddressForm()">Add Address</button>
-
-      <div class="address-form" id="addressForm" style="display: none;">
-        <label for="pincode">Pincode:
-          <input type="text" id="pincode" placeholder="Enter Pincode" />
-        </label>
-        <label for="street">Street:
-          <input type="text" id="street" placeholder="Street Name" />
-        </label>
-        <label for="city">City:
-          <input type="text" id="city" placeholder="City" />
-        </label>
-        <label for="state">State:
-          <input type="text" id="state" placeholder="State" />
-        </label>
-
-        <button type="button" class="add-address" onclick="detectLocation()">Detect Location</button>
-        <button type="button" class="add-address" onclick="submitAddress()">Submit</button>
-
-        <div id="locationMessage" class="message"></div>
+      <div class="excludes">
+        <p><strong>Excludes:</strong></p>
+        <ul>
+          <li>Exceeding KM limit is chargeable at ₹8/km.</li>
+          <li>Fuel is not included as part of the booking.</li>
+        </ul>
       </div>
 
-      <div class="address-display" id="addressDisplay" style="display: none;"></div>
-    </div>
+      <div class="total-amount">
+        <p>Total Payable Amount</p>
+        <h3 id="totalAmount">₹0.00</h3>
+      </div>
 
-    <button class="submit-btn" id="submitBtn">Submit</button>
+      <button type="button" id="pay-btn">PROCEED TO PAY</button>
+    </form>
   </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-
-    const pickupLocation = params.get("location") || "N/A";
-    const pickupDate = params.get("pickupDate") || "N/A";
-    const pickupTime = params.get("pickupTime") || "N/A";
-    const dropoffDate = params.get("dropoffDate") || "N/A";
-    const dropoffTime = params.get("dropoffTime") || "N/A";
-    const total = params.get("total") || "0";
-    const name = params.get("name") || "";
-    const brand = params.get("brand") || "";
-    const image = params.get("image") || "";
-
     document.addEventListener("DOMContentLoaded", () => {
-      // Set product details
-      document.getElementById("name").textContent = name;
-      document.getElementById("brand").textContent = brand;
+      function parseDateTime(dateStr, timeStr) {
+        const [day, month, year] = dateStr.split("-").map(Number);
+        const [hour, minute] = timeStr.split(":").map(Number);
+        return new Date(year, month - 1, day, hour, minute);
+      }
+
+      function calculateTotalHours(start, end) {
+        const diffMs = end - start;
+        return Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60)));
+      }
+
+      function toDDMMYYYY(str) {
+        if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+          const [yyyy, mm, dd] = str.split("-");
+          return `${dd}-${mm}-${yyyy}`;
+        }
+        return str;
+      }
+
+      const params = new URLSearchParams(window.location.search);
+
+      const pickupDateRaw = params.get("pickupDate") || "2025-05-18";
+      const dropoffDateRaw = params.get("dropoffDate") || "2025-05-20";
+      const pickupTime = params.get("pickupTime") || "10:00";
+      const dropoffTime = params.get("dropoffTime") || "10:00";
+      const pricePerHour = parseFloat(params.get("price")) || 0;
+      const location = params.get("location") || "N/A";
+      const brand = params.get("brand") || "Unknown";
+      const name = params.get("name") || "";
+      const image = params.get("image") || "";
+
+      const pickupDate = toDDMMYYYY(pickupDateRaw);
+      const dropoffDate = toDDMMYYYY(dropoffDateRaw);
+
       document.getElementById("bikeImage").src = image;
-      document.getElementById("rentalInfo").textContent = `${pickupLocation} ${pickupDate} → ${dropoffDate}`;
-      document.getElementById("totalAmount").textContent = `Total: ₹${parseFloat(total).toFixed(2)}`;
+      document.getElementById("bikeBrand").textContent = brand;
+      document.getElementById("bikeModel").textContent = name;
+      document.getElementById("pickupDate").textContent = pickupDate;
+      document.getElementById("dropoffDate").textContent = dropoffDate;
+      document.getElementById("pickupTime").textContent = pickupTime;
+      document.getElementById("dropoffTime").textContent = dropoffTime;
+      document.getElementById("location").textContent = location;
+      document.getElementById("kmIncluded").textContent = "N/A";
 
-      // Back button returns to previous page with params
-      document.getElementById("backBtn").addEventListener("click", () => {
-        window.history.back();
-      });
+      const start = parseDateTime(pickupDate, pickupTime);
+      const end = parseDateTime(dropoffDate, dropoffTime);
+      const totalHours = calculateTotalHours(start, end);
+      const totalAmount = pricePerHour * totalHours;
 
-      // Redirect to confirm.html on submit button click
-      document.getElementById("submitBtn").addEventListener("click", () => {
-        window.location.href = "confirm.html";
+      document.getElementById("totalAmount").textContent = `₹${totalAmount.toFixed(2)}`;
+
+      document.getElementById("pay-btn").addEventListener("click", () => {
+        // Save to orders
+        const orderItem = {
+          name: name,
+          brand: brand,
+          image: image,
+          rent: `₹${totalAmount.toFixed(2)}`,
+          location: location,
+          dates: `${pickupDate} ${pickupTime} → ${dropoffDate} ${dropoffTime}`,
+          pickupDate,
+          dropoffDate,
+          pickupTime,
+          dropoffTime,
+          pricePerHour,
+          totalHours
+        };
+
+        let myOrders = [];
+        try {
+          myOrders = JSON.parse(localStorage.getItem('myOrders')) || [];
+        } catch (e) {
+          myOrders = [];
+        }
+        myOrders.push(orderItem);
+        localStorage.setItem('myOrders', JSON.stringify(myOrders));
+
+        // Save only vehicle name for success page
+        localStorage.setItem('lastVehicleName', name);
+
+        // Proceed to payment page
+        window.location.href = `payment.html?price=${pricePerHour}&hours=${totalHours}`;
       });
     });
-
-    function toggleAddressForm() {
-      const form = document.getElementById("addressForm");
-      form.style.display = form.style.display === "none" ? "block" : "none";
-    }
-
-    function detectLocation() {
-      const message = document.getElementById("locationMessage");
-      message.textContent = "Detecting location...";
-      setTimeout(() => {
-        message.textContent = "Location detected successfully (mock).";
-      }, 1500);
-    }
-
-    function submitAddress() {
-      const pincode = document.getElementById("pincode").value.trim();
-      const street = document.getElementById("street").value.trim();
-      const city = document.getElementById("city").value.trim();
-      const state = document.getElementById("state").value.trim();
-
-      const display = document.getElementById("addressDisplay");
-      if (pincode && street && city && state) {
-        display.innerHTML = `
-          <strong>Address:</strong><br/>
-          ${street}, ${city}, ${state} - ${pincode}
-        `;
-        display.style.display = "block";
-        document.getElementById("addressForm").style.display = "none";
-        document.getElementById("locationMessage").textContent = "Address submitted!";
-      } else {
-        document.getElementById("locationMessage").textContent = "Please fill all address fields.";
-      }
-    }
   </script>
-
-  <script src="../scripts/del.js"></script>
 </body>
 </html>
