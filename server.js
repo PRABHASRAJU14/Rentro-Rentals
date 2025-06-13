@@ -1,9 +1,9 @@
-require('dotenv').config(); // Load .env variables
+require('dotenv').config();
 
 const express = require('express');
-const nodemailer = require('nodemailer');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const nodemailer = require('nodemailer');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -21,7 +21,6 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-
 app.post('/send-otp', async (req, res) => {
   const { email } = req.body;
   if (!email) return res.json({ success: false, error: "Email is required" });
@@ -30,7 +29,7 @@ app.post('/send-otp', async (req, res) => {
   otpStore[email] = { otp, timestamp: Date.now() };
 
   const mailOptions = {
-    from: 'your.email@gmail.com',
+    from: process.env.EMAIL_USER,
     to: email,
     subject: 'Your Rentro OTP',
     text: `Your OTP is ${otp}. It is valid for 5 minutes.`
@@ -38,10 +37,10 @@ app.post('/send-otp', async (req, res) => {
 
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
-      console.error("Email error:", err);
+      console.error("Error sending OTP:", err);
       return res.json({ success: false, error: "Failed to send OTP." });
     }
-    console.log(`OTP ${otp} sent to ${email}`);
+    console.log(`OTP sent to ${email}: ${otp}`);
     res.json({ success: true });
   });
 });
@@ -51,7 +50,7 @@ app.post('/verify-otp', (req, res) => {
   if (!otpStore[email]) return res.json({ success: false, error: "No OTP sent to this email." });
 
   const { otp: storedOtp, timestamp } = otpStore[email];
-  const isExpired = Date.now() - timestamp > 5 * 60 * 1000; // 5 min expiry
+  const isExpired = Date.now() - timestamp > 5 * 60 * 1000;
 
   if (isExpired) {
     delete otpStore[email];
@@ -67,5 +66,5 @@ app.post('/verify-otp', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`OTP server running at http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
