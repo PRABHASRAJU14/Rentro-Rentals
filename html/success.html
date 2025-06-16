@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Booking Success</title>
   <link rel="stylesheet" href="../styles/success.css">
+  <script src="../scripts/auth.js"></script>
 </head>
 <body>
   <div class="container">
@@ -12,16 +13,70 @@
     </div>
     <h1>Order Placed Successfully!</h1>
     <div class="vehicle-name" id="vehicleName">Vehicle Name</div>
+    <div class="customer-details" id="customerDetails">
+      <p><strong>Customer:</strong> <span id="customerName">N/A</span></p>
+      <p><strong>Email:</strong> <span id="customerEmail">N/A</span></p>
+      <p><strong>Phone:</strong> <span id="customerPhone">N/A</span></p>
+    </div>
     <p>Thank you for your booking.</p>
     <p>A confirmation will be sent to your email.</p>
     <a href="city.html" class="home-link">← Back to Home</a>
   </div>
   <script>
-    // Get vehicle name from localStorage as set by the confirm page
-    const lastVehicleName = localStorage.getItem('lastVehicleName');
-    if (lastVehicleName) {
-      document.getElementById('vehicleName').textContent = lastVehicleName;
-    }
+    window.addEventListener('DOMContentLoaded', () => {
+      // Get vehicle name from localStorage as set by the confirm page
+      const lastVehicleName = localStorage.getItem('lastVehicleName');
+      if (lastVehicleName) {
+        document.getElementById('vehicleName').textContent = lastVehicleName;
+      }
+
+      // Get consumer profile and display details
+      const consumerProfile = JSON.parse(localStorage.getItem('consumerProfile'));
+      if (consumerProfile) {
+        document.getElementById('customerName').textContent = consumerProfile.fullName || 'N/A';
+        document.getElementById('customerEmail').textContent = consumerProfile.email || 'N/A';
+        document.getElementById('customerPhone').textContent = consumerProfile.phone || 'N/A';
+      }
+
+      // Save the order to myOrders for hamburger menu
+      const currentBooking = JSON.parse(localStorage.getItem('currentBooking'));
+      if (currentBooking && consumerProfile) {
+        const myOrders = JSON.parse(localStorage.getItem('myOrders')) || [];
+        
+        const orderData = {
+          name: currentBooking.vehicleName,
+          brand: 'Rentro',
+          image: currentBooking.vehicleImage || '../images/bike.png',
+          rent: `₹${currentBooking.totalAmount}`,
+          location: currentBooking.location,
+          dates: `${currentBooking.pickupDate} to ${currentBooking.dropoffDate}`,
+          customerName: consumerProfile.fullName,
+          customerEmail: consumerProfile.email,
+          customerPhone: consumerProfile.phone,
+          bookingId: currentBooking.bookingId,
+          orderDate: new Date().toLocaleDateString()
+        };
+
+        myOrders.push(orderData);
+        localStorage.setItem('myOrders', JSON.stringify(myOrders));
+
+        // Also save to bookings for provider dashboard
+        const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+        bookings.push({
+          id: currentBooking.bookingId,
+          vehicleName: currentBooking.vehicleName,
+          vehicleType: 'Vehicle', // You might want to pass this from the booking flow
+          price: currentBooking.totalAmount,
+          image: currentBooking.vehicleImage,
+          customerName: consumerProfile.fullName,
+          date: new Date().toLocaleDateString()
+        });
+        localStorage.setItem('bookings', JSON.stringify(bookings));
+
+        // Clear current booking
+        localStorage.removeItem('currentBooking');
+      }
+    });
   </script>
 </body>
 </html>

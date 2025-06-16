@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Rentro Rentals</title>
+  <link rel="stylesheet" href="../styles/login.css" />
+</head>
+<body>
+  <div class="container">
+    <img src="../images/bp.jpg" alt="picture" class="logo" />
+    <h2>LOGIN</h2>
+    
+    <div class="role-selector">
+      <label>
+        <input type="radio" name="role" value="consumer" checked />
+        Consumer
+      </label>
+      <label>
+        <input type="radio" name="role" value="provider" />
+        Provider
+      </label>
+    </div>
+
+    <form class="form" id="login-form" novalidate>
+      <input type="email" id="email" placeholder="Enter your email" required />
+      <div class="error" id="email-error"></div>
+
+      <div id="provider-fields" style="display: none;">
+        <input type="password" id="password" placeholder="Enter your password" />
+        <div class="error" id="password-error"></div>
+      </div>
+
+      <button type="submit" class="submit-btn">LOGIN</button>
+    </form>
+
+    <p class="switch-text">
+      Don't have an account? <a href="create.html">Create Account</a>
+    </p>
+  </div>
+
+  <script>
+    const form = document.getElementById("login-form");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const providerFields = document.getElementById("provider-fields");
+    const roleInputs = document.querySelectorAll('input[name="role"]');
+    
+    // Hardcoded provider credentials
+    const providerCredentials = [
+      { email: "provider1@rentro.com", password: "provider123" },
+      { email: "provider2@rentro.com", password: "provider456" },
+      { email: "admin@rentro.com", password: "admin123" }
+    ];
+
+    // Show/hide password field based on role
+    roleInputs.forEach(radio => {
+      radio.addEventListener('change', function() {
+        if (this.value === 'provider') {
+          providerFields.style.display = 'block';
+          passwordInput.required = true;
+        } else {
+          providerFields.style.display = 'none';
+          passwordInput.required = false;
+        }
+      });
+    });
+
+    function isValidEmail(email) {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
+    }
+
+    function clearErrors() {
+      document.getElementById("email-error").textContent = "";
+      document.getElementById("password-error").textContent = "";
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      clearErrors();
+
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+      const selectedRole = document.querySelector('input[name="role"]:checked').value;
+      
+      let isValid = true;
+
+      if (!isValidEmail(email)) {
+        document.getElementById("email-error").textContent = "Please enter a valid email address.";
+        isValid = false;
+      }
+
+      if (selectedRole === 'provider') {
+        if (!password) {
+          document.getElementById("password-error").textContent = "Password is required for providers.";
+          isValid = false;
+        } else {
+          // Check provider credentials
+          const validProvider = providerCredentials.find(
+            cred => cred.email === email && cred.password === password
+          );
+          
+          if (!validProvider) {
+            document.getElementById("password-error").textContent = "Invalid provider credentials.";
+            isValid = false;
+          }
+        }
+      }
+
+      if (isValid) {
+        // Store user session
+        const userSession = {
+          email: email,
+          role: selectedRole,
+          loginTime: new Date().toISOString()
+        };
+        localStorage.setItem('userSession', JSON.stringify(userSession));
+        localStorage.setItem('userEmail', email);
+
+        // Redirect based on role
+        if (selectedRole === 'provider') {
+          window.location.href = "dashboard.html";
+        } else {
+          window.location.href = "city.html";
+        }
+      }
+    });
+  </script>
+</body>
+</html>
