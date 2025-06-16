@@ -169,7 +169,7 @@
     localStorage.setItem("googleUser", JSON.stringify(userData));
 
     // Redirect to your app page
-    window.location.href = "html/dashboard.html"; // Change if needed
+    window.location.href = "html/city.html"; // Change if needed
   }
 
   function parseJwt(token) {
@@ -182,7 +182,7 @@
     return JSON.parse(jsonPayload);
   }
     google.accounts.id.initialize({
-    client_id: "YOUR_GOOGLE_CLIENT_ID",
+    client_id: "707999172905-4co07efkvna5makf1mojfn2gb64nk3mg.apps.googleusercontent.com",
     callback: handleGoogleResponse
   });
 
