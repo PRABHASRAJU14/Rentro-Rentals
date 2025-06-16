@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Enter OTP</title>
+  <script src="../scripts/auth.js"></script>
   <style>
     * {
       margin: 0;
@@ -226,6 +227,11 @@
       user-select: none;
     }
 
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
     @media (min-width: 1024px) {
       .container {
         max-width: 600px;
@@ -379,36 +385,49 @@
     document.getElementById("error-msg").style.display = "none";
   }
 
-  // Send OTP to backend
+  // Send OTP to backend with environment detection
   async function sendOTP() {
     const email = localStorage.getItem("userEmail");
     if (!email) {
       showError("No email provided.");
       return;
     }
+    
     const resendBtn = document.getElementById("resend-btn");
+    const container = document.querySelector('.container');
+    
     resendBtn.disabled = true;
     resendBtn.textContent = "Sending...";
+    container.classList.add('loading');
+    
     try {
-      const res = await fetch('http://localhost:3001/send-otp', {
+      const backendUrl = getBackendUrl();
+      const res = await fetch(`${backendUrl}/send-otp`, {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email })
       });
+      
       const data = await res.json();
       if (data.success) {
         hideError();
+        showError("OTP sent successfully!");
+        setTimeout(hideError, 3000);
       } else {
         showError(data.error || "Could not send OTP.");
       }
-    } catch {
-      showError("Network error.");
+    } catch (error) {
+      console.error('OTP send error:', error);
+      showError("Network error. Please check your connection.");
+    } finally {
+      container.classList.remove('loading');
+      setTimeout(() => {
+        resendBtn.disabled = false;
+        resendBtn.textContent = "RESEND";
+      }, 30000);
     }
-    setTimeout(() => {
-      resendBtn.disabled = false;
-      resendBtn.textContent = "RESEND";
-    }, 30000);
   }
+  
   document.getElementById("resend-btn").addEventListener("click", sendOTP);
 
   // Auto send OTP on page load if email exists
@@ -418,27 +437,51 @@
   document.getElementById("verify-btn").addEventListener("click", async () => {
     const otp = getOTP();
     const email = localStorage.getItem("userEmail");
+    
     if (otp.length !== 6) {
       showError("Please enter a 6-digit OTP.");
       return;
     }
+    
+    const verifyBtn = document.getElementById("verify-btn");
+    const container = document.querySelector('.container');
+    
+    verifyBtn.disabled = true;
+    verifyBtn.textContent = "Verifying...";
+    container.classList.add('loading');
+    
     try {
-      const res = await fetch('http://localhost:3001/verify-otp', {
+      const backendUrl = getBackendUrl();
+      const res = await fetch(`${backendUrl}/verify-otp`, {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp })
       });
+      
       const data = await res.json();
       if (data.success) {
+        // Create consumer session
+        const userSession = {
+          email: email,
+          role: 'consumer',
+          loginTime: new Date().toISOString()
+        };
+        localStorage.setItem('userSession', JSON.stringify(userSession));
+        
         window.location.href = "city.html";
       } else {
         showError(data.error || "Invalid OTP. Please try again.");
       }
-    } catch {
-      showError("Network error.");
+    } catch (error) {
+      console.error('OTP verify error:', error);
+      showError("Network error. Please check your connection.");
+    } finally {
+      container.classList.remove('loading');
+      verifyBtn.disabled = false;
+      verifyBtn.textContent = "VERIFY →";
     }
   });
 </script>
 
 </body>
-</html>       
+</html>

@@ -111,12 +111,24 @@
           <h2 class="section-title">Get Started</h2>
           <p class="section-subtitle">Enter your email to login</p>
 
-          <div class="input-group">
-            <input type="email" id="email-id" placeholder="Enter email address" />
-            <a href="#" id="next-page-link">&gt;</a>
-          </div>
+<!-- Google Sign-In -->
+<div id="g_id_onload"
+     data-client_id="707999172905-4co07efkvna5makf1mojfn2gb64nk3mg.apps.googleusercontent.com"
+     data-context="signin"
+     data-ux_mode="popup"
+     data-callback="handleGoogleResponse"
+     data-auto_prompt="false">
+</div>
 
-          <p id="error-msg" style="color: red;"></p>
+<div class="g_id_signin"
+     data-type="standard"
+     data-shape="rectangular"
+     data-theme="filled_black"
+     data-text="signin_with"
+     data-size="large"
+     data-logo_alignment="left">
+</div>
+
 
           <p class="small">
             By continuing, you agree to our
@@ -129,6 +141,12 @@
           </div>
 
           <a class="create-account" href="html/create.html">create account</a>
+          
+          <div style="margin-top: 15px; text-align: center;">
+            <a href="html/login.html" style="color: #f44336; text-decoration: none; font-weight: bold;">
+              Already have an account? Login here
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -139,44 +157,40 @@
     <source src="assets/splash.mp3" type="audio/mpeg" />
     Your browser does not support the audio element.
   </audio>
+<!-- Google Sign-In SDK -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 
-  <script>
-    // Audio play on splash
-    window.addEventListener("DOMContentLoaded", () => {
-      const audio = document.getElementById("splash-audio");
-      setTimeout(() => {
-        audio.play().catch((e) => {
-          console.log("Audio autoplay was blocked:", e);
-        });
-      }, 300);
-    });
+<script>
+  function handleGoogleResponse(response) {
+    const userData = parseJwt(response.credential);
+    console.log("Google user:", userData);
 
-    const emailInput = document.getElementById("email-id");
-    const errorMsg = document.getElementById("error-msg");
+    // Store user data
+    localStorage.setItem("googleUser", JSON.stringify(userData));
 
-    function validateEmail() {
-      const email = emailInput.value.trim();
-      const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    // Redirect to your app page
+    window.location.href = "html/dashboard.html"; // Change if needed
+  }
 
-      if (!emailPattern.test(email)) {
-        errorMsg.style.display = "block";
-        errorMsg.textContent = "Please enter a valid email address.";
-        return false;
-      }
+  function parseJwt(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
 
-      errorMsg.style.display = "none";
-      return true;
-    }
+    return JSON.parse(jsonPayload);
+  }
+    google.accounts.id.initialize({
+    client_id: "YOUR_GOOGLE_CLIENT_ID",
+    callback: handleGoogleResponse
+  });
 
-    document.getElementById("next-page-link").addEventListener("click", function (event) {
-      event.preventDefault();
-      if (validateEmail()) {
-        const email = emailInput.value.trim();
-        localStorage.setItem("userEmail", email);
-        window.location.href = "html/otp.html";
-      }
-    });
-  </script>
+  document.getElementById("custom-google-btn").addEventListener("click", function () {
+    google.accounts.id.prompt(); // shows One Tap
+  });
+</script>
+
 
 </body>
 </html>

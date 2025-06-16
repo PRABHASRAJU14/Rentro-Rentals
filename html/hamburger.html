@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Menu</title>
   <link rel="stylesheet" href="../styles/hamburger.css" />
+  <script src="../scripts/auth.js"></script>
 </head>
 <body>
   <nav class="hamburger-menu">
@@ -62,19 +63,20 @@
         </a>
       </li>
       <li>
-        <a href="../index.html" id="logout-link">
+        <a href="login.html" id="logout-link">
           <span class="icon">
             <svg width="24" height="24" fill="none" stroke="#f4a261" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           </span>
           Logout
         </a>
       </li>
-      <li>
+      <!-- Provider link only shown to providers -->
+      <li id="provider-menu-item" style="display: none;">
         <a href="dashboard.html" class="provider">
           <span class="icon" style="background-color:#f4d35e;border-radius:50%;padding:3px;">
             <svg width="20" height="20" fill="none" stroke="#f4a261" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="9" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
           </span>
-          Provider
+          Provider Dashboard
         </a>
       </li>
     </ul>
@@ -180,24 +182,21 @@
     </div>
   </div>
 
+  <script>
+    // Show provider menu item only for providers
+    window.addEventListener('DOMContentLoaded', () => {
+      const session = checkUserSession();
+      if (session && session.role === 'provider') {
+        document.getElementById('provider-menu-item').style.display = 'block';
+      }
+    });
+
+    // Update logout to use auth.js logout function
+    document.getElementById('logout-link').addEventListener('click', function(e) {
+      e.preventDefault();
+      logout();
+    });
+  </script>
   <script src="../scripts/hamburger.js"></script>
 </body>
 </html>
-
-
-      <!-- <li>
-        <a href="#" id="cart-link">
-          <span class="icon">
-            <svg width="24" height="24" fill="none" stroke="#f4a261" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1"/><circle cx="17" cy="20" r="1"/><path d="M5 6h2l1 7h8l1-7h2"/></svg>
-          </span>
-          My Cart
-        </a>
-      </li>
-      <li>
-        <a href="#" id="wishlist-link">
-          <span class="icon">
-            <svg width="24" height="24" fill="none" stroke="#f4a261" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.35-7-10A5 5 0 0 1 12 6a5 5 0 0 1 7 5c0 5.65-7 10-7 10z"/></svg>
-          </span>
-          Wishlist
-        </a>
-      </li> -->

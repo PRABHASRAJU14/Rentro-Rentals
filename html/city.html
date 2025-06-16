@@ -6,7 +6,7 @@
   <title>Select City</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../styles/city.css" />
-
+  <script src="../scripts/auth.js"></script>
 </head>
 <body>
 
@@ -52,6 +52,11 @@
   </div>
 
   <script>
+    // Check authentication and auto-redirect based on role
+    window.addEventListener('DOMContentLoaded', () => {
+      autoRedirectBasedOnRole();
+    });
+
     // Search filter code
     const searchInput = document.getElementById('city-search');
     const cityCards = document.querySelectorAll('.city-card');
