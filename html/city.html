@@ -14,6 +14,7 @@
     <div class="header">
       <!-- Hamburger icon at top right -->
       <button class="hamburger" aria-label="Open menu">&#9776;</button>
+      <h2 id="greeting" style="text-align:center;"></h2>
       <h2 class="title">Select City</h2>
     </div>
 
@@ -56,6 +57,14 @@
     window.addEventListener('DOMContentLoaded', () => {
       autoRedirectBasedOnRole();
     });
+  //     const name = localStorage.getItem("userName");
+  // const greetingEl = document.getElementById("greeting");
+
+  // if (name) {
+  //   greetingEl.textContent = `Welcome, ${name}!`;
+  // } else {
+  //   greetingEl.textContent = "Welcome to Rentro Rentals!";
+  // }
 
     // Search filter code
     const searchInput = document.getElementById('city-search');
