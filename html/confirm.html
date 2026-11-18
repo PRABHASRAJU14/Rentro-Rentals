@@ -2,56 +2,225 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Booking Confirmation</title>
-  <link rel="stylesheet" href="../styles/confirm.css" />
-  <script src="../scripts/confirm.js" defer></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Review & Confirm Booking - Rentro Rentals</title>
+  
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/booking.css" />
+  <link rel="stylesheet" href="../styles/responsive.css" />
+  
+  <script src="../scripts/utils.js" defer></script>
+  <script src="../scripts/storage.js" defer></script>
+  <script src="../scripts/auth.js" defer></script>
+  <script src="../scripts/vehicles.js" defer></script>
+  <script src="../scripts/bookings.js" defer></script>
+  <script src="../scripts/payments.js" defer></script>
 </head>
 <body>
-  <div class="container">
-    <form id="confirmForm" onsubmit="return false;">
-      <div class="bike-image">
-        <img id="bikeImage" src="" alt="Bike" />
+
+  <!-- Navigation Bar -->
+  <header class="rentro-navbar">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="brand-logo">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="5" cy="18" r="3"></circle><circle cx="19" cy="18" r="3"></circle><path d="M12 18V8a2 2 0 0 1 2-2h4"></path><polyline points="15 3 18 6 15 9"></polyline><path d="M5 18h14"></path></svg>
+        </div>
+        <span>Rentro<span class="brand-accent">Rentals</span></span>
+      </a>
+
+      <div class="nav-actions">
+        <div id="nav-user-container"></div>
       </div>
+    </div>
+  </header>
 
-      <h2 class="bike-name">
-        <span id="bikeModel">Model</span>
-      </h2>
-
-      <h3>Booking Details</h3>
-      <div class="booking-details">
-        <div class="date-time">
+  <main class="checkout-step-container">
+    <div class="container container-narrow">
+      <div class="checkout-card">
+        <div class="checkout-header">
           <div>
-            <p id="pickupDate">N/A</p>
-            <p class="time" id="pickupTime">N/A</p>
+            <h1>Review & Confirm Reservation</h1>
+            <p style="color:var(--text-muted); font-size:0.9rem; margin-top:4px;">Step 1 of 3 &bull; Verify trip schedule & rider information</p>
           </div>
-          <span class="arrow">→</span>
-          <div>
-            <p id="dropoffDate">N/A</p>
-            <p class="time" id="dropoffTime">N/A</p>
+          <button class="btn btn-ghost btn-sm" onclick="window.history.back()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            Modify Ride
+          </button>
+        </div>
+
+        <div id="confirmContent">
+          <!-- Vehicle Snapshot -->
+          <div class="booking-vehicle-snapshot">
+            <img id="confVehicleImg" src="" alt="Vehicle" class="snapshot-img" onerror="this.src='../images/honda activa 6g.png'" />
+            <div class="snapshot-info">
+              <span class="badge badge-success" style="margin-bottom:6px;">Verified Fleet</span>
+              <h3 id="confVehicleName">Honda Activa 6G</h3>
+              <p style="color:var(--text-secondary); font-size:0.88rem;" id="confVehicleLoc">Siripuram Junction, Visakhapatnam</p>
+            </div>
+          </div>
+
+          <!-- Trip Timing Box -->
+          <div class="trip-timing-card">
+            <div class="timing-col">
+              <label>Pickup Scheduled</label>
+              <div class="date-val" id="confPickupDateTime">18 Nov 2026, 10:00 AM</div>
+              <div class="loc-val" id="confPickupLoc">Hub Location &bull; Helmet Provided</div>
+            </div>
+            <div class="timing-col">
+              <label>Dropoff Scheduled</label>
+              <div class="date-val" id="confReturnDateTime">19 Nov 2026, 06:00 PM</div>
+              <div class="loc-val" id="confDurationText">Duration: 1 day 8 hrs</div>
+            </div>
+          </div>
+
+          <!-- Rider Information Form -->
+          <div style="margin: 28px 0; padding-top: 20px; border-top: 1px solid var(--border-color);">
+            <h3 style="font-size:1.15rem; font-weight:700; margin-bottom:16px;">Primary Rider Details</h3>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+              <div class="form-group">
+                <label class="form-label" for="riderName">Full Legal Name</label>
+                <input type="text" id="riderName" class="form-control" placeholder="Full Name as on DL" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="riderPhone">Mobile Number (For OTP & Key Handover)</label>
+                <input type="tel" id="riderPhone" class="form-control" placeholder="10-digit phone" maxlength="10" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="riderEmail">Email Address (For Instant Receipt)</label>
+              <input type="email" id="riderEmail" class="form-control" placeholder="rider@example.com" required />
+            </div>
+          </div>
+
+          <!-- Price Summary Breakdown -->
+          <div style="background:var(--bg-subtle); border-radius:var(--radius-md); padding:20px; margin: 24px 0;">
+            <h4 style="font-size:1rem; font-weight:700; margin-bottom:14px;">Price Breakdown</h4>
+            <div class="price-breakdown-row" style="margin-bottom:8px;">
+              <span>Base Rental Fare:</span>
+              <strong id="confBaseFare">₹360</strong>
+            </div>
+            <div class="price-breakdown-row" style="margin-bottom:8px;">
+              <span>Taxes & Urban Mobility Cess (18% GST):</span>
+              <strong id="confTaxes">₹65</strong>
+            </div>
+            <div class="price-breakdown-row" style="margin-bottom:8px;">
+              <span>Refundable Security Deposit:</span>
+              <strong id="confDeposit">₹500</strong>
+            </div>
+            <div class="price-breakdown-row total-row" style="border-top:1px solid var(--border-color); padding-top:12px; margin-top:8px;">
+              <span style="font-size:1.15rem; font-weight:800;">Total Payable Now:</span>
+              <span id="confTotalPayable" style="font-size:1.4rem; font-weight:800; color:var(--secondary);">₹925</span>
+            </div>
+          </div>
+
+          <!-- Conflict Error Message if any -->
+          <div id="confirmErrorAlert" style="display:none; background:var(--danger-light); color:#991b1b; padding:14px; border-radius:var(--radius-md); margin-bottom:20px; font-size:0.9rem;">
+          </div>
+
+          <!-- Action Buttons -->
+          <div style="display:flex; gap:16px; justify-content:flex-end;">
+            <button class="btn btn-secondary" onclick="window.history.back()">Back</button>
+            <button class="btn btn-primary btn-lg" id="proceedToPayBtn">
+              Proceed to Secure Payment &rarr;
+            </button>
           </div>
         </div>
-        <div class="location-info">
-          <p><strong>Location:</strong> <span id="location">N/A</span></p>
-          <p><strong>km :</strong> <span id="kmIncluded">N/A</span></p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="rentro-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>&copy; 2026 Rentro Rentals Marketplace. All rights reserved.</div>
+        <div style="display:flex; gap: 20px;">
+          <span>Secure 256-Bit SSL Encrypted Checkout</span>
         </div>
       </div>
+    </div>
+  </footer>
 
-      <div class="excludes">
-        <p><strong>Excludes:</strong></p>
-        <ul>
-          <li>Exceeding KM limit is chargeable at ₹8/km.</li>
-          <li>Fuel is not included as part of the booking.</li>
-        </ul>
-      </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      RentroStorage.init();
+      RentroAuth.renderNavUser('nav-user-container');
 
-      <div class="total-amount">
-        <p>Total Payable Amount</p>
-        <h3 id="totalAmount">₹0.00</h3>
-      </div>
+      const draft = RentroPayments.getCheckoutDraft();
+      if (!draft) {
+        RentroUtils.showToast('No active booking found. Redirecting to vehicles...', 'warning');
+        setTimeout(() => window.location.href = 'search.html', 1000);
+        return;
+      }
 
-      <button type="button" id="pay-btn">PROCEED TO PAY</button>
-    </form>
-  </div>
+      // Re-verify availability to prevent race condition double bookings
+      const availability = RentroVehicles.checkAvailability(
+        draft.vehicleId, draft.pickupDate, draft.pickupTime, draft.returnDate, draft.returnTime
+      );
+
+      const errorAlert = document.getElementById('confirmErrorAlert');
+      const proceedBtn = document.getElementById('proceedToPayBtn');
+
+      if (!availability.available) {
+        errorAlert.style.display = 'block';
+        errorAlert.textContent = `Reservation Conflict: ${availability.reason}. Please select different dates.`;
+        proceedBtn.disabled = true;
+      }
+
+      // Populate snapshot
+      document.getElementById('confVehicleName').textContent = draft.vehicleName;
+      document.getElementById('confVehicleLoc').textContent = `${draft.pickupLocation}, ${draft.vehicleCity}`;
+      document.getElementById('confVehicleImg').src = RentroUtils.resolvePath(draft.vehicleImage || 'images/honda activa 6g.png');
+
+      document.getElementById('confPickupDateTime').textContent = RentroUtils.formatDateTime(draft.pickupDate, draft.pickupTime);
+      document.getElementById('confPickupLoc').textContent = `${draft.pickupLocation} &bull; Free Helmet Included`;
+      document.getElementById('confReturnDateTime').textContent = RentroUtils.formatDateTime(draft.returnDate, draft.returnTime);
+      document.getElementById('confDurationText').textContent = `Duration: ${draft.durationText}`;
+
+      document.getElementById('confBaseFare').textContent = RentroUtils.formatCurrency(draft.basePrice);
+      document.getElementById('confTaxes').textContent = RentroUtils.formatCurrency(draft.taxes);
+      document.getElementById('confDeposit').textContent = RentroUtils.formatCurrency(draft.securityDeposit);
+      document.getElementById('confTotalPayable').textContent = RentroUtils.formatCurrency(draft.totalAmount);
+
+      // Pre-fill rider details from current user or draft
+      const currentUser = RentroAuth.getCurrentUser();
+      const riderNameInput = document.getElementById('riderName');
+      const riderPhoneInput = document.getElementById('riderPhone');
+      const riderEmailInput = document.getElementById('riderEmail');
+
+      riderNameInput.value = draft.customerName || (currentUser ? currentUser.name : '');
+      riderPhoneInput.value = draft.customerPhone || (currentUser ? currentUser.phone : '');
+      riderEmailInput.value = draft.customerEmail || (currentUser ? currentUser.email : '');
+
+      proceedBtn.addEventListener('click', () => {
+        // Validate inputs
+        if (!riderNameInput.value.trim()) {
+          RentroUtils.showToast('Please enter the rider legal name.', 'error');
+          riderNameInput.focus();
+          return;
+        }
+        if (!RentroValidator.isValidPhone(riderPhoneInput.value)) {
+          RentroUtils.showToast('Please enter a valid 10-digit mobile number.', 'error');
+          riderPhoneInput.focus();
+          return;
+        }
+        if (!RentroValidator.isValidEmail(riderEmailInput.value)) {
+          RentroUtils.showToast('Please enter a valid email address.', 'error');
+          riderEmailInput.focus();
+          return;
+        }
+
+        // Update draft with verified rider details
+        draft.customerName = riderNameInput.value.trim();
+        draft.customerPhone = riderPhoneInput.value.trim();
+        draft.customerEmail = riderEmailInput.value.trim();
+
+        RentroPayments.saveCheckoutDraft(draft);
+
+        // Navigate to payment hub
+        window.location.href = 'payment.html';
+      });
+    });
+  </script>
 </body>
 </html>

@@ -2,61 +2,380 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Payment Page</title>
-  <link rel="stylesheet" href="../styles/payment.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Gateway - Rentro Rentals</title>
+  
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/booking.css" />
+  <link rel="stylesheet" href="../styles/responsive.css" />
+  
+  <script src="../scripts/utils.js" defer></script>
+  <script src="../scripts/storage.js" defer></script>
+  <script src="../scripts/auth.js" defer></script>
+  <script src="../scripts/vehicles.js" defer></script>
+  <script src="../scripts/bookings.js" defer></script>
+  <script src="../scripts/payments.js" defer></script>
+  <script src="../scripts/validation.js" defer></script>
 </head>
 <body>
-  <div class="container">
-    <p class="amount">Total Payable Amount: <strong id="amount">₹0.00</strong></p>
 
-    <form id="form">
-      <div class="payment-box">
-        <h3>CHOOSE PAYMENT METHOD</h3>
-        <div class="payment-method">Debit Card</div>
-        <div class="payment-method">Credit Card</div>
-        <div class="payment-method">COD</div>
-        <div class="payment-method">UPI Payment</div>
-        <div class="payment-method offer">
-          <img src="../images/mob.png" alt="Mobikwik Logo" />
-          <span>Offer available</span>
+  <!-- Navigation Bar -->
+  <header class="rentro-navbar">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="brand-logo">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="5" cy="18" r="3"></circle><circle cx="19" cy="18" r="3"></circle><path d="M12 18V8a2 2 0 0 1 2-2h4"></path><polyline points="15 3 18 6 15 9"></polyline><path d="M5 18h14"></path></svg>
         </div>
-        <div class="payment-method">
-          <img src="../images/pay.png" alt="Paytm Logo" class="paytm-logo" />
+        <span>Rentro<span class="brand-accent">Rentals</span></span>
+      </a>
+
+      <div class="nav-actions">
+        <div id="nav-user-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="checkout-step-container">
+    <div class="container container-narrow">
+      <div class="checkout-card">
+        <div class="checkout-header">
+          <div>
+            <h1>Select Payment Method</h1>
+            <p style="color:var(--text-muted); font-size:0.9rem; margin-top:4px;">Step 2 of 3 &bull; Encrypted & Secure Demo Checkout</p>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Payable Amount</div>
+            <div style="font-size:1.6rem; font-weight:800; color:var(--secondary);" id="payableAmountDisplay">₹0</div>
+          </div>
+        </div>
+
+        <!-- Demo Mode Notice -->
+        <div style="background:#fef3c7; border:1px solid #fde68a; border-radius:var(--radius-md); padding:12px 16px; margin-bottom:24px; color:#92400e; font-size:0.85rem; display:flex; align-items:center; gap:10px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <div>
+            <strong>Interactive Simulation Mode:</strong> Real card/bank details are not debited. You can enter any mock 16-digit card number or UPI ID to test the booking flow.
+          </div>
+        </div>
+
+        <!-- Payment Method Tabs -->
+        <div class="payment-methods-tabs">
+          <button class="payment-tab-btn active" data-tab="tab-card">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+            Cards
+          </button>
+          <button class="payment-tab-btn" data-tab="tab-upi">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            UPI
+          </button>
+          <button class="payment-tab-btn" data-tab="tab-netbanking">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+            Netbanking
+          </button>
+          <button class="payment-tab-btn" data-tab="tab-paytm">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 12l-4-4-4 4M12 16V8"></path></svg>
+            Wallets
+          </button>
+          <button class="payment-tab-btn" data-tab="tab-cod">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>
+            Pay at Pickup
+          </button>
+        </div>
+
+        <!-- 1. Card Tab Panel (Debit / Credit) -->
+        <div class="payment-method-panel active" id="tab-card">
+          <!-- Live Visual Card Mockup -->
+          <div class="card-visual-wrapper">
+            <div class="credit-card-mockup">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div class="card-chip"></div>
+                <span style="font-weight:800; font-style:italic; font-size:1.1rem; color:#f8fafc;" id="visualCardType">VISA / MASTERCARD</span>
+              </div>
+              <div class="card-number-display" id="visualCardNum">•••• •••• •••• ••••</div>
+              <div class="card-meta-row">
+                <div>
+                  <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase;">Card Holder</div>
+                  <div class="card-holder-name" id="visualCardHolder">YOUR NAME</div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase;">Expires</div>
+                  <div class="card-expiry-display" id="visualCardExp">MM/YY</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Form -->
+          <form id="cardPaymentForm" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="cardNumber">Card Number (16 Digits)</label>
+              <input type="text" id="cardNumber" class="form-control" placeholder="4111 2222 3333 4444" maxlength="19" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cardHolder">Name on Card</label>
+              <input type="text" id="cardHolder" class="form-control" placeholder="Full name as printed on card" required />
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+              <div class="form-group">
+                <label class="form-label" for="cardExpiry">Valid Thru (MM/YY)</label>
+                <input type="text" id="cardExpiry" class="form-control" placeholder="12/28" maxlength="5" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="cardCVV">CVV / CVC</label>
+                <input type="password" id="cardCVV" class="form-control" placeholder="•••" maxlength="4" required />
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
+              <div style="display:flex; gap:10px;">
+                <a href="payc1.html" class="btn btn-ghost btn-sm">Use Debit Gateway</a>
+                <a href="payc2.html" class="btn btn-ghost btn-sm">Use Credit Gateway</a>
+              </div>
+              <button type="submit" class="btn btn-primary btn-lg">
+                Pay Securely & Verify OTP &rarr;
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- 2. UPI Tab Panel -->
+        <div class="payment-method-panel" id="tab-upi">
+          <div style="max-width:480px; margin: 0 auto; text-align:center; padding: 20px 0;">
+            <p style="color:var(--text-secondary); margin-bottom: 20px;">
+              Pay directly using Google Pay, PhonePe, Paytm UPI, or any BHIM UPI handle.
+            </p>
+
+            <form id="upiPaymentForm">
+              <div class="form-group" style="text-align:left;">
+                <label class="form-label" for="upiId">Enter Virtual Payment Address (VPA / UPI ID)</label>
+                <input type="text" id="upiId" class="form-control" placeholder="username@okhdfcbank / 9876543210@paytm" required />
+              </div>
+
+              <div style="display:flex; gap:10px; justify-content:center; margin-bottom: 24px;">
+                <span class="badge badge-info">@okhdfcbank</span>
+                <span class="badge badge-info">@ybl</span>
+                <span class="badge badge-info">@paytm</span>
+                <span class="badge badge-info">@apl</span>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-lg" style="width:100%;">
+                Request Payment on UPI App &rarr;
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- 3. Netbanking Tab Panel -->
+        <div class="payment-method-panel" id="tab-netbanking">
+          <p style="color:var(--text-secondary); margin-bottom: 16px;">
+            Select your preferred bank to login to Internet Banking:
+          </p>
+
+          <div class="bank-selection-grid" id="bankSelectionGrid">
+            <button class="bank-option-btn selected" data-bank="State Bank of India">SBI</button>
+            <button class="bank-option-btn" data-bank="HDFC Bank">HDFC Bank</button>
+            <button class="bank-option-btn" data-bank="ICICI Bank">ICICI Bank</button>
+            <button class="bank-option-btn" data-bank="Axis Bank">Axis Bank</button>
+            <button class="bank-option-btn" data-bank="Kotak Mahindra Bank">Kotak</button>
+            <button class="bank-option-btn" data-bank="Punjab National Bank">PNB</button>
+          </div>
+
+          <div style="margin-top:24px; display:flex; justify-content:space-between; align-items:center;">
+            <a href="payc3.html" class="btn btn-ghost btn-sm">Full Netbanking Page</a>
+            <button class="btn btn-primary btn-lg" id="proceedNetbankingBtn">
+              Proceed to Bank Portal &rarr;
+            </button>
+          </div>
+        </div>
+
+        <!-- 4. Wallets Tab Panel -->
+        <div class="payment-method-panel" id="tab-paytm">
+          <div style="text-align:center; padding: 30px 0;">
+            <div style="font-size: 2.4rem; margin-bottom: 12px;">📱</div>
+            <h3 style="font-size: 1.2rem; font-weight:700; margin-bottom: 8px;">Paytm Wallet / Amazon Pay</h3>
+            <p style="color:var(--text-secondary); max-width: 400px; margin: 0 auto 24px;">
+              Pay with your registered mobile wallet balance. Fast 1-click checkout with automated OTP delivery.
+            </p>
+            <button class="btn btn-primary btn-lg" id="proceedWalletBtn">
+              Pay via Linked Wallet &rarr;
+            </button>
+          </div>
+        </div>
+
+        <!-- 5. Cash on Delivery (Pay at Pickup) -->
+        <div class="payment-method-panel" id="tab-cod">
+          <div style="background:var(--bg-subtle); border-radius:var(--radius-md); padding:24px; margin-bottom:24px;">
+            <h3 style="font-size:1.15rem; font-weight:700; margin-bottom:8px;">Pay at Pickup Spot</h3>
+            <p style="color:var(--text-secondary); font-size:0.92rem; line-height:1.6;">
+              Inspect your vehicle in person at the provider location. Once satisfied, make payment via Cash or UPI directly to the fleet provider before taking the keys.
+            </p>
+            <ul style="margin: 16px 0 0 20px; font-size:0.88rem; color:var(--text-secondary);">
+              <li>Original Driving License must be presented at key handover.</li>
+              <li>Security deposit of ₹500 is collected upon arrival.</li>
+              <li>Free cancellation available until scheduled pickup time.</li>
+            </ul>
+          </div>
+
+          <div style="text-align:right;">
+            <button class="btn btn-primary btn-lg" id="confirmCodBtn">
+              Confirm Reservation (Pay on Arrival) &rarr;
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="rentro-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>&copy; 2026 Rentro Rentals Marketplace. All rights reserved.</div>
+        <div style="display:flex; gap: 20px;">
+          <span>Simulated Payment Environment</span>
         </div>
       </div>
-    </form>
-  </div>
+    </div>
+  </footer>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const params = new URLSearchParams(window.location.search);
-      const price = parseFloat(params.get("price")) || 0; // price per hour
-      const hours = parseFloat(params.get("hours")) || 0; // total hours
+    document.addEventListener('DOMContentLoaded', () => {
+      RentroStorage.init();
+      RentroAuth.renderNavUser('nav-user-container');
 
-      const totalAmount = price * hours;
+      const draft = RentroPayments.getCheckoutDraft();
+      if (!draft) {
+        RentroUtils.showToast('No active booking draft found. Returning to vehicles...', 'warning');
+        setTimeout(() => window.location.href = 'search.html', 1000);
+        return;
+      }
 
-      document.getElementById("amount").textContent = `₹ ${totalAmount.toFixed(2)}`;
+      document.getElementById('payableAmountDisplay').textContent = RentroUtils.formatCurrency(draft.totalAmount);
 
-      const paymentMethods = document.querySelectorAll(".payment-method");
+      // Payment Tab Switching
+      const tabButtons = document.querySelectorAll('.payment-tab-btn');
+      const panels = document.querySelectorAll('.payment-method-panel');
 
-      const paymentPages = [
-        "payc1.html",   // Debit Card
-        "payc2.html",   // Credit Card
-        "cod.html",     // COD
-        "upi.html",     // UPI Payment
-        "mob.html",     // Mobikwik
-        "paytm.html"    // Paytm
-      ];
+      tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabButtons.forEach(b => b.classList.remove('active'));
+          panels.forEach(p => p.classList.remove('active'));
 
-      paymentMethods.forEach((method, index) => {
-        method.addEventListener("click", () => {
-          const targetPage = paymentPages[index];
-          if (targetPage) {
-            // Pass total amount as total query param (optional)
-            window.location.href = `${targetPage}?total=${totalAmount.toFixed(2)}`;
-          }
+          btn.classList.add('active');
+          const target = btn.getAttribute('data-tab');
+          const targetPanel = document.getElementById(target);
+          if (targetPanel) targetPanel.classList.add('active');
         });
+      });
+
+      // Live Card Visual Preview
+      const cardNumInput = document.getElementById('cardNumber');
+      const cardHolderInput = document.getElementById('cardHolder');
+      const cardExpInput = document.getElementById('cardExpiry');
+      const visualNum = document.getElementById('visualCardNum');
+      const visualHolder = document.getElementById('visualCardHolder');
+      const visualExp = document.getElementById('visualCardExp');
+
+      RentroValidator.formatCardNumberInput(cardNumInput);
+      RentroValidator.formatExpiryInput(cardExpInput);
+
+      if (cardNumInput) {
+        cardNumInput.addEventListener('input', (e) => {
+          visualNum.textContent = e.target.value.trim() || '•••• •••• •••• ••••';
+        });
+      }
+      if (cardHolderInput) {
+        cardHolderInput.addEventListener('input', (e) => {
+          visualHolder.textContent = e.target.value.trim() || 'YOUR NAME';
+        });
+      }
+      if (cardExpInput) {
+        cardExpInput.addEventListener('input', (e) => {
+          visualExp.textContent = e.target.value.trim() || 'MM/YY';
+        });
+      }
+
+      // Bank Selector in Netbanking tab
+      const bankButtons = document.querySelectorAll('.bank-option-btn');
+      let selectedBank = 'State Bank of India';
+      bankButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          bankButtons.forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          selectedBank = btn.getAttribute('data-bank');
+        });
+      });
+
+      // Submit Card Payment
+      document.getElementById('cardPaymentForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const rawNum = cardNumInput.value.replace(/\s+/g, '');
+        if (rawNum.length < 15) {
+          RentroUtils.showToast('Please enter a valid card number.', 'error');
+          return;
+        }
+        if (!cardHolderInput.value.trim()) {
+          RentroUtils.showToast('Please enter the name on the card.', 'error');
+          return;
+        }
+
+        // Generate Demo OTP & Route
+        RentroPayments.generateOTP();
+        draft.paymentMethod = 'Credit / Debit Card (Online)';
+        RentroPayments.saveCheckoutDraft(draft);
+
+        RentroUtils.showToast('Demo payment initialized. Verify OTP.', 'info');
+        setTimeout(() => window.location.href = 'otp.html', 500);
+      });
+
+      // Submit UPI Payment
+      document.getElementById('upiPaymentForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const upiId = document.getElementById('upiId').value;
+        if (!upiId.includes('@')) {
+          RentroUtils.showToast('Please enter a valid UPI ID (e.g. user@bank).', 'error');
+          return;
+        }
+
+        RentroPayments.generateOTP();
+        draft.paymentMethod = `UPI (${upiId})`;
+        RentroPayments.saveCheckoutDraft(draft);
+
+        RentroUtils.showToast('Payment request sent. Enter OTP to complete.', 'info');
+        setTimeout(() => window.location.href = 'otp.html', 500);
+      });
+
+      // Submit Netbanking
+      document.getElementById('proceedNetbankingBtn').addEventListener('click', () => {
+        RentroPayments.generateOTP();
+        draft.paymentMethod = `Netbanking (${selectedBank})`;
+        RentroPayments.saveCheckoutDraft(draft);
+
+        RentroUtils.showToast(`Redirecting to ${selectedBank} gateway simulation...`, 'info');
+        setTimeout(() => window.location.href = 'otp.html', 500);
+      });
+
+      // Submit Wallet
+      document.getElementById('proceedWalletBtn').addEventListener('click', () => {
+        RentroPayments.generateOTP();
+        draft.paymentMethod = 'Paytm Wallet';
+        RentroPayments.saveCheckoutDraft(draft);
+
+        RentroUtils.showToast('Wallet balance debited (Demo). Enter OTP.', 'info');
+        setTimeout(() => window.location.href = 'otp.html', 500);
+      });
+
+      // Submit Cash on Delivery
+      document.getElementById('confirmCodBtn').addEventListener('click', () => {
+        const result = RentroPayments.processFinalPayment('Cash on Delivery');
+        if (result.success) {
+          RentroUtils.showToast('Booking confirmed successfully!', 'success');
+          setTimeout(() => window.location.href = 'success.html', 500);
+        } else {
+          RentroUtils.showToast(result.message, 'error');
+        }
       });
     });
   </script>

@@ -2,167 +2,323 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Provider Dashboard</title>
-
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <!-- Dashboard CSS -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Host Fleet Dashboard - Rentro Rentals</title>
+  
+  <link rel="stylesheet" href="../styles/global.css" />
   <link rel="stylesheet" href="../styles/dashboard.css" />
-  <script src="../scripts/auth.js"></script>
+  <link rel="stylesheet" href="../styles/responsive.css" />
+  
+  <script src="../scripts/utils.js" defer></script>
+  <script src="../scripts/storage.js" defer></script>
+  <script src="../scripts/auth.js" defer></script>
+  <script src="../scripts/vehicles.js" defer></script>
+  <script src="../scripts/bookings.js" defer></script>
+  <script src="../scripts/dashboard.js" defer></script>
 </head>
 <body>
-  <div class="container">
-    <aside class="sidebar">
-      <button class="nav-btn active" data-section="about"><i class="fas fa-info-circle"></i> About</button>
-      <button class="nav-btn" data-section="providers"><i class="fas fa-user-tie"></i> Providers</button>
-      <button class="nav-btn" data-section="addVehicle"><i class="fas fa-plus"></i> Add Vehicle</button>
-      <button class="nav-btn" data-section="vehicles"><i class="fas fa-car"></i> Vehicles</button>
-      <button class="nav-btn" data-section="bookings"><i class="fas fa-calendar-check"></i> Bookings</button>
-      <button class="nav-btn" data-section="earnings"><i class="fas fa-dollar-sign"></i> Earnings</button>
-      <button class="nav-btn logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+
+  <!-- Top Navigation Bar -->
+  <header class="rentro-navbar">
+    <div class="container navbar-inner" style="max-width: 100%; padding: 0 32px;">
+      <a href="../index.html" class="brand-logo">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="5" cy="18" r="3"></circle><circle cx="19" cy="18" r="3"></circle><path d="M12 18V8a2 2 0 0 1 2-2h4"></path><polyline points="15 3 18 6 15 9"></polyline><path d="M5 18h14"></path></svg>
+        </div>
+        <span>Rentro<span class="brand-accent">Fleet</span></span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="create.html" class="btn btn-primary btn-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+          List New Vehicle
+        </a>
+        <div id="nav-user-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="dashboard-wrapper">
+    <!-- Left Sidebar -->
+    <aside class="dashboard-sidebar">
+      <div class="provider-mini-badge">
+        <img id="dashProviderAvatar" src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=150&q=80" alt="Avatar" class="provider-mini-avatar" />
+        <div class="provider-mini-info">
+          <h4 id="dashProviderName">Kiran Kumar</h4>
+          <span id="dashBusinessName">Coastal Wheels Fleet</span>
+        </div>
+      </div>
+
+      <ul class="sidebar-nav-list">
+        <li>
+          <button class="sidebar-btn active" data-tab="overview-tab">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+            Overview
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-btn" data-tab="fleet-tab">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="18" r="3"></circle><circle cx="19" cy="18" r="3"></circle><path d="M12 18V8a2 2 0 0 1 2-2h4"></path><polyline points="15 3 18 6 15 9"></polyline><path d="M5 18h14"></path></svg>
+            My Fleet
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-btn" data-tab="bookings-tab">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            Bookings
+          </button>
+        </li>
+        <li>
+          <button class="sidebar-btn" data-tab="earnings-tab">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            Earnings
+          </button>
+        </li>
+        <li>
+          <a href="create.html" class="sidebar-btn" style="color:var(--primary-hover);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+            Add Vehicle
+          </a>
+        </li>
+        <li>
+          <a href="del.html" class="sidebar-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            Manage Vehicles
+          </a>
+        </li>
+      </ul>
     </aside>
 
-    <main class="main-content">
-      <!-- About Section -->
-      <section id="about" class="content-section active">
-        <div class="about-wrapper">
-          <h1 class="header">About Us</h1>
-          <div class="section"><h2>Our Story</h2><p>We started with a simple idea  to provide outstanding services that empower our clients to succeed.
-      Our team is committed to delivering innovative and reliable solutions tailored to your needs.
-    </p></div>
-          <div class="section"><h2>Our Mission</h2><p>
-      To build lasting partnerships through trust, transparency, and exceptional service quality.
-      We aim to lead the market with forward-thinking strategies.
-    </p></div>
+    <!-- Main Workspace -->
+    <main class="dashboard-main">
+      
+      <!-- TAB 1: OVERVIEW -->
+      <section class="dashboard-tab-content active" id="overview-tab">
+        <div class="dashboard-topbar">
+          <div class="dashboard-title-box">
+            <h1>Fleet Operations Overview</h1>
+            <p>Real-time vehicle availability, live bookings, and revenue metrics</p>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <a href="create.html" class="btn btn-primary">+ Add Vehicle</a>
+            <a href="del.html" class="btn btn-secondary">Manage Listings</a>
+          </div>
+        </div>
+
+        <!-- Metric Cards Grid -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-data">
+              <h3 id="statTotalVehicles">0</h3>
+              <p>Total Vehicles</p>
+            </div>
+            <div class="metric-icon-wrap" style="background:#e0f2fe; color:#0284c7;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="18" r="3"></circle><circle cx="19" cy="18" r="3"></circle><path d="M12 18V8a2 2 0 0 1 2-2h4"></path><polyline points="15 3 18 6 15 9"></polyline><path d="M5 18h14"></path></svg>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-data">
+              <h3 id="statActiveVehicles">0 Online</h3>
+              <p>Active Fleet</p>
+            </div>
+            <div class="metric-icon-wrap" style="background:var(--success-light); color:var(--success);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-data">
+              <h3 id="statTotalBookings">0</h3>
+              <p id="statPendingBookings">0 Pending</p>
+            </div>
+            <div class="metric-icon-wrap" style="background:var(--warning-light); color:var(--warning);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-data">
+              <h3 id="statTotalEarnings">₹0</h3>
+              <p>Total Revenue</p>
+            </div>
+            <div class="metric-icon-wrap" style="background:#fef3c7; color:#b45309;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panels Grid: Chart + Quick Summary -->
+        <div class="dashboard-panels-grid">
+          <!-- Revenue Bar Chart -->
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <h3>Monthly Fleet Earnings</h3>
+              <span style="font-size:0.85rem; color:var(--success); font-weight:700;" id="statMonthlyEarnings">+ ₹0 this month</span>
+            </div>
+
+            <div class="earnings-bar-chart">
+              <div class="chart-bar-col">
+                <div class="chart-bar-fill" style="height: 45%;"></div>
+                <span class="chart-bar-label">Jul</span>
+              </div>
+              <div class="chart-bar-col">
+                <div class="chart-bar-fill" style="height: 60%;"></div>
+                <span class="chart-bar-label">Aug</span>
+              </div>
+              <div class="chart-bar-col">
+                <div class="chart-bar-fill" style="height: 50%;"></div>
+                <span class="chart-bar-label">Sep</span>
+              </div>
+              <div class="chart-bar-col">
+                <div class="chart-bar-fill" style="height: 75%;"></div>
+                <span class="chart-bar-label">Oct</span>
+              </div>
+              <div class="chart-bar-col">
+                <div class="chart-bar-fill" style="height: 90%;"></div>
+                <span class="chart-bar-label">Nov</span>
+              </div>
+              <div class="chart-bar-col">
+                <div class="chart-bar-fill" style="height: 30%;"></div>
+                <span class="chart-bar-label">Dec (Proj)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Host Guidelines -->
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <h3>Fleet Quality Standards</h3>
+            </div>
+            <ul style="display:flex; flex-direction:column; gap:12px; font-size:0.88rem; color:var(--text-secondary); list-style:none;">
+              <li style="display:flex; gap:10px;"><span style="color:var(--success);">✔</span> Keep 2 sanitized ISI-marked helmets with each vehicle.</li>
+              <li style="display:flex; gap:10px;"><span style="color:var(--success);">✔</span> Inspect tire pressure and fuel level prior to key handover.</li>
+              <li style="display:flex; gap:10px;"><span style="color:var(--success);">✔</span> Check renter's original Driving License at pickup.</li>
+              <li style="display:flex; gap:10px;"><span style="color:var(--success);">✔</span> Confirm returned condition promptly to release deposits.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Recent Bookings Table -->
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <h3>Recent Booking Activity</h3>
+            <button class="btn btn-ghost btn-sm" onclick="document.querySelector('[data-tab=bookings-tab]').click()">View All Bookings &rarr;</button>
+          </div>
+
+          <div class="data-table-wrapper">
+            <table class="rentro-table">
+              <thead>
+                <tr>
+                  <th>Booking ID</th>
+                  <th>Vehicle</th>
+                  <th>Rider</th>
+                  <th>Scheduled Pickup</th>
+                  <th>Fare</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="recentBookingsTableBody">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
-      <!-- Providers Section -->
-<section id="providers" class="content-section">
-  <h2>Provider Details</h2>
-  <!-- <form id="providerForm"> -->
-    <div class="form-group">
-      <label for="providerName">Name:</label>
-      <input type="text" id="providerName" required />
-    </div>
-    <div class="form-group">
-      <label for="providerEmail">Email:</label>
-      <input type="email" id="providerEmail" required />
-    </div>
-    <div class="form-group">
-      <label for="providerPhone">Phone:</label>
-      <input type="tel" id="providerPhone" required />
-    </div>
-    <div class="form-group">
-      <label for="providerCompany">Vehicle type:</label>
-      <input type="text" id="providerCompany" />
-    </div>
-    <div class="form-group">
-  <label for="providerAddress">Address:</label>
-  <input type="text" id="providerAddress" />
-</div>
+      <!-- TAB 2: FLEET LIST -->
+      <section class="dashboard-tab-content" id="fleet-tab">
+        <div class="dashboard-topbar">
+          <div class="dashboard-title-box">
+            <h1>My Vehicle Fleet</h1>
+            <p>Manage listing prices, toggle online/offline availability, or update specs</p>
+          </div>
+          <a href="create.html" class="btn btn-primary">+ List New Vehicle</a>
+        </div>
 
-    <button type="submit" class="submit-btn">Save </button>
-    <p id="providerMessage"></p>
-  <!-- </form> -->
-   <!-- Existing inputs and save button here -->
-
-<h2 style="margin-top: 30px;">Previous Providers</h2>
-<div id="providerCardContainer" style="margin-top: 10px;"></div>
-
-</section>
-
-
-
-      <!-- Add Vehicle Section -->
-<section id="addVehicle" class="content-section">
-  <h2>Add Vehicle</h2>
-  <!-- <form id="addVehicleForm"> -->
-    <div class="form-group">
-      <label for="vehicleName">Vehicle Name:</label>
-      <input type="text" id="vehicleName" required />
-    </div>
-    <div class="form-group">
-      <label for="vehicleType">Type:</label>
-      <select id="vehicleType" required>
-        <option value="">Select type</option>
-        <option value="Scooter">Scooter</option>
-        <option value="Bike">Bike</option>
-        <option value="Bicycle">Bicycle</option>
-        <option value="Car">Car</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="vehiclePrice">Price (Rs/hr):</label>
-      <input type="number" id="vehiclePrice" min="0" step="0.01" required />
-    </div>
-
-    <div class="form-group">
-      <label for="vehicleLocation">Location (City):</label>
-      <input type="text" id="vehicleLocation" required placeholder="e.g. VIZAG" />
-    </div>
-        <div class="form-group">
-      <label for="vehicleImage">Image URL:</label>
-      <input type="url" id="vehicleImage" placeholder="Optional" />
-    </div>
-    <button type="submit" class="submit-btn">Add Vehicle</button>
-    <p id="addVehicleMessage"></p>
-  <!-- </form> -->
-</section>
-      <!-- Vehicles Section -->
-<section id="vehicles" class="content-section">
-  <h2>Vehicles</h2>
-  <section id="scooters" class="vehicle-section">
-    <h3>Scooters</h3>
-    <div class="vehicle-container" id="scooter-container"></div>
-  </section>
-
-  <section id="bikes" class="vehicle-section">
-    <h3>Bikes</h3>
-    <div class="vehicle-container" id="bike-container"></div>
-  </section>
-
-  <section id="bicycles" class="vehicle-section">
-    <h3>Bicycles</h3>
-    <div class="vehicle-container" id="bicycle-container"></div>
-  </section>
-
-  <section id="cars" class="vehicle-section">
-    <h3>Cars</h3>
-    <div class="vehicle-container" id="car-container"></div>
-  </section>
-</section>
-
-
-      <!-- Bookings Section -->
-      <section id="bookings" class="content-section">
-        <h2>Bookings</h2>
-        <div id="bookingsContainer"></div>
+        <div class="panel-card">
+          <div class="data-table-wrapper">
+            <table class="rentro-table">
+              <thead>
+                <tr>
+                  <th>Vehicle & Reg</th>
+                  <th>Location</th>
+                  <th>Rates</th>
+                  <th>Availability</th>
+                  <th>Rating</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="fleetTableBody">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
       </section>
 
-      <!-- Earnings Section -->
-      <section id="earnings" class="content-section">
-        <h2>Earnings Summary</h2>
-        <div id="earningsSummary"></div>
+      <!-- TAB 3: BOOKINGS -->
+      <section class="dashboard-tab-content" id="bookings-tab">
+        <div class="dashboard-topbar">
+          <div class="dashboard-title-box">
+            <h1>Reservation Requests & Trips</h1>
+            <p>Approve incoming bookings, view pickup schedules, and complete returned rides</p>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <div class="data-table-wrapper">
+            <table class="rentro-table">
+              <thead>
+                <tr>
+                  <th>Booking ID</th>
+                  <th>Vehicle</th>
+                  <th>Rider Contact</th>
+                  <th>Schedule</th>
+                  <th>Fare</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="bookingsTableBody">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
       </section>
+
+      <!-- TAB 4: EARNINGS -->
+      <section class="dashboard-tab-content" id="earnings-tab">
+        <div class="dashboard-topbar">
+          <div class="dashboard-title-box">
+            <h1>Earnings & Payout Ledger</h1>
+            <p>Transaction history for completed trips and settlements</p>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <div class="data-table-wrapper">
+            <table class="rentro-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Booking ID</th>
+                  <th>Vehicle</th>
+                  <th>Payment Mode</th>
+                  <th>Net Earnings</th>
+                </tr>
+              </thead>
+              <tbody id="earningsHistoryTableBody">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
     </main>
   </div>
 
-  <script>
-    // Check provider access on page load
-    window.addEventListener('DOMContentLoaded', () => {
-      if (!requireProvider()) {
-        return;
-      }
-      
-      // Load provider email in the form if available
-      const session = checkUserSession();
-      if (session && session.email) {
-        document.getElementById('providerEmail').value = session.email;
-      }
-    });
-  </script>
-  <script src="../scripts/dashboard.js"></script>
 </body>
 </html>

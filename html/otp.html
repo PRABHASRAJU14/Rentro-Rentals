@@ -2,486 +2,211 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Enter OTP</title>
-  <script src="../scripts/auth.js"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
-    }
-
-    body {
-      background-color: #fffcee;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      padding: 20px;
-    }
-
-    .container {
-      background: #fff;
-      max-width: 480px;
-      width: 100%;
-      height: 480px;
-      padding: 24px 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      border: 2px solid #f9d97a;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease-in-out;
-    }
-
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .login-text {
-      font-weight: 700;
-      color: #ff914d;
-      font-size: 1.2em;
-      user-select: none;
-    }
-
-    .title {
-      text-align: center;
-      color: #ff914d;
-      font-weight: 700;
-      font-size: 1.8em;
-      margin-top: 6px;
-      margin-bottom: 6px;
-    }
-
-    .otp-info {
-      font-weight: 600;
-      color: #333;
-      text-align: center;
-      font-size: 1em;
-      margin-bottom: 6px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .otp-info strong {
-      color: #ff914d;
-      user-select: text;
-    }
-
-    .edit-btn {
-      color: #000;
-      background-color: #ffcc47;
-      border: none;
-      padding: 4px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.85em;
-      user-select: none;
-      transition: background-color 0.3s;
-      flex-shrink: 0;
-    }
-
-    .edit-btn:hover {
-      background-color: #ffc107;
-    }
-
-    #edit-section {
-      display: none;
-      margin-top: 10px;
-      justify-content: flex-start;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: nowrap;
-      flex-direction: row;
-    }
-
-    #email-input {
-      flex-grow: 1;
-      padding: 8px 12px;
-      font-size: 1em;
-      border: 2px solid #f0d361;
-      border-radius: 8px;
-      background-color: #fff6cc;
-      transition: border-color 0.3s;
-      min-width: 0;
-    }
-
-    #email-input:focus {
-      border-color: #ffc107;
-      outline: none;
-    }
-
-    #edit-section button {
-      background-color: #ffcc47;
-      border: none;
-      color: black;
-      font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      flex-shrink: 0;
-      font-size: 0.9em;
-      user-select: none;
-    }
-
-    #edit-section button:hover {
-      background-color: #ffc107;
-    }
-
-    .resend-btn {
-      background-color: #ffcc47;
-      border: none;
-      color: black;
-      font-weight: 700;
-      padding: 8px 0;
-      border-radius: 8px;
-      cursor: pointer;
-      width: 100%;
-      font-size: 1em;
-      transition: background-color 0.3s;
-      user-select: none;
-    }
-
-    .resend-btn:hover:not(:disabled) {
-      background-color: #ffc107;
-    }
-
-    .resend-btn:disabled {
-      background-color: #f0d361;
-      cursor: not-allowed;
-      color: #666;
-    }
-
-    .otp-inputs {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 6px;
-    }
-
-    .otp-digit {
-      width: 42px;
-      height: 42px;
-      text-align: center;
-      font-size: 1.4em;
-      border: 2px solid #f9d97a;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      background-color: #fff6cc;
-      outline: none;
-      transition: border-color 0.3s, box-shadow 0.3s;
-    }
-
-    .otp-digit:focus {
-      border-color: #ffc107;
-      box-shadow: 0 0 8px #ffc107;
-    }
-
-    #verify-btn {
-      background-color: #ffcc47;
-      border: none;
-      color: black;
-      font-weight: 700;
-      padding: 10px 0;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 1em;
-      transition: background-color 0.3s;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      user-select: none;
-    }
-
-    #verify-btn:hover {
-      background-color: #ffc107;
-    }
-
-    .verify-arrow {
-      font-weight: 700;
-      font-size: 1.6em;
-    }
-
-    #error-msg {
-      color: red;
-      font-size: 0.9em;
-      text-align: center;
-      margin-top: -8px;
-      margin-bottom: 8px;
-      min-height: 20px;
-      display: none;
-      user-select: none;
-    }
-
-    .loading {
-      opacity: 0.6;
-      pointer-events: none;
-    }
-
-    @media (min-width: 1024px) {
-      .container {
-        max-width: 600px;
-        height: auto;
-        padding: 32px 40px;
-        border-radius: 20px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        gap: 20px;
-      }
-
-      .otp-digit {
-        width: 50px;
-        height: 50px;
-        font-size: 1.6em;
-      }
-
-      .title {
-        font-size: 2em;
-      }
-
-      .otp-info {
-        font-size: 1.1em;
-      }
-
-      .edit-btn,
-      .resend-btn,
-      #verify-btn,
-      #edit-section button {
-        font-size: 1em;
-      }
-
-      #email-input {
-        font-size: 1em;
-      }
-
-      body {
-        padding: 40px;
-      }
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enter OTP - Rentro Rentals</title>
+  
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/booking.css" />
+  <link rel="stylesheet" href="../styles/responsive.css" />
+  
+  <script src="../scripts/utils.js" defer></script>
+  <script src="../scripts/storage.js" defer></script>
+  <script src="../scripts/auth.js" defer></script>
+  <script src="../scripts/vehicles.js" defer></script>
+  <script src="../scripts/bookings.js" defer></script>
+  <script src="../scripts/payments.js" defer></script>
 </head>
 <body>
 
-<div class="container" role="main" aria-label="OTP Verification container">
-  <header class="header">
-    <span class="login-text">LOGIN</span>
+  <header class="rentro-navbar">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="brand-logo">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="5" cy="18" r="3"></circle><circle cx="19" cy="18" r="3"></circle><path d="M12 18V8a2 2 0 0 1 2-2h4"></path><polyline points="15 3 18 6 15 9"></polyline><path d="M5 18h14"></path></svg>
+        </div>
+        <span>Rentro<span class="brand-accent">Rentals</span></span>
+      </a>
+      <div style="font-size:0.9rem; font-weight:700; color:var(--text-secondary);">
+        Two-Factor Authentication
+      </div>
+    </div>
   </header>
 
-  <h1 class="title">Enter OTP</h1>
-
-  <p class="otp-info" aria-live="polite">
-    OTP sent to <strong id="user-email" aria-label="Email address"></strong>
-    <button class="edit-btn" id="edit-btn" aria-controls="edit-section" aria-expanded="false">EDIT</button>
-  </p>
-
-  <div id="edit-section" role="region" aria-hidden="true">
-    <input type="email" id="email-input" placeholder="Enter your email address" aria-label="Email input" />
-    <button onclick="updateEmail()">Save</button>
-  </div>
-
-  <button class="resend-btn" id="resend-btn">RESEND</button>
-
-  <div class="otp-inputs" role="group" aria-label="OTP input fields">
-    <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" aria-label="OTP digit 1" />
-    <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" aria-label="OTP digit 2" />
-    <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" aria-label="OTP digit 3" />
-    <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" aria-label="OTP digit 4" />
-    <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" aria-label="OTP digit 5" />
-    <input class="otp-digit" type="tel" maxlength="1" inputmode="numeric" aria-label="OTP digit 6" />
-  </div>
-
-  <p id="error-msg" role="alert"></p>
-
-  <button class="verify-btn" id="verify-btn">
-    VERIFY <span class="verify-arrow" aria-hidden="true">&rarr;</span>
-  </button>
-</div>
-
-<script>
-  // Email display and storage
-  const emailDisplay = document.getElementById("user-email");
-  const storedEmail = localStorage.getItem("userEmail");
-  if (storedEmail) emailDisplay.textContent = storedEmail;
-
-  const inputs = document.querySelectorAll(".otp-digit");
-
-  function getOTP() {
-    return Array.from(inputs).map(input => input.value).join('');
-  }
-
-  // OTP input navigation
-  inputs.forEach((input, index) => {
-    input.addEventListener("input", () => {
-      input.value = input.value.replace(/\D/, '');
-      if (input.value && index < inputs.length - 1) {
-        inputs[index + 1].focus();
-      }
-      if (getOTP().length === inputs.length) {
-        hideError();
-      }
-    });
-
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Backspace" && input.value === "" && index > 0) {
-        inputs[index - 1].focus();
-      }
-    });
-  });
-
-  // Edit email section
-  const editBtn = document.getElementById("edit-btn");
-  const emailInput = document.getElementById("email-input");
-  const editSection = document.getElementById("edit-section");
-
-  editBtn.addEventListener("click", () => {
-    const expanded = editBtn.getAttribute("aria-expanded") === "true";
-    if (expanded) {
-      editSection.style.display = "none";
-      editSection.setAttribute("aria-hidden", "true");
-      editBtn.setAttribute("aria-expanded", "false");
-    } else {
-      editSection.style.display = "flex";
-      editSection.setAttribute("aria-hidden", "false");
-      editBtn.setAttribute("aria-expanded", "true");
-      emailInput.value = localStorage.getItem("userEmail") || "";
-      emailInput.focus();
-    }
-  });
-
-  function updateEmail() {
-    const email = emailInput.value.trim();
-    if (!email.match(/^[^@]+@[^@]+\.[^@]+$/)) {
-      alert("Please enter a valid email address.");
-      return;
-    }
-    emailDisplay.textContent = email;
-    localStorage.setItem("userEmail", email);
-    editSection.style.display = "none";
-    editSection.setAttribute("aria-hidden", "true");
-    editBtn.setAttribute("aria-expanded", "false");
-    sendOTP(); // Send OTP whenever email is updated
-  }
-
-  // Show/hide error message
-  function showError(msg) {
-    const errorMsg = document.getElementById("error-msg");
-    errorMsg.textContent = msg;
-    errorMsg.style.display = "block";
-  }
-  function hideError() {
-    document.getElementById("error-msg").style.display = "none";
-  }
-
-  // Send OTP to backend with environment detection
-  async function sendOTP() {
-    const email = localStorage.getItem("userEmail");
-    if (!email) {
-      showError("No email provided.");
-      return;
-    }
-    
-    const resendBtn = document.getElementById("resend-btn");
-    const container = document.querySelector('.container');
-    
-    resendBtn.disabled = true;
-    resendBtn.textContent = "Sending...";
-    container.classList.add('loading');
-    
-    try {
-      const backendUrl = getBackendUrl();
-      const res = await fetch(`${backendUrl}/send-otp`, {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
-      });
-      
-      const data = await res.json();
-      if (data.success) {
-        hideError();
-        showError("OTP sent successfully!");
-        setTimeout(hideError, 3000);
-      } else {
-        showError(data.error || "Could not send OTP.");
-      }
-    } catch (error) {
-      console.error('OTP send error:', error);
-      showError("Network error. Please check your connection.");
-    } finally {
-      container.classList.remove('loading');
-      setTimeout(() => {
-        resendBtn.disabled = false;
-        resendBtn.textContent = "RESEND";
-      }, 30000);
-    }
-  }
-  
-  document.getElementById("resend-btn").addEventListener("click", sendOTP);
-
-  // Auto send OTP on page load if email exists
-  if (storedEmail) sendOTP();
-
-  // Verify OTP with backend
-  document.getElementById("verify-btn").addEventListener("click", async () => {
-    const otp = getOTP();
-    const email = localStorage.getItem("userEmail");
-    
-    if (otp.length !== 6) {
-      showError("Please enter a 6-digit OTP.");
-      return;
-    }
-    
-    const verifyBtn = document.getElementById("verify-btn");
-    const container = document.querySelector('.container');
-    
-    verifyBtn.disabled = true;
-    verifyBtn.textContent = "Verifying...";
-    container.classList.add('loading');
-    
-    try {
-      const backendUrl = getBackendUrl();
-      const res = await fetch(`${backendUrl}/verify-otp`, {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, otp })
-      });
-      
-      const data = await res.json();
-      if (data.success) {
-        // Create consumer session
-        const userSession = {
-          email: email,
-          role: 'consumer',
-          loginTime: new Date().toISOString()
-        };
-        localStorage.setItem('userSession', JSON.stringify(userSession));
+  <main class="checkout-step-container">
+    <div class="container">
+      <div class="checkout-card otp-box-container">
         
-        window.location.href = "city.html";
-      } else {
-        showError(data.error || "Invalid OTP. Please try again.");
-      }
-    } catch (error) {
-      console.error('OTP verify error:', error);
-      showError("Network error. Please check your connection.");
-    } finally {
-      container.classList.remove('loading');
-      verifyBtn.disabled = false;
-      verifyBtn.textContent = "VERIFY →";
-    }
-  });
-</script>
+        <!-- Demonstration OTP Banner -->
+        <div class="demo-otp-banner">
+          <span>Demo 3D-Secure Code (Auto-Generated):</span>
+          <strong id="demoOtpDisplay">------</strong>
+          <button type="button" class="btn btn-outline-primary btn-sm" id="autoFillOtpBtn" style="margin-top:8px; background:#fff;">
+            Auto-Fill OTP
+          </button>
+        </div>
 
+        <h1 style="font-size:1.6rem; font-weight:800; color:var(--secondary); margin-bottom:8px;">
+          Authenticate Transaction
+        </h1>
+        <p style="color:var(--text-secondary); font-size:0.92rem;">
+          Enter the 6-digit verification code sent to your registered mobile number <strong id="maskedPhone">+91 ******3210</strong>
+        </p>
+
+        <!-- 6 Digit OTP Inputs -->
+        <form id="otpVerifyForm">
+          <div class="otp-inputs-row">
+            <input type="text" class="otp-digit-input" maxlength="1" data-index="0" autofocus />
+            <input type="text" class="otp-digit-input" maxlength="1" data-index="1" />
+            <input type="text" class="otp-digit-input" maxlength="1" data-index="2" />
+            <input type="text" class="otp-digit-input" maxlength="1" data-index="3" />
+            <input type="text" class="otp-digit-input" maxlength="1" data-index="4" />
+            <input type="text" class="otp-digit-input" maxlength="1" data-index="5" />
+          </div>
+
+          <div id="otpErrorMsg" style="display:none; color:var(--danger); font-size:0.88rem; font-weight:600; margin-bottom:16px;">
+            Invalid OTP code. Please enter the demo code shown above.
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg" id="submitOtpBtn" style="width:100%; margin-bottom:18px;">
+            Authorize & Confirm Booking
+          </button>
+
+          <!-- Resend with Timer -->
+          <div style="font-size:0.88rem; color:var(--text-muted);">
+            Didn't receive code? 
+            <button type="button" id="resendOtpBtn" style="background:none; border:none; color:var(--primary-hover); font-weight:700; cursor:pointer;" disabled>
+              Resend in <span id="cooldownTimer">30</span>s
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      RentroStorage.init();
+
+      const draft = RentroPayments.getCheckoutDraft();
+      if (!draft) {
+        RentroUtils.showToast('No booking in progress. Returning to search...', 'warning');
+        setTimeout(() => window.location.href = 'search.html', 1000);
+        return;
+      }
+
+      // Display masked phone
+      const phone = draft.customerPhone || '9876543210';
+      document.getElementById('maskedPhone').textContent = `+91 ******${phone.slice(-4)}`;
+
+      // Display or Generate OTP
+      let currentOtp = RentroPayments.getCurrentOTP();
+      if (!currentOtp) {
+        currentOtp = RentroPayments.generateOTP();
+      }
+      document.getElementById('demoOtpDisplay').textContent = currentOtp;
+
+      // Handle 6 Input Fields Auto-advancement
+      const inputs = document.querySelectorAll('.otp-digit-input');
+
+      inputs.forEach((input, index) => {
+        input.addEventListener('input', (e) => {
+          const val = e.target.value.replace(/[^0-9]/g, '');
+          e.target.value = val;
+
+          if (val && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+          }
+        });
+
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !input.value && index > 0) {
+            inputs[index - 1].focus();
+          }
+        });
+
+        // Handle Paste
+        input.addEventListener('paste', (e) => {
+          e.preventDefault();
+          const pasteData = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '');
+          if (pasteData) {
+            for (let i = 0; i < Math.min(pasteData.length, inputs.length); i++) {
+              inputs[i].value = pasteData[i];
+            }
+            const nextIdx = Math.min(pasteData.length, inputs.length - 1);
+            inputs[nextIdx].focus();
+          }
+        });
+      });
+
+      // Auto-Fill Button
+      document.getElementById('autoFillOtpBtn').addEventListener('click', () => {
+        const otpStr = RentroPayments.getCurrentOTP() || '';
+        for (let i = 0; i < Math.min(otpStr.length, inputs.length); i++) {
+          inputs[i].value = otpStr[i];
+        }
+        inputs[inputs.length - 1].focus();
+      });
+
+      // Resend Cooldown Timer
+      let cooldown = 30;
+      const resendBtn = document.getElementById('resendOtpBtn');
+      const timerSpan = document.getElementById('cooldownTimer');
+
+      const interval = setInterval(() => {
+        cooldown--;
+        if (cooldown <= 0) {
+          clearInterval(interval);
+          resendBtn.disabled = false;
+          resendBtn.textContent = 'Resend OTP Now';
+        } else {
+          timerSpan.textContent = cooldown;
+        }
+      }, 1000);
+
+      resendBtn.addEventListener('click', () => {
+        const newOtp = RentroPayments.generateOTP();
+        document.getElementById('demoOtpDisplay').textContent = newOtp;
+        RentroUtils.showToast(`New demo OTP sent: ${newOtp}`, 'info');
+        resendBtn.disabled = true;
+        cooldown = 30;
+        resendBtn.innerHTML = `Resend in <span id="cooldownTimer">30</span>s`;
+      });
+
+      // Form Submission & Verification
+      const otpForm = document.getElementById('otpVerifyForm');
+      const errorMsg = document.getElementById('otpErrorMsg');
+
+      otpForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const enteredOtp = Array.from(inputs).map(i => i.value).join('');
+
+        if (enteredOtp.length < 6) {
+          errorMsg.style.display = 'block';
+          errorMsg.textContent = 'Please enter all 6 digits of the OTP code.';
+          return;
+        }
+
+        const verifyResult = RentroPayments.verifyOTP(enteredOtp);
+        if (verifyResult.success) {
+          errorMsg.style.display = 'none';
+          
+          // Commit booking to database
+          const finalResult = RentroPayments.processFinalPayment(draft.paymentMethod || 'Online Payment');
+
+          if (finalResult.success) {
+            RentroUtils.showToast('Payment verified successfully! Generating receipt...', 'success');
+            setTimeout(() => window.location.href = 'success.html', 600);
+          } else {
+            errorMsg.style.display = 'block';
+            errorMsg.textContent = finalResult.message;
+          }
+        } else {
+          errorMsg.style.display = 'block';
+          errorMsg.textContent = verifyResult.message;
+        }
+      });
+    });
+  </script>
 </body>
 </html>

@@ -1,0 +1,173 @@
+/**
+ * Rentro Rentals - Responsive Breakpoints & Mobile Enhancements
+ * Clean mobile navigation, sticky action bars, and flexible layouts.
+ */
+
+@media (max-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Navigation Bar */
+  .navbar-inner {
+    height: 64px;
+  }
+
+  .nav-links {
+    display: none; /* Mobile Drawer / Menu toggle */
+  }
+
+  .hide-on-mobile {
+    display: none !important;
+  }
+
+  .mobile-menu-btn {
+    display: flex !important;
+  }
+
+  /* Grid Layouts Stack */
+  .search-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .search-filter-sidebar {
+    display: none; /* Toggled via mobile filter sheet */
+  }
+
+  .search-filter-sidebar.mobile-open {
+    display: block !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    background: #fff;
+    padding: 24px;
+    overflow-y: auto;
+  }
+
+  /* Vehicle Detail Page */
+  .vehicle-detail-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .booking-widget-card {
+    position: static !important;
+    margin-top: 24px;
+  }
+
+  /* Footer */
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  /* Hero Section */
+  .hero-search-card {
+    padding: 20px !important;
+  }
+
+  .hero-search-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .rentro-toast-container {
+    left: 16px;
+    right: 16px;
+    top: 16px;
+  }
+
+  .rentro-toast {
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  /* Dashboard */
+  .dashboard-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .dashboard-sidebar {
+    display: none;
+  }
+
+  .dashboard-sidebar.mobile-open {
+    display: flex !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    z-index: 1000;
+    box-shadow: var(--shadow-xl);
+  }
+}
+
+/* Mobile Hamburger Menu Drawer */
+.mobile-nav-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  padding: 8px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .mobile-nav-toggle {
+    display: block;
+  }
+}
+
+.mobile-drawer {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 290px;
+  height: 100vh;
+  background: #fff;
+  z-index: 999;
+  box-shadow: -4px 0 24px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-drawer.open {
+  right: 0;
+}
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.drawer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.drawer-link {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}

@@ -2,195 +2,571 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Rento Rentals</title>
-
-  <link rel="stylesheet" href="styles/styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
-
-  <style>
-    /* Background Animation */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: linear-gradient(-45deg, #0f2027, #2c5364, #f7971e, #ffd700);
-      background-size: 400% 400%;
-      animation: gradientBG 10s ease infinite;
-      z-index: -1;
-    }
-
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* Splash Screen */
-    .splash-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      backdrop-filter: blur(6px);
-      background-color: rgba(0, 0, 0, 0.4);
-      z-index: 9999;
-      animation: fadeOut 1s ease forwards;
-      animation-delay: 5s;
-    }
-
-    .logo-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .logo-container img {
-      width: 100px;
-      height: auto;
-      margin-bottom: 20px;
-    }
-
-    .netflix-logo {
-      font-family: 'Anton', sans-serif;
-      font-size: 4rem ;
-      letter-spacing: 6px;
-      color: transparent;
-      background: linear-gradient(90deg, rgb(246, 242, 242) 0%, black 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      text-transform: uppercase;
-      animation: flicker 2s ease-in-out infinite alternate;
-      line-height: 1.2;
-    }
-
-    .netflix-logo span {
-      display: block;
-      font-size: 2.2rem;
-      letter-spacing: 4px;
-    }
-
-    @keyframes flicker {
-      0%   { opacity: 0.95; text-shadow: 0 0 3px rgba(44, 44, 44, 0.3); }
-      100% { opacity: 1;    text-shadow: 0 0 10px rgba(23, 15, 15, 0.7); }
-    }
-
-    @keyframes fadeOut {
-      to {
-        opacity: 0;
-        visibility: hidden;
-      }
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rentro Rentals - Two-Wheeler & Vehicle Rental Marketplace</title>
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="styles/global.css" />
+  <link rel="stylesheet" href="styles/landing.css" />
+  <link rel="stylesheet" href="styles/responsive.css" />
+  
+  <!-- Scripts -->
+  <script src="scripts/utils.js" defer></script>
+  <script src="scripts/storage.js" defer></script>
+  <script src="scripts/auth.js" defer></script>
+  <script src="scripts/vehicles.js" defer></script>
+  <script src="scripts/bookings.js" defer></script>
 </head>
 <body>
 
-  <!-- Splash Screen -->
-  <div class="splash-overlay">
-    <div class="logo-container">
-      <img src="images/bike.png" alt="Bike Logo">
-      <div class="netflix-logo">
-        RENTRO<br><span>RENTALS</span>
+  <!-- Navigation Bar -->
+  <header class="rentro-navbar">
+    <div class="container navbar-inner">
+      <a href="index.html" class="brand-logo">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="5" cy="18" r="3"></circle><circle cx="19" cy="18" r="3"></circle><path d="M12 18V8a2 2 0 0 1 2-2h4"></path><polyline points="15 3 18 6 15 9"></polyline><path d="M5 18h14"></path></svg>
+        </div>
+        <span>Rentro<span class="brand-accent">Rentals</span></span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link active">Home</a>
+        <a href="html/city.html" class="nav-link">Locations</a>
+        <a href="html/search.html" class="nav-link">Search Rides</a>
+        <a href="#how-it-works" class="nav-link">How it Works</a>
+        <a href="#why-rentro" class="nav-link">Why Us</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div id="nav-user-container">
+          <!-- Populated dynamically by RentroAuth.renderNavUser -->
+        </div>
+        <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Open Navigation">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
       </div>
     </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <div class="drawer-header">
+      <span class="brand-logo" style="font-size: 1.15rem;">
+        <span>Rentro<span class="brand-accent">Rentals</span></span>
+      </span>
+      <button class="modal-close-btn" id="closeDrawerBtn">&times;</button>
+    </div>
+    <ul class="drawer-links">
+      <li><a href="index.html" class="drawer-link">Home</a></li>
+      <li><a href="html/city.html" class="drawer-link">Browse Cities</a></li>
+      <li><a href="html/search.html" class="drawer-link">Find Vehicles</a></li>
+      <li><a href="html/dashboard.html" class="drawer-link">Provider Dashboard</a></li>
+      <li><a href="html/profile-collection.html" class="drawer-link">Profile & Settings</a></li>
+      <li style="margin-top: 20px;"><a href="html/signup.html?role=provider" class="btn btn-primary" style="width:100%;">Become a Host</a></li>
+    </ul>
   </div>
 
-  <!-- Main App Content -->
-  <div class="container">
-    <div class="get-started">
-      <div class="overlay">
-        <h1 class="brand-title">RENTRO<br><span class="highlight">RENTALS</span></h1>
-
-        <div class="bottom-panel">
-          <h2 class="section-title">Get Started</h2>
-          <p class="section-subtitle">Enter your email to login</p>
-
-<!-- Google Sign-In -->
-<div id="g_id_onload"
-     data-client_id="707999172905-4co07efkvna5makf1mojfn2gb64nk3mg.apps.googleusercontent.com"
-     data-context="signin"
-     data-ux_mode="popup"
-     data-callback="handleGoogleResponse"
-     data-auto_prompt="false">
-</div>
-
-<div class="g_id_signin"
-     data-type="standard"
-     data-shape="rectangular"
-     data-theme="filled_black"
-     data-text="signin_with"
-     data-size="large"
-     data-logo_alignment="left">
-</div>
-
-
-          <p class="small">
-            By continuing, you agree to our
-            <a href="#">End-User License Agreement</a> and
-            <a href="#">Privacy Policy</a>
-          </p>
-
-          <div class="divider">
-            <hr><span>or</span><hr>
+  <main>
+    <!-- Hero Section with Search Card -->
+    <section class="hero-section">
+      <div class="container hero-grid">
+        <div class="hero-text-content">
+          <div class="hero-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+            India's Leading Urban Vehicle Rental Platform
           </div>
+          <h1 class="hero-headline">
+            Freedom to ride anywhere, <span>whenever you need</span>.
+          </h1>
+          <p class="hero-subhead">
+            Rent pristine scooters and motorcycles by the hour or day. Verified fleet providers, zero security deposit options, and sanitized helmets included.
+          </p>
+          <div style="display:flex; gap: 14px; flex-wrap: wrap;">
+            <a href="html/search.html" class="btn btn-primary btn-lg">Explore All Rides</a>
+            <a href="html/signup.html?role=provider" class="btn btn-secondary btn-lg">Earn as a Fleet Provider</a>
+          </div>
+        </div>
 
-          <a class="create-account" href="html/create.html">create account</a>
-          
-          <div style="margin-top: 15px; text-align: center;">
-            <a href="html/login.html" style="color: #f44336; text-decoration: none; font-weight: bold;">
-              Already have an account? Login here
-            </a>
+        <!-- Search Form Card -->
+        <div class="hero-search-card">
+          <h3 class="search-card-title">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            Book Your Next Ride
+          </h3>
+
+          <form id="heroSearchForm" class="hero-search-form">
+            <!-- City Selection -->
+            <div class="search-field-box">
+              <label for="heroCitySelect">Select City</label>
+              <div class="search-input-wrap">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <select id="heroCitySelect" required>
+                  <option value="Visakhapatnam">Visakhapatnam (Vizag)</option>
+                  <option value="Vijayawada">Vijayawada</option>
+                  <option value="Hyderabad">Hyderabad</option>
+                  <option value="Bangalore">Bangalore</option>
+                  <option value="Chennai">Chennai</option>
+                  <option value="Mumbai">Mumbai</option>
+                  <option value="Delhi NCR">Delhi NCR</option>
+                  <option value="Pune">Pune</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Pickup Date & Time -->
+            <div class="hero-search-row">
+              <div class="search-field-box">
+                <label for="heroPickupDate">Pickup Date</label>
+                <div class="search-input-wrap">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                  <input type="date" id="heroPickupDate" required />
+                </div>
+              </div>
+              <div class="search-field-box">
+                <label for="heroPickupTime">Pickup Time</label>
+                <div class="search-input-wrap">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  <input type="time" id="heroPickupTime" value="10:00" required />
+                </div>
+              </div>
+            </div>
+
+            <!-- Return Date & Time -->
+            <div class="hero-search-row">
+              <div class="search-field-box">
+                <label for="heroReturnDate">Dropoff Date</label>
+                <div class="search-input-wrap">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                  <input type="date" id="heroReturnDate" required />
+                </div>
+              </div>
+              <div class="search-field-box">
+                <label for="heroReturnTime">Dropoff Time</label>
+                <div class="search-input-wrap">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  <input type="time" id="heroReturnTime" value="18:00" required />
+                </div>
+              </div>
+            </div>
+
+            <!-- Search Button -->
+            <button type="submit" class="btn btn-primary btn-search-hero">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              Find Available Vehicles
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trust Strip -->
+    <section class="trust-strip">
+      <div class="container trust-grid">
+        <div class="trust-item">
+          <div class="trust-icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          </div>
+          <div>
+            <div class="trust-item-title">Verified Fleet Providers</div>
+            <div class="trust-item-desc">All vehicles sanitized & serviced</div>
+          </div>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 8l-8 8"></path><path d="M8 8l8 8"></path></svg>
+          </div>
+          <div>
+            <div class="trust-item-title">Zero Deposit Options</div>
+            <div class="trust-item-desc">No heavy upfront lock-in</div>
+          </div>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          </div>
+          <div>
+            <div class="trust-item-title">Transparent Pricing</div>
+            <div class="trust-item-desc">No hidden charges or fuel penalties</div>
+          </div>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+          </div>
+          <div>
+            <div class="trust-item-title">24/7 Road Assistance</div>
+            <div class="trust-item-desc">Pan-city breakdown support</div>
           </div>
         </div>
       </div>
+    </section>
+
+    <!-- Popular Vehicle Categories -->
+    <section class="section-pad">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-tag">Diverse Fleet</span>
+          <h2 class="section-title">Ride in Style & Comfort</h2>
+          <p class="section-desc">Choose from high-mileage commuter scooters, energetic sports bikes, or long-distance cruisers.</p>
+        </div>
+
+        <div class="categories-grid">
+          <div class="category-card" onclick="location.href='html/search.html?category=Scooter'">
+            <div class="category-card-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="18" r="3"></circle><circle cx="19" cy="18" r="3"></circle><path d="M12 18V8a2 2 0 0 1 2-2h4"></path><polyline points="15 3 18 6 15 9"></polyline><path d="M5 18h14"></path></svg>
+            </div>
+            <h3 class="category-card-title">Daily Scooters</h3>
+            <p class="category-card-count">Activa, Access, Jupiter &bull; From ₹380/day</p>
+          </div>
+
+          <div class="category-card" onclick="location.href='html/search.html?category=Sports%20Bike'">
+            <div class="category-card-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5.5" cy="17.5" r="3.5"></circle><circle cx="18.5" cy="17.5" r="3.5"></circle><path d="M15 6h-3l-4 6 5 2"></path><path d="M12 17.5V14l4-3 2.5 1.5"></path></svg>
+            </div>
+            <h3 class="category-card-title">Sports Bikes</h3>
+            <p class="category-card-count">Pulsar NS400, MT-15 &bull; From ₹850/day</p>
+          </div>
+
+          <div class="category-card" onclick="location.href='html/search.html?category=Cruiser'">
+            <div class="category-card-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="17" r="3"></circle><circle cx="19" cy="17" r="3"></circle><path d="M5 17h14"></path><path d="M9 17l2-7h4l2 7"></path></svg>
+            </div>
+            <h3 class="category-card-title">Cruisers</h3>
+            <p class="category-card-count">Royal Enfield Classic 350 &bull; From ₹990/day</p>
+          </div>
+
+          <div class="category-card" onclick="location.href='html/search.html?category=Electric%20Scooter'">
+            <div class="category-card-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            </div>
+            <h3 class="category-card-title">Electric Rides</h3>
+            <p class="category-card-count">Ather 450X, Ola S1 &bull; From ₹550/day</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Vehicles Showcase -->
+    <section class="section-pad" style="background: #fff;">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-tag">Featured Fleet</span>
+          <h2 class="section-title">Most Popular Two-Wheelers</h2>
+          <p class="section-desc">Top rated by travelers and city explorers with 100% verified provider reviews.</p>
+        </div>
+
+        <div class="vehicles-grid" id="featuredVehiclesGrid">
+          <!-- Dynamically populated from RentroVehicles -->
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+          <a href="html/search.html" class="btn btn-secondary btn-lg">Browse All 50+ Vehicles</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Top Cities Exploration -->
+    <section class="section-pad">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-tag">Locations</span>
+          <h2 class="section-title">Explore Rental Hubs in Top Cities</h2>
+          <p class="section-desc">Pick up anywhere from bustling IT parks to scenic coastal highways.</p>
+        </div>
+
+        <div class="city-grid" id="landingCityGrid">
+          <!-- Populated from storage cities -->
+        </div>
+
+        <div style="text-align: center; margin-top: 36px;">
+          <a href="html/city.html" class="btn btn-outline-primary">View All Available Cities</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works 3-Step Journey -->
+    <section class="section-pad" id="how-it-works" style="background: #fff;">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-tag">Seamless Process</span>
+          <h2 class="section-title">How Rentro Rentals Works</h2>
+          <p class="section-desc">Get your keys in under 3 minutes with zero paperwork delays.</p>
+        </div>
+
+        <div class="how-it-works-grid">
+          <div class="step-card">
+            <div class="step-num-badge">1</div>
+            <div class="step-icon-wrap">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </div>
+            <h3 class="step-title">Select City & Dates</h3>
+            <p class="step-desc">Pick your pickup spot, schedule duration, and browse available scooters with transparent prices.</p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-num-badge">2</div>
+            <div class="step-icon-wrap">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+            </div>
+            <h3 class="step-title">Instant Online Booking</h3>
+            <p class="step-desc">Lock your vehicle with secure payment options (UPI, Cards, or Cash on Delivery) and instant OTP verification.</p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-num-badge">3</div>
+            <div class="step-icon-wrap">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            </div>
+            <h3 class="step-title">Pick Up & Enjoy</h3>
+            <p class="step-desc">Show your booking confirmation to the verified fleet provider, grab your sanitized helmet, and ride freely.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Provider CTA Banner -->
+    <section class="container" style="margin-top: 60px;">
+      <div class="provider-cta-banner">
+        <div class="cta-content">
+          <h2>Have an idle vehicle? Turn it into income.</h2>
+          <p>List your scooters and motorcycles on Rentro. Connect with verified renters, set your own availability, and earn up to ₹25,000 every month.</p>
+        </div>
+        <div>
+          <a href="html/signup.html?role=provider" class="btn btn-primary btn-lg">Become a Fleet Host</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section-pad" id="why-rentro" style="background: #fff;">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-tag">Rider Stories</span>
+          <h2 class="section-title">Loved by Over 25,000+ Riders</h2>
+          <p class="section-desc">See what our community members say about their seamless trips.</p>
+        </div>
+
+        <div class="testimonials-grid">
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"Renting an Activa 6G in Vizag was effortless. Picked it up near Siripuram, explored the coastal road, and returned it with zero issues. Best rental service!"</p>
+            <div class="testimonial-user">
+              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80" alt="Arjun Rao" class="testimonial-avatar" />
+              <div>
+                <div class="testimonial-user-name">Arjun Rao</div>
+                <div class="testimonial-user-city">Visakhapatnam</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"As a host, listing my 3 scooters was simple. The dashboard tracks my earnings and booking requests in real time. Earned over ₹18,000 this month alone!"</p>
+            <div class="testimonial-user">
+              <img src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=150&q=80" alt="Kiran Kumar" class="testimonial-avatar" />
+              <div>
+                <div class="testimonial-user-name">Kiran Kumar</div>
+                <div class="testimonial-user-city">Fleet Host, Vizag</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"Booking the Pulsar NS400 for a weekend trip was pure bliss. Clean helmet, full tank, and smooth pickup near Hitec City. 10/10 recommended!"</p>
+            <div class="testimonial-user">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" alt="Sneha Patel" class="testimonial-avatar" />
+              <div>
+                <div class="testimonial-user-name">Sneha Patel</div>
+                <div class="testimonial-user-city">Hyderabad</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="rentro-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="brand-logo" style="color:#fff;">
+            <div class="brand-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="5" cy="18" r="3"></circle><circle cx="19" cy="18" r="3"></circle><path d="M12 18V8a2 2 0 0 1 2-2h4"></path><polyline points="15 3 18 6 15 9"></polyline><path d="M5 18h14"></path></svg>
+            </div>
+            <span>Rentro<span class="brand-accent">Rentals</span></span>
+          </a>
+          <p>India's trusted two-wheeler rental marketplace connecting everyday commuters and adventurers with verified fleet hosts.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="html/city.html">Browse Cities</a></li>
+            <li><a href="html/search.html">Search Vehicles</a></li>
+            <li><a href="html/login.html">Sign In</a></li>
+            <li><a href="html/signup.html">Create Account</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>For Hosts</h4>
+          <ul class="footer-links">
+            <li><a href="html/signup.html?role=provider">Become a Partner</a></li>
+            <li><a href="html/dashboard.html">Provider Dashboard</a></li>
+            <li><a href="html/create.html">Add New Listing</a></li>
+            <li><a href="html/del.html">Manage Fleet</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Customer Care</h4>
+          <p style="color:#94a3b8; font-size:0.9rem; margin-bottom: 10px;">Support helpline available 24/7:</p>
+          <p style="color:var(--primary); font-weight:700; font-size:1.1rem; margin-bottom: 12px;">+91 1800 200 4567</p>
+          <p style="color:#94a3b8; font-size:0.85rem;">support@rentrorentals.com</p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 Rentro Rentals Marketplace. All rights reserved.</div>
+        <div style="display:flex; gap: 20px;">
+          <span>Privacy Policy</span>
+          <span>Terms of Service</span>
+          <span>Rental Agreement</span>
+        </div>
+      </div>
     </div>
-  </div>
+  </footer>
 
-  <!-- Splash Audio -->
-  <audio id="splash-audio" preload="auto">
-    <source src="assets/splash.mp3" type="audio/mpeg" />
-    Your browser does not support the audio element.
-  </audio>
-<!-- Google Sign-In SDK -->
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- Landing Page Controller Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize seed data and user state
+      if (window.RentroStorage) RentroStorage.init();
+      if (window.RentroAuth) RentroAuth.renderNavUser('nav-user-container');
 
-<script>
-  function handleGoogleResponse(response) {
-    const userData = parseJwt(response.credential);
-    console.log("Google user:", userData);
+      // Setup Dates in Hero Search Card
+      const pickupDateInput = document.getElementById('heroPickupDate');
+      const returnDateInput = document.getElementById('heroReturnDate');
+      const today = RentroUtils.getTodayDateString(0);
+      const tomorrow = RentroUtils.getTodayDateString(1);
 
-    // Store user data
-    localStorage.setItem("googleUser", JSON.stringify(userData));
+      if (pickupDateInput) {
+        pickupDateInput.value = today;
+        pickupDateInput.min = today;
+        pickupDateInput.addEventListener('change', (e) => {
+          if (returnDateInput && returnDateInput.value < e.target.value) {
+            returnDateInput.value = e.target.value;
+          }
+        });
+      }
 
-    // Redirect to your app page
-    window.location.href = "html/city.html"; // Change if needed
-  }
+      if (returnDateInput) {
+        returnDateInput.value = tomorrow;
+        returnDateInput.min = today;
+      }
 
-  function parseJwt(token) {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
+      // Mobile drawer toggle
+      const mobileToggle = document.getElementById('mobileNavToggle');
+      const closeDrawer = document.getElementById('closeDrawerBtn');
+      const drawer = document.getElementById('mobileDrawer');
+      if (mobileToggle && drawer) {
+        mobileToggle.addEventListener('click', () => drawer.classList.add('open'));
+        closeDrawer.addEventListener('click', () => drawer.classList.remove('open'));
+      }
 
-    return JSON.parse(jsonPayload);
-  }
-    google.accounts.id.initialize({
-    client_id: "707999172905-4co07efkvna5makf1mojfn2gb64nk3mg.apps.googleusercontent.com",
-    callback: handleGoogleResponse
-  });
+      // Handle Hero Search Form Submission
+      const searchForm = document.getElementById('heroSearchForm');
+      if (searchForm) {
+        searchForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const city = document.getElementById('heroCitySelect').value;
+          const pickupDate = pickupDateInput.value;
+          const pickupTime = document.getElementById('heroPickupTime').value;
+          const returnDate = returnDateInput.value;
+          const returnTime = document.getElementById('heroReturnTime').value;
 
-  document.getElementById("custom-google-btn").addEventListener("click", function () {
-    google.accounts.id.prompt(); // shows One Tap
-  });
-</script>
+          // Save to active search
+          RentroStorage.set(RentroStorage.KEYS.ACTIVE_SEARCH, {
+            city, pickupDate, pickupTime, returnDate, returnTime
+          });
 
+          // Redirect to search page with parameters
+          const params = new URLSearchParams({
+            city, pickupDate, pickupTime, returnDate, returnTime
+          });
+          window.location.href = `html/search.html?${params.toString()}`;
+        });
+      }
 
+      // Render Featured Vehicles
+      const featuredContainer = document.getElementById('featuredVehiclesGrid');
+      if (featuredContainer && window.RentroVehicles) {
+        const vehicles = RentroVehicles.getAll().slice(0, 6);
+        featuredContainer.innerHTML = vehicles.map(v => `
+          <div class="vehicle-card">
+            <div class="vehicle-card-img-wrap">
+              <span class="vehicle-status-badge badge-success">Available</span>
+              <div class="vehicle-rating-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                <span>${v.rating.toFixed(1)}</span>
+              </div>
+              <img src="${v.images[0] || 'images/honda activa 6g.png'}" alt="${v.name}" class="vehicle-card-img" />
+            </div>
+            <div class="vehicle-card-body">
+              <span class="vehicle-category-tag">${v.category} &bull; ${v.city}</span>
+              <h3 class="vehicle-title">${v.name}</h3>
+              <div class="vehicle-location-row">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <span>${v.location}</span>
+              </div>
+              <div class="vehicle-specs-row">
+                <div class="vehicle-spec-pill">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                  <span>${v.transmission}</span>
+                </div>
+                <div class="vehicle-spec-pill">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l19-9-9 19-2-8-8-2z"></path></svg>
+                  <span>${v.fuelType}</span>
+                </div>
+                <div class="vehicle-spec-pill">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                  <span>${v.seatingCapacity} Seats</span>
+                </div>
+              </div>
+              <div class="vehicle-card-footer">
+                <div class="vehicle-price-box">
+                  <span class="vehicle-price-amount">${RentroUtils.formatCurrency(v.pricePerDay)}</span>
+                  <span class="vehicle-price-unit">per day (&bull; ${RentroUtils.formatCurrency(v.pricePerHour)}/hr)</span>
+                </div>
+                <a href="html/vehicle.html?id=${v.id}" class="btn btn-sm btn-primary">Book Now</a>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Render Top Cities
+      const cityContainer = document.getElementById('landingCityGrid');
+      if (cityContainer && window.RentroStorage) {
+        const cities = (RentroStorage.get(RentroStorage.KEYS.CITIES) || []).slice(0, 8);
+        cityContainer.innerHTML = cities.map(c => `
+          <div class="city-card" onclick="location.href='html/search.html?city=${encodeURIComponent(c.name)}'">
+            <img src="${c.image}" alt="${c.name}" onerror="this.src='images/Vizag.png'" />
+            <div class="city-card-overlay">
+              <h3 class="city-card-name">${c.name}</h3>
+              <span class="city-card-count">${c.vehicleCount} Vehicles Available &bull; ${c.tag}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+    });
+  </script>
 </body>
 </html>

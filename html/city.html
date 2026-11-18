@@ -1,101 +1,158 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Select City</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../styles/city.css" />
-  <script src="../scripts/auth.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select City - Rentro Rentals</title>
+  
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/landing.css" />
+  <link rel="stylesheet" href="../styles/responsive.css" />
+  
+  <script src="../scripts/utils.js" defer></script>
+  <script src="../scripts/storage.js" defer></script>
+  <script src="../scripts/auth.js" defer></script>
 </head>
 <body>
 
-  <div class="container" role="main" aria-label="City selection container">
-    <div class="header">
-      <!-- Hamburger icon at top right -->
-      <button class="hamburger" aria-label="Open menu">&#9776;</button>
-      <h2 id="greeting" style="text-align:center;"></h2>
-      <h2 class="title">Select City</h2>
-    </div>
+  <!-- Navigation Bar -->
+  <header class="rentro-navbar">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="brand-logo">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="5" cy="18" r="3"></circle><circle cx="19" cy="18" r="3"></circle><path d="M12 18V8a2 2 0 0 1 2-2h4"></path><polyline points="15 3 18 6 15 9"></polyline><path d="M5 18h14"></path></svg>
+        </div>
+        <span>Rentro<span class="brand-accent">Rentals</span></span>
+      </a>
 
-    <div class="search-box">
-      <input type="text" id="city-search" placeholder="Select city to book your ride" aria-label="Search city" />
-      <span class="search-icon">&#128269;</span>
-    </div>
+      <nav class="nav-links">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="city.html" class="nav-link active">Locations</a>
+        <a href="search.html" class="nav-link">Search Rides</a>
+        <a href="dashboard.html" class="nav-link">Host Fleet</a>
+      </nav>
 
-    <div class="grid" id="city-grid" role="list">
-      <!-- Cities list unchanged ... -->
-      <div class="city-card" role="listitem" style="background-image: url('../images/t.png');"><span>TIRUPATI</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/ag.png');"><span>AGRA</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/vij.png');"><span>VIJAYAWADA</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/Vizag.png');"><span>VIZAG</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/gu.png');"><span>GUNTUR</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/del.png');"><span>DELHI</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/mum.png');"><span>MUMBAI</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/kol.png');"><span>KOLKATA</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/ch.png');"><span>CHENNAI</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/ban.png');"><span>BANGALORE</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/jai.png');"><span>JAIPUR</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/hyd.png');"><span>HYDERABAD</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/pune.png');"><span>PUNE</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/lucknow.png');"><span>LUCKNOW</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/ahmedabad.png');"><span>AHMEDABAD</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/kanpur.png');"><span>KANPUR</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/nagpur.png');"><span>NAGPUR</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/thane.png');"><span>THANE</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/bhopal.png');"><span>BHOPAL</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/visakhapatnam.png');"><span>VISAKHAPATNAM</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/patna.png');"><span>PATNA</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/bhubaneswar.png');"><span>BHUBANESWAR</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/coimbatore.png');"><span>COIMBATORE</span></div>
-      <div class="city-card" role="listitem" style="background-image: url('../images/indore.png');"><span>INDORE</span></div>
+      <div class="nav-actions">
+        <div id="nav-user-container"></div>
+        <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Open Navigation">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+      </div>
     </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <div class="drawer-header">
+      <span class="brand-logo" style="font-size: 1.15rem;">
+        <span>Rentro<span class="brand-accent">Rentals</span></span>
+      </span>
+      <button class="modal-close-btn" id="closeDrawerBtn">&times;</button>
+    </div>
+    <ul class="drawer-links">
+      <li><a href="../index.html" class="drawer-link">Home</a></li>
+      <li><a href="city.html" class="drawer-link">Browse Cities</a></li>
+      <li><a href="search.html" class="drawer-link">Find Vehicles</a></li>
+      <li><a href="dashboard.html" class="drawer-link">Provider Dashboard</a></li>
+      <li><a href="profile-collection.html" class="drawer-link">My Profile</a></li>
+    </ul>
   </div>
 
+  <main class="section-pad">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag">Pick Your Destination</span>
+        <h1 class="section-title">Where are you riding next?</h1>
+        <p class="section-desc">Select a city to explore available two-wheelers with instant pickup points across transit hubs and metro locations.</p>
+      </div>
+
+      <!-- City Search Filter Input -->
+      <div style="max-width: 520px; margin: 0 auto 40px;">
+        <div class="search-input-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="citySearchInput" placeholder="Search by city name (e.g. Vizag, Hyderabad, Bangalore...)" style="padding-left: 42px; font-size: 1rem; padding-top: 14px; padding-bottom: 14px;" />
+        </div>
+      </div>
+
+      <!-- Cities Grid -->
+      <div class="city-grid" id="allCitiesGrid">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="rentro-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>&copy; 2026 Rentro Rentals Marketplace. All rights reserved.</div>
+        <div style="display:flex; gap: 20px;">
+          <a href="../index.html">Home</a>
+          <a href="search.html">Search Vehicles</a>
+          <a href="dashboard.html">Host Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
   <script>
-    // Check authentication and auto-redirect based on role
-    window.addEventListener('DOMContentLoaded', () => {
-      autoRedirectBasedOnRole();
-    });
-  //     const name = localStorage.getItem("userName");
-  // const greetingEl = document.getElementById("greeting");
+    document.addEventListener('DOMContentLoaded', () => {
+      RentroStorage.init();
+      RentroAuth.renderNavUser('nav-user-container');
 
-  // if (name) {
-  //   greetingEl.textContent = `Welcome, ${name}!`;
-  // } else {
-  //   greetingEl.textContent = "Welcome to Rentro Rentals!";
-  // }
+      // Mobile Drawer
+      const mobileToggle = document.getElementById('mobileNavToggle');
+      const closeDrawer = document.getElementById('closeDrawerBtn');
+      const drawer = document.getElementById('mobileDrawer');
+      if (mobileToggle && drawer) {
+        mobileToggle.addEventListener('click', () => drawer.classList.add('open'));
+        closeDrawer.addEventListener('click', () => drawer.classList.remove('open'));
+      }
 
-    // Search filter code
-    const searchInput = document.getElementById('city-search');
-    const cityCards = document.querySelectorAll('.city-card');
+      const cities = RentroStorage.get(RentroStorage.KEYS.CITIES) || [];
+      const grid = document.getElementById('allCitiesGrid');
+      const searchInput = document.getElementById('citySearchInput');
 
-    searchInput.addEventListener('input', (event) => {
-      const query = event.target.value.toLowerCase();
-      cityCards.forEach(card => {
-        const cityName = card.textContent.toLowerCase();
-        card.style.display = cityName.includes(query) ? 'flex' : 'none';
-      });
-    });
+      function renderCities(list) {
+        if (!grid) return;
+        if (list.length === 0) {
+          grid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 48px; background: #fff; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+              <h3 style="font-size: 1.2rem; margin-bottom: 8px;">No cities matching your search</h3>
+              <p style="color: var(--text-muted);">Try typing another city name or select from our major hubs.</p>
+            </div>
+          `;
+          return;
+        }
 
-    // City card click event to save selection and redirect
-    cityCards.forEach(card => {
-      card.addEventListener('click', () => {
-        const cityName = card.textContent.trim();
-        const bgImageStyle = card.style.backgroundImage;
-        const imageUrlMatch = bgImageStyle.match(/url\(["']?(.*?)["']?\)/);
-        const imageUrl = imageUrlMatch ? imageUrlMatch[1] : '';
+        grid.innerHTML = list.map(c => `
+          <div class="city-card" onclick="selectCity('${c.name}')">
+            <img src="${RentroUtils.resolvePath(c.image)}" alt="${c.name}" onerror="this.src='../images/Vizag.png'" />
+            <div class="city-card-overlay">
+              <h3 class="city-card-name">${c.name}</h3>
+              <span class="city-card-count">${c.vehicleCount} Vehicles Available &bull; ${c.state}</span>
+            </div>
+          </div>
+        `).join('');
+      }
 
-        localStorage.setItem('selectedCity', JSON.stringify({ name: cityName, image: imageUrl }));
-        window.location.href = 'search.html';
-      });
-    });
+      window.selectCity = (cityName) => {
+        const storedSearch = RentroStorage.get(RentroStorage.KEYS.ACTIVE_SEARCH) || {};
+        storedSearch.city = cityName;
+        RentroStorage.set(RentroStorage.KEYS.ACTIVE_SEARCH, storedSearch);
+        window.location.href = `search.html?city=${encodeURIComponent(cityName)}`;
+      };
 
-    // Hamburger button click: open hamburger.html
-    document.querySelector('.hamburger').addEventListener('click', function() {
-      window.location.href = 'hamburger.html';
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          const q = e.target.value.toLowerCase().trim();
+          const filtered = cities.filter(c => c.name.toLowerCase().includes(q) || c.state.toLowerCase().includes(q));
+          renderCities(filtered);
+        });
+      }
+
+      renderCities(cities);
     });
   </script>
-
 </body>
 </html>

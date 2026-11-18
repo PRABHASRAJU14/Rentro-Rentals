@@ -1,0 +1,354 @@
+/**
+ * Rentro Rentals - Booking, Payment, Card Visuals, OTP & Success Styles
+ */
+
+.checkout-step-container {
+  padding: 40px 0 80px;
+}
+
+.checkout-card {
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 32px;
+}
+
+.checkout-header {
+  margin-bottom: 28px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.checkout-header h1 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--secondary);
+}
+
+.booking-summary-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 36px;
+}
+
+/* Vehicle Snapshot */
+.booking-vehicle-snapshot {
+  display: flex;
+  gap: 20px;
+  background: var(--bg-subtle);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.snapshot-img {
+  width: 120px;
+  height: 80px;
+  object-fit: contain;
+  background: #fff;
+  border-radius: var(--radius-sm);
+  padding: 6px;
+}
+
+.snapshot-info h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.trip-timing-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.timing-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.timing-col label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.timing-col .date-val {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.timing-col .loc-val {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+/* Payment Methods Grid */
+.payment-methods-tabs {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.payment-tab-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 12px;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+
+.payment-tab-btn.active, .payment-tab-btn:hover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary-hover);
+}
+
+.payment-method-panel {
+  display: none;
+  animation: fadeIn 0.2s ease;
+}
+
+.payment-method-panel.active {
+  display: block;
+}
+
+/* Visual Debit/Credit Card Display */
+.card-visual-wrapper {
+  margin-bottom: 24px;
+  perspective: 1000px;
+}
+
+.credit-card-mockup {
+  width: 100%;
+  max-width: 380px;
+  height: 210px;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 15px 30px -5px rgba(15, 23, 42, 0.4);
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.credit-card-mockup::after {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 160px;
+  height: 160px;
+  background: rgba(245, 158, 11, 0.25);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.card-chip {
+  width: 44px;
+  height: 32px;
+  background: linear-gradient(135deg, #fbbf24, #d97706);
+  border-radius: 6px;
+}
+
+.card-number-display {
+  font-size: 1.25rem;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+.card-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.card-holder-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-expiry-display {
+  font-size: 0.85rem;
+  font-family: monospace;
+}
+
+/* Bank Selection Grid */
+.bank-selection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.bank-option-btn {
+  padding: 12px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: #fff;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.bank-option-btn:hover, .bank-option-btn.selected {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary-hover);
+}
+
+/* OTP Screen Specifics */
+.otp-box-container {
+  max-width: 460px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.demo-otp-banner {
+  background: #fef3c7;
+  border: 1px dashed #d97706;
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 24px;
+  color: #92400e;
+  font-size: 0.9rem;
+}
+
+.demo-otp-banner strong {
+  font-size: 1.25rem;
+  letter-spacing: 4px;
+  display: block;
+  margin-top: 4px;
+}
+
+.otp-inputs-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 24px 0;
+}
+
+.otp-digit-input {
+  width: 52px;
+  height: 58px;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 800;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  outline: none;
+  font-family: monospace;
+}
+
+.otp-digit-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+
+/* Booking Success Receipt */
+.success-container {
+  max-width: 680px;
+  margin: 40px auto 80px;
+}
+
+.success-banner-card {
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 40px 32px;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+.success-check-icon {
+  width: 76px;
+  height: 76px;
+  background: var(--success-light);
+  color: var(--success);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+.receipt-card {
+  background: var(--bg-subtle);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  margin: 28px 0;
+  text-align: left;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+}
+
+.receipt-row strong {
+  color: var(--text-main);
+}
+
+.receipt-row.total {
+  border-top: 1px solid var(--border-color);
+  padding-top: 12px;
+  font-size: 1.15rem;
+  color: var(--secondary);
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printableReceipt, #printableReceipt * {
+    visibility: visible;
+  }
+  #printableReceipt {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

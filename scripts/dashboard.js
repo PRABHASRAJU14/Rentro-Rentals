@@ -1,386 +1,283 @@
-// Utility functions
-function getVehicles() {
-  return JSON.parse(localStorage.getItem('vehicles') || '[]');
-}
+/**
+ * Rentro Rentals - Provider Dashboard & Fleet Management Controller
+ */
 
-function saveVehicles(vehicles) {
-  localStorage.setItem('vehicles', JSON.stringify(vehicles));
-}
+document.addEventListener('DOMContentLoaded', () => {
+  // Ensure seed data initialized
+  RentroStorage.init();
 
-function getBookings() {
-  return JSON.parse(localStorage.getItem('bookings') || '[]');
-}
+  // Route guard: Provider only
+  const hasAuth = RentroAuth.requireAuth('provider');
+  if (!hasAuth) return;
 
-// Navigation logic
-const navButtons = document.querySelectorAll('.nav-btn');
-const sections = document.querySelectorAll('.content-section');
+  const currentProvider = RentroAuth.getCurrentUser();
 
-navButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    navButtons.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+  // Set provider profile information
+  const providerNameElem = document.getElementById('dashProviderName');
+  const providerBusinessElem = document.getElementById('dashBusinessName');
+  const providerAvatarElem = document.getElementById('dashProviderAvatar');
 
-    const target = btn.getAttribute('data-section');
-    sections.forEach(section => {
-      section.classList.toggle('active', section.id === target);
+  if (providerNameElem) providerNameElem.textContent = currentProvider.name;
+  if (providerBusinessElem) providerBusinessElem.textContent = currentProvider.businessName || 'Fleet Partner';
+  if (providerAvatarElem) providerAvatarElem.src = currentProvider.avatar || 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=150&q=80';
+
+  // Render navigation user state
+  RentroAuth.renderNavUser('nav-user-container');
+
+  // Sidebar Tab Navigation
+  const sidebarButtons = document.querySelectorAll('.sidebar-btn');
+  const contentSections = document.querySelectorAll('.dashboard-tab-content');
+
+  sidebarButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.getAttribute('data-tab');
+      sidebarButtons.forEach(b => b.classList.remove('active'));
+      contentSections.forEach(s => s.classList.remove('active'));
+
+      btn.classList.add('active');
+      const targetSection = document.getElementById(target);
+      if (targetSection) targetSection.classList.add('active');
+
+      if (target === 'fleet-tab') renderFleetList();
+      if (target === 'bookings-tab') renderBookingsList();
+      if (target === 'earnings-tab') renderEarningsBreakdown();
     });
-
-    if (target === 'vehicles') loadVehicles();
-    else if (target === 'bookings') loadBookings();
-    else if (target === 'earnings') loadEarnings();
   });
-});
 
-// Add Vehicle logic
-const addVehicleForm = document.getElementById('addVehicleForm');
-const addVehicleMessage = document.getElementById('addVehicleMessage');
+  // Load Dashboard Data
+  refreshDashboard();
 
-function clearAddVehicleInputs() {
-  document.getElementById('vehicleName').value = '';
-  document.getElementById('vehicleType').value = '';
-  document.getElementById('vehiclePrice').value = '';
-  document.getElementById('vehicleImage').value = '';
-  document.getElementById('vehicleLocation').value = '';
-}
+  function refreshDashboard() {
+    const stats = RentroBookings.getProviderAnalytics(currentProvider.id);
 
-let editingVehicleId = null; // Track if editing
+    // Update Metric Cards
+    const statTotalVehicles = document.getElementById('statTotalVehicles');
+    const statActiveVehicles = document.getElementById('statActiveVehicles');
+    const statTotalBookings = document.getElementById('statTotalBookings');
+    const statPendingBookings = document.getElementById('statPendingBookings');
+    const statTotalEarnings = document.getElementById('statTotalEarnings');
+    const statMonthlyEarnings = document.getElementById('statMonthlyEarnings');
 
-function handleAddVehicleSubmit(e) {
-  if (e) e.preventDefault();
+    if (statTotalVehicles) statTotalVehicles.textContent = stats.totalVehicles;
+    if (statActiveVehicles) statActiveVehicles.textContent = `${stats.activeVehicles} Online`;
+    if (statTotalBookings) statTotalBookings.textContent = stats.totalBookings;
+    if (statPendingBookings) statPendingBookings.textContent = `${stats.pendingBookings} Pending`;
+    if (statTotalEarnings) statTotalEarnings.textContent = RentroUtils.formatCurrency(stats.totalEarnings);
+    if (statMonthlyEarnings) statMonthlyEarnings.textContent = RentroUtils.formatCurrency(stats.monthlyEarnings);
 
-  const name = document.getElementById('vehicleName').value.trim();
-  let type = document.getElementById('vehicleType').value.trim();
-  const price = parseFloat(document.getElementById('vehiclePrice').value);
-  const image = document.getElementById('vehicleImage').value.trim();
-  const location = document.getElementById('vehicleLocation').value.trim();
-  const message = document.getElementById('addVehicleMessage');
+    // Render Recent Bookings on Overview
+    renderOverviewBookings(stats.recentBookings);
 
-  // Normalize type (capitalize first letter)
-  type = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+    // Render Fleet List
+    renderFleetList();
 
-  if (!name || !type || isNaN(price) || price < 0 || !location) {
-    message.textContent = 'Please fill all fields correctly.';
-    message.style.color = 'red';
-    return;
+    // Render Bookings List
+    renderBookingsList();
+
+    // Render Earnings Breakdown
+    renderEarningsBreakdown();
   }
 
-  const vehicles = getVehicles();
+  // 1. Overview Recent Bookings Table
+  function renderOverviewBookings(recentBookings) {
+    const tableBody = document.getElementById('recentBookingsTableBody');
+    if (!tableBody) return;
 
-  if (editingVehicleId) {
-    const index = vehicles.findIndex(v => v.id === editingVehicleId);
-    if (index !== -1) {
-      vehicles[index] = { id: editingVehicleId, name, type, price, image, location };
-      message.textContent = `Updated "${name}" successfully!`;
-      message.style.color = 'green';
+    if (!recentBookings || recentBookings.length === 0) {
+      tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 24px; color: var(--text-muted);">No bookings received yet.</td></tr>`;
+      return;
     }
-    editingVehicleId = null;
-  } else {
-    vehicles.push({ id: Date.now(), name, type, price, image, location });
-    message.textContent = `Added "${name}" successfully!`;
-    message.style.color = 'green';
+
+    tableBody.innerHTML = recentBookings.slice(0, 5).map(b => `
+      <tr>
+        <td><strong>#${b.id}</strong></td>
+        <td>
+          <div class="table-vehicle-cell">
+            <img src="${RentroUtils.resolvePath(b.vehicleImage || 'images/honda activa 6g.png')}" alt="${b.vehicleName}" class="table-vehicle-thumb" />
+            <span>${b.vehicleName}</span>
+          </div>
+        </td>
+        <td>${b.customerName}<br><small style="color:var(--text-muted);">${b.customerPhone}</small></td>
+        <td>${RentroUtils.formatDateTime(b.pickupDate, b.pickupTime)}</td>
+        <td><strong>${RentroUtils.formatCurrency(b.totalAmount)}</strong></td>
+        <td><span class="badge ${getStatusBadgeClass(b.bookingStatus)}">${b.bookingStatus}</span></td>
+      </tr>
+    `).join('');
   }
 
-  saveVehicles(vehicles);
-  clearAddVehicleInputs();
-  loadVehicles();
-}
+  // 2. Complete Fleet Management Table
+  function renderFleetList() {
+    const fleetTableBody = document.getElementById('fleetTableBody');
+    if (!fleetTableBody) return;
 
-if (addVehicleForm) {
-  addVehicleForm.addEventListener('submit', handleAddVehicleSubmit);
-} else {
-  const addVehicleBtn = document.querySelector('#addVehicle .submit-btn');
-  if (addVehicleBtn) {
-    addVehicleBtn.addEventListener('click', handleAddVehicleSubmit);
+    const vehicles = RentroVehicles.getByProvider(currentProvider.id);
+
+    if (vehicles.length === 0) {
+      fleetTableBody.innerHTML = `
+        <tr>
+          <td colspan="7" style="text-align:center; padding: 36px;">
+            <p style="color: var(--text-muted); margin-bottom: 12px;">No vehicles listed under your account yet.</p>
+            <a href="create.html" class="btn btn-primary btn-sm">+ Add Your First Vehicle</a>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    fleetTableBody.innerHTML = vehicles.map(v => `
+      <tr>
+        <td>
+          <div class="table-vehicle-cell">
+            <img src="${RentroUtils.resolvePath(v.images[0] || 'images/honda activa 6g.png')}" alt="${v.name}" class="table-vehicle-thumb" />
+            <div>
+              <strong>${v.name}</strong>
+              <div style="font-size:0.75rem; color:var(--text-muted);">${v.regNumber} &bull; ${v.category}</div>
+            </div>
+          </div>
+        </td>
+        <td>${v.city}<br><small style="color:var(--text-muted);">${v.location}</small></td>
+        <td>${RentroUtils.formatCurrency(v.pricePerDay)}/day<br><small style="color:var(--text-muted);">${RentroUtils.formatCurrency(v.pricePerHour)}/hr</small></td>
+        <td>
+          <button class="btn btn-sm ${v.available ? 'btn-outline-primary' : 'btn-ghost'}" onclick="handleToggleAvailability('${v.id}')">
+            ${v.available ? '🟢 Active' : '⚪ Offline'}
+          </button>
+        </td>
+        <td>⭐ ${v.rating.toFixed(1)} (${v.reviewCount})</td>
+        <td>
+          <div class="action-btn-group">
+            <button class="btn btn-sm btn-ghost" onclick="handleEditVehicle('${v.id}')" title="Edit Vehicle">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            </button>
+            <button class="btn btn-sm btn-ghost text-danger" onclick="handleDeleteVehicle('${v.id}', '${v.name.replace(/'/g, "\\'")}')" title="Delete Vehicle">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
   }
-}
 
-// Load Vehicles
-function isValidImageUrl(url) {
-  return url && /^https?:\/\/.+/i.test(url.trim());
-}
+  // 3. Complete Bookings List with Actions
+  function renderBookingsList() {
+    const bookingsTableBody = document.getElementById('bookingsTableBody');
+    if (!bookingsTableBody) return;
 
-function loadVehicles() {
-  const vehicles = getVehicles();
-  const containers = {
-    scooter: document.getElementById('scooter-container'),
-    bike: document.getElementById('bike-container'),
-    bicycle: document.getElementById('bicycle-container'),
-    car: document.getElementById('car-container')
+    const bookings = RentroBookings.getByProvider(currentProvider.id);
+
+    if (bookings.length === 0) {
+      bookingsTableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 36px; color: var(--text-muted);">No booking requests found.</td></tr>`;
+      return;
+    }
+
+    bookingsTableBody.innerHTML = bookings.map(b => `
+      <tr>
+        <td><strong>#${b.id}</strong></td>
+        <td>
+          <div class="table-vehicle-cell">
+            <img src="${RentroUtils.resolvePath(b.vehicleImage || 'images/honda activa 6g.png')}" alt="${b.vehicleName}" class="table-vehicle-thumb" />
+            <div>
+              <strong>${b.vehicleName}</strong>
+              <div style="font-size:0.75rem; color:var(--text-muted);">${b.vehicleCity}</div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <strong>${b.customerName}</strong>
+          <div style="font-size:0.78rem; color:var(--text-muted);">${b.customerPhone} &bull; ${b.customerEmail}</div>
+        </td>
+        <td>
+          <div>${RentroUtils.formatDateTime(b.pickupDate, b.pickupTime)}</div>
+          <div style="font-size:0.78rem; color:var(--text-muted);">to ${RentroUtils.formatDateTime(b.returnDate, b.returnTime)} (${b.durationText})</div>
+        </td>
+        <td>
+          <strong>${RentroUtils.formatCurrency(b.totalAmount)}</strong>
+          <div style="font-size:0.75rem; color:var(--text-muted);">${b.paymentMethod}</div>
+        </td>
+        <td><span class="badge ${getStatusBadgeClass(b.bookingStatus)}">${b.bookingStatus}</span></td>
+        <td>
+          <div class="action-btn-group">
+            ${b.bookingStatus === 'Pending' ? `
+              <button class="btn btn-sm btn-primary" onclick="handleBookingStatusChange('${b.id}', 'Confirmed')">Accept</button>
+              <button class="btn btn-sm btn-ghost text-danger" onclick="handleBookingStatusChange('${b.id}', 'Rejected')">Reject</button>
+            ` : ''}
+            ${b.bookingStatus === 'Confirmed' || b.bookingStatus === 'Active' ? `
+              <button class="btn btn-sm btn-secondary" onclick="handleBookingStatusChange('${b.id}', 'Completed')">Mark Completed</button>
+            ` : ''}
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  // 4. Earnings Breakdown
+  function renderEarningsBreakdown() {
+    const earningsListBody = document.getElementById('earningsHistoryTableBody');
+    if (!earningsListBody) return;
+
+    const bookings = RentroBookings.getByProvider(currentProvider.id);
+    const completedOrActive = bookings.filter(b => b.bookingStatus === 'Completed' || b.bookingStatus === 'Active' || b.bookingStatus === 'Confirmed');
+
+    if (completedOrActive.length === 0) {
+      earningsListBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 24px; color: var(--text-muted);">No earnings transactions logged yet.</td></tr>`;
+      return;
+    }
+
+    earningsListBody.innerHTML = completedOrActive.map(b => `
+      <tr>
+        <td>${RentroUtils.formatDateOnly(b.createdAt)}</td>
+        <td><strong>#${b.id}</strong></td>
+        <td>${b.vehicleName}</td>
+        <td>${b.paymentMethod}</td>
+        <td style="color: var(--success); font-weight: 700;">+ ${RentroUtils.formatCurrency(b.basePrice)}</td>
+      </tr>
+    `).join('');
+  }
+
+  function getStatusBadgeClass(status) {
+    switch (status) {
+      case 'Confirmed':
+      case 'Active':
+      case 'Completed':
+        return 'badge-success';
+      case 'Pending':
+        return 'badge-warning';
+      case 'Rejected':
+      case 'Cancelled':
+        return 'badge-danger';
+      default:
+        return 'badge-info';
+    }
+  }
+
+  // Window global handlers for inline click events
+  window.handleToggleAvailability = (id) => {
+    RentroVehicles.toggleStatus(id);
+    RentroUtils.showToast('Vehicle availability toggled.', 'info');
+    refreshDashboard();
   };
 
-  Object.values(containers).forEach(c => c.innerHTML = '');
-
-  if (vehicles.length === 0) {
-    Object.values(containers).forEach(c => c.innerHTML = '<p class="no-data">No vehicles added yet.</p>');
-    return;
-  }
-
-  vehicles.forEach(v => {
-    const div = document.createElement('div');
-    div.className = 'vehicle-card';
-    div.style.position = 'relative';
-
-    // Image logic: show valid URL, else fallback to placeholder
-    const imgSrc = isValidImageUrl(v.image)
-      ? v.image
-      : 'https://via.placeholder.com/280x140?text=No+Image';
-
-    div.innerHTML = `
-      <img src="${imgSrc}" alt="${v.name}" />
-      <div class="vehicle-info">
-        <h3>${v.name}</h3>
-        <p><strong>Type:</strong> ${v.type}</p>
-        <p><strong>Price:</strong> ₹ ${Number(v.price).toFixed(2)}</p>
-        <p><strong>Location:</strong> ${v.location}</p>
-      </div>
-      <div class="card-actions" style="display:none; position:absolute; top:10px; right:10px; background:#fff; border:1px solid #ccc; border-radius:4px; padding:5px;">
-        <button class="edit-btn">Edit</button>
-        <button class="delete-btn" style="margin-left:5px; color:red;">Delete</button>
-      </div>
-    `;
-
-    // Toggle card actions
-    div.addEventListener('click', e => {
-      if (e.target.classList.contains('edit-btn') || e.target.classList.contains('delete-btn')) return;
-      document.querySelectorAll('.card-actions').forEach(ca => ca.style.display = 'none');
-      const actions = div.querySelector('.card-actions');
-      actions.style.display = actions.style.display === 'block' ? 'none' : 'block';
+  window.handleDeleteVehicle = async (id, name) => {
+    const confirmed = await RentroUtils.confirmModal({
+      title: 'Delete Vehicle Listing',
+      message: `Are you sure you want to permanently remove "${name}" from your fleet? Past booking records will remain safely archived.`,
+      confirmText: 'Delete Listing',
+      type: 'danger'
     });
 
-    // Edit handler
-    div.querySelector('.edit-btn').addEventListener('click', e => {
-      e.stopPropagation();
-      editingVehicleId = v.id;
-      document.getElementById('vehicleName').value = v.name;
-      document.getElementById('vehicleType').value = v.type;
-      document.getElementById('vehiclePrice').value = v.price;
-      document.getElementById('vehicleImage').value = v.image;
-      document.getElementById('vehicleLocation').value = v.location;
-
-      document.getElementById('addVehicleMessage').textContent = `Editing "${v.name}". Make changes and click save.`;
-      document.getElementById('addVehicleMessage').style.color = 'blue';
-
-      // Activate Vehicles tab
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      document.querySelector('.nav-btn[data-section="vehicles"]').classList.add('active');
-      document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-      document.getElementById('vehicles').classList.add('active');
-
-      div.querySelector('.card-actions').style.display = 'none';
-    });
-
-    // Delete handler
-    div.querySelector('.delete-btn').addEventListener('click', e => {
-      e.stopPropagation();
-      if (confirm(`Delete "${v.name}"?`)) {
-        const newList = getVehicles().filter(item => item.id !== v.id);
-        saveVehicles(newList);
-        loadVehicles();
-
-        if (editingVehicleId === v.id) {
-          editingVehicleId = null;
-          document.getElementById('addVehicleMessage').textContent = '';
-          clearAddVehicleInputs();
-        }
-      }
-    });
-
-    const target = containers[v.type.toLowerCase()];
-    if (target) target.appendChild(div);
-  });
-}
-
-// Hide card actions when clicking elsewhere
-document.addEventListener('click', e => {
-  if (!e.target.closest('.vehicle-card')) {
-    document.querySelectorAll('.card-actions').forEach(ca => ca.style.display = 'none');
-  }
-});
-
-// Load on startup
-loadVehicles();
-
-// Load Bookings
-const bookingsContainer = document.getElementById('bookingsContainer');
-
-function loadBookings() {
-  const bookings = getBookings();
-  bookingsContainer.innerHTML = '';
-
-  if (bookings.length === 0) {
-    bookingsContainer.innerHTML = '<p class="no-data">No bookings made yet.</p>';
-    return;
-  }
-
-  bookings.forEach(b => {
-    const card = document.createElement('div');
-    card.className = 'booking-card';
-
-    card.innerHTML = `
-      <img src="${b.image || 'https://via.placeholder.com/150'}" alt="${b.vehicleName}" class="booking-image" />
-      <div class="booking-info">
-        <h3>${b.vehicleName}</h3>
-        <p><strong>Type:</strong> ${b.vehicleType}</p>
-        <p><strong>Price:</strong> ₹${Number(b.price).toFixed(2)}</p>
-        <p><strong>Customer:</strong> ${b.customerName}</p>
-        <p><strong>Date:</strong> ${b.date}</p>
-        <p><strong>Booking ID:</strong> ${b.id}</p>
-      </div>
-    `;
-
-    bookingsContainer.appendChild(card);
-  });
-}
-
-// Load bookings when the bookings tab button is clicked
-document.querySelector('.nav-btn[data-section="bookings"]').addEventListener('click', loadBookings);
-
-// Earnings tab content load on page ready
-window.addEventListener('DOMContentLoaded', () => {
-  const earningsSummary = document.getElementById('earningsSummary');
-  const bookings = getBookings();
-
-  // Calculate total earnings by summing prices
-  const totalEarnings = bookings.reduce((sum, booking) => sum + (booking.price || 0), 0);
-
-  // Build earnings HTML
-  let html = `<p><strong>Total Earnings:</strong> ₹${totalEarnings.toFixed(2)}</p>`;
-
-  if (bookings.length > 0) {
-    html += '<h3>Bookings Details:</h3><ul>';
-    bookings.forEach(b => {
-      html += `<li>${b.vehicleName} - ₹${Number(b.price).toFixed(2)} (Date: ${b.date})</li>`;
-    });
-    html += '</ul>';
-  } else {
-    html += '<p>No bookings yet.</p>';
-  }
-
-  earningsSummary.innerHTML = html;
-});
-
-// Provider logic
-let providers = [];
-let editingProviderId = null;
-
-const providerName = document.getElementById('providerName');
-const providerEmail = document.getElementById('providerEmail');
-const providerPhone = document.getElementById('providerPhone');
-const providerCompany = document.getElementById('providerCompany');
-const providerAddress = document.getElementById('providerAddress');
-
-const providerMessage = document.getElementById('providerMessage');
-const providerCardContainer = document.getElementById('providerCardContainer');
-
-const saveBtn = document.querySelector('#providers .submit-btn');
-
-saveBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-
-  const name = providerName.value.trim();
-  const email = providerEmail.value.trim();
-  const phone = providerPhone.value.trim();
-  const company = providerCompany.value.trim();
-  const address = providerAddress.value.trim();
-
-  // Simple validation
-  if (!name || !email || !phone) {
-    providerMessage.textContent = 'Please fill Name, Email, and Phone.';
-    providerMessage.style.color = 'red';
-    return;
-  }
-
-  if (editingProviderId) {
-    // Update existing provider
-    const idx = providers.findIndex(p => p.id === editingProviderId);
-    if (idx !== -1) {
-      providers[idx] = { id: editingProviderId, name, email, phone, company, address };
-      providerMessage.textContent = `Updated provider "${name}" successfully!`;
-      providerMessage.style.color = 'green';
+    if (confirmed) {
+      RentroVehicles.delete(id);
+      RentroUtils.showToast('Vehicle removed successfully.', 'success');
+      refreshDashboard();
     }
-    editingProviderId = null;
-  } else {
-    // Add new provider
-    const newProvider = {
-      id: Date.now(),
-      name,
-      email,
-      phone,
-      company,
-      address
-    };
-    providers.push(newProvider);
-    providerMessage.textContent = `Added provider "${name}" successfully!`;
-    providerMessage.style.color = 'green';
-  }
+  };
 
-  clearInputs();
-  renderProviderCards();
+  window.handleBookingStatusChange = (bookingId, newStatus) => {
+    RentroBookings.updateStatus(bookingId, newStatus);
+    RentroUtils.showToast(`Booking #${bookingId} marked as ${newStatus}.`, 'success');
+    refreshDashboard();
+  };
+
+  window.handleEditVehicle = (vehicleId) => {
+    window.location.href = `del.html?edit=${vehicleId}`;
+  };
 });
-
-function clearInputs() {
-  providerName.value = '';
-  providerEmail.value = '';
-  providerPhone.value = '';
-  providerCompany.value = '';
-  providerAddress.value = '';
-}
-
-function renderProviderCards() {
-  providerCardContainer.innerHTML = '';
-
-  if (providers.length === 0) {
-    providerCardContainer.innerHTML = '<p>No previous providers added yet.</p>';
-    return;
-  }
-
-  providers.forEach(provider => {
-    const card = document.createElement('div');
-    card.className = 'provider-card';
-
-    card.innerHTML = `
-      <h3>${provider.name}</h3>
-      <p><strong>Email:</strong> ${provider.email}</p>
-      <p><strong>Phone:</strong> ${provider.phone}</p>
-      <p><strong>Company:</strong> ${provider.company || '-'}</p>
-      <p><strong>Address:</strong> ${provider.address || '-'}</p>
-      <div class="card-actions">
-        <button class="edit-btn">Edit</button>
-        <button class="delete-btn">Delete</button>
-      </div>
-    `;
-
-    // Edit button
-    card.querySelector('.edit-btn').addEventListener('click', () => {
-      editingProviderId = provider.id;
-      providerName.value = provider.name;
-      providerEmail.value = provider.email;
-      providerPhone.value = provider.phone;
-      providerCompany.value = provider.company;
-      providerAddress.value = provider.address;
-
-      providerMessage.textContent = `Editing provider "${provider.name}". Make changes and save.`;
-      providerMessage.style.color = 'blue';
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    // Delete button
-    card.querySelector('.delete-btn').addEventListener('click', () => {
-      if (confirm(`Delete provider "${provider.name}"?`)) {
-        providers = providers.filter(p => p.id !== provider.id);
-        if (editingProviderId === provider.id) {
-          editingProviderId = null;
-          clearInputs();
-          providerMessage.textContent = '';
-        }
-        renderProviderCards();
-      }
-    });
-
-    providerCardContainer.appendChild(card);
-  });
-}
-
-// Initial render
-renderProviderCards();

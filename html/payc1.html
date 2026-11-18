@@ -2,56 +2,150 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Debit Card Payment</title>
-  <link rel="stylesheet" href="../styles/payc.css" />
-  <script src="../scripts/payc1.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Debit Card Payment - Rentro Rentals</title>
+  
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/booking.css" />
+  <link rel="stylesheet" href="../styles/responsive.css" />
+  
+  <script src="../scripts/utils.js" defer></script>
+  <script src="../scripts/storage.js" defer></script>
+  <script src="../scripts/auth.js" defer></script>
+  <script src="../scripts/payments.js" defer></script>
+  <script src="../scripts/validation.js" defer></script>
 </head>
 <body>
-  <div class="container">
-  
-    <div class="payment-box">
-      <div class="payment-header">
-        CHOOSE PAYMENT METHOD
+
+  <header class="rentro-navbar">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="brand-logo">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="5" cy="18" r="3"></circle><circle cx="19" cy="18" r="3"></circle><path d="M12 18V8a2 2 0 0 1 2-2h4"></path><polyline points="15 3 18 6 15 9"></polyline><path d="M5 18h14"></path></svg>
+        </div>
+        <span>Rentro<span class="brand-accent">Rentals</span></span>
+      </a>
+      <div style="font-size:0.9rem; font-weight:700; color:var(--text-secondary);">
+        Debit Card Gateway
       </div>
-
-      <div class="form-section">
-        <label for="card-type">Enter your debit card details</label>
-        <select id="card-type">
-          <option>Choose your debit card type</option>
-          <option>Visa</option>
-          <option>MasterCard</option>
-          <option>RuPay</option>
-        </select>
-
-        <div class="input-box">
-          <label>Card Number</label>
-          <input type="text" placeholder="Enter your card number" />
-        </div>
-
-        <div class="input-box">
-          <label>Name on the card</label>
-          <input type="text" placeholder="Enter name on the card" />
-        </div>
-
-        <div class="row">
-          <div class="input-small">
-            <label>Expiry</label>
-            <input type="text" placeholder="M" maxlength="2" />
-          </div>
-          <div class="input-small">
-            <label>&nbsp;</label>
-            <input type="text" placeholder="Y" maxlength="2" />
-          </div>
-          <div class="input-small">
-            <label>CVV</label>
-            <input type="password" placeholder="CVV" maxlength="3" />
-          </div>
-        </div>
-      </div>
-
-      <button class="pay-button">MAKE PAYMENT</button>
     </div>
-  </div>
+  </header>
+
+  <main class="checkout-step-container">
+    <div class="container container-narrow">
+      <div class="checkout-card" style="max-width: 600px; margin: 0 auto;">
+        <div class="checkout-header">
+          <div>
+            <h1>Pay via Debit Card</h1>
+            <p style="color:var(--text-muted); font-size:0.85rem;">Visa, MasterCard, RuPay, Maestro accepted</p>
+          </div>
+          <span style="font-size: 1.5rem; font-weight: 800; color:var(--secondary);" id="payc1Amount">₹0</span>
+        </div>
+
+        <!-- Live Visual Card -->
+        <div class="card-visual-wrapper">
+          <div class="credit-card-mockup" style="background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div class="card-chip"></div>
+              <span style="font-weight:800; font-style:italic; font-size:1.1rem; color:#93c5fd;" id="debitCardType">DEBIT CARD</span>
+            </div>
+            <div class="card-number-display" id="visualDebitNum">•••• •••• •••• ••••</div>
+            <div class="card-meta-row">
+              <div>
+                <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase;">Card Holder</div>
+                <div class="card-holder-name" id="visualDebitHolder">CARDHOLDER NAME</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase;">Valid Thru</div>
+                <div class="card-expiry-display" id="visualDebitExp">MM/YY</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form id="debitCardForm">
+          <div class="form-group">
+            <label class="form-label" for="debitNetwork">Card Network</label>
+            <select id="debitNetwork" class="form-control">
+              <option value="Visa">Visa Debit</option>
+              <option value="MasterCard">MasterCard Debit</option>
+              <option value="RuPay">RuPay Platinum / Classic</option>
+              <option value="Maestro">Maestro</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="debitNumber">16-Digit Debit Card Number</label>
+            <input type="text" id="debitNumber" class="form-control" placeholder="4123 4567 8901 2345" maxlength="19" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="debitHolder">Cardholder Name</label>
+            <input type="text" id="debitHolder" class="form-control" placeholder="Name as printed on debit card" required />
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+            <div class="form-group">
+              <label class="form-label" for="debitExpiry">Expiry Date</label>
+              <input type="text" id="debitExpiry" class="form-control" placeholder="MM/YY" maxlength="5" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="debitCVV">CVV</label>
+              <input type="password" id="debitCVV" class="form-control" placeholder="•••" maxlength="3" required />
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px;">
+            <a href="payment.html" class="btn btn-secondary">&larr; Other Methods</a>
+            <button type="submit" class="btn btn-primary btn-lg">Verify via Bank OTP &rarr;</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      RentroStorage.init();
+      const draft = RentroPayments.getCheckoutDraft();
+      if (!draft) {
+        window.location.href = 'search.html';
+        return;
+      }
+
+      document.getElementById('payc1Amount').textContent = RentroUtils.formatCurrency(draft.totalAmount);
+
+      const numInput = document.getElementById('debitNumber');
+      const nameInput = document.getElementById('debitHolder');
+      const expInput = document.getElementById('debitExpiry');
+      const networkSelect = document.getElementById('debitNetwork');
+
+      RentroValidator.formatCardNumberInput(numInput);
+      RentroValidator.formatExpiryInput(expInput);
+
+      numInput.addEventListener('input', (e) => {
+        document.getElementById('visualDebitNum').textContent = e.target.value || '•••• •••• •••• ••••';
+      });
+      nameInput.addEventListener('input', (e) => {
+        document.getElementById('visualDebitHolder').textContent = e.target.value.toUpperCase() || 'CARDHOLDER NAME';
+      });
+      expInput.addEventListener('input', (e) => {
+        document.getElementById('visualDebitExp').textContent = e.target.value || 'MM/YY';
+      });
+      networkSelect.addEventListener('change', (e) => {
+        document.getElementById('debitCardType').textContent = e.target.value.toUpperCase() + ' DEBIT';
+      });
+
+      document.getElementById('debitCardForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        RentroPayments.generateOTP();
+        draft.paymentMethod = `${networkSelect.value} Debit Card`;
+        RentroPayments.saveCheckoutDraft(draft);
+
+        RentroUtils.showToast('Connecting to 3D Secure bank OTP...', 'info');
+        setTimeout(() => window.location.href = 'otp.html', 500);
+      });
+    });
+  </script>
 </body>
 </html>

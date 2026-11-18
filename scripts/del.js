@@ -1,157 +1,125 @@
-document.addEventListener("DOMContentLoaded", function() {
+/**
+ * Rentro Rentals - Delivery & Fulfillment Engine
+ */
 
-function parseDateTime(dateStr, timeStr) {
-  const [day, month, year] = dateStr.split("-").map(Number);
-  const [hour, minute] = timeStr.split(":").map(Number);
-  return new Date(year, month - 1, day, hour, minute);
-}
+document.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
 
-function setDurationDisplay(startDateStr, startTimeStr, endDateStr, endTimeStr, durationDisplay) {
-  if (startDateStr && startTimeStr && endDateStr && endTimeStr) {
-    const start = parseDateTime(startDateStr, startTimeStr);
-    const end = parseDateTime(endDateStr, endTimeStr);
+  // Extract Query Parameters
+  const name = params.get("name") || "Honda Activa 6G";
+  const brand = params.get("brand") || "Scooter";
+  const image = params.get("image") || "../images/honda activa 6g.png";
+  const pricePerHour = parseFloat(params.get("price")) || 40;
+  const location = params.get("location") || "VIZAG";
+  const pickupDate = params.get("pickupDate") || "Today";
+  const pickupTime = params.get("pickupTime") || "10:00";
+  const dropoffDate = params.get("dropoffDate") || "Tomorrow";
+  const dropoffTime = params.get("dropoffTime") || "18:00";
 
-    let diffMs = end - start;
-    if (diffMs < 0) diffMs = 0;
+  // Calculate Duration and Price
+  const totalHours = calculateHours(pickupDate, pickupTime, dropoffDate, dropoffTime);
+  const totalAmount = parseFloat(params.get("total")) || (pricePerHour * totalHours);
 
-    let totalHours = Math.floor(diffMs / (1000 * 60 * 60));
-    let days = Math.floor(totalHours / 24);
-    let hours = totalHours % 24;
+  // Populate UI Fields
+  document.getElementById("vehicleName").textContent = name;
+  document.getElementById("vehicleType").textContent = `${brand} • ${location}`;
+  document.getElementById("vehicleImage").src = image;
+  document.getElementById("tripTiming").textContent = `📅 ${pickupDate} ${pickupTime} → ${dropoffDate} ${dropoffTime} (${totalHours} hrs)`;
+  document.getElementById("totalPriceDisplay").textContent = `₹${totalAmount.toFixed(0)}`;
 
-    let durationStr = "";
-    if (days > 0) durationStr += `${days} Day${days > 1 ? 's' : ''}`;
-    if (days > 0 && hours > 0) durationStr += ` ${hours} Hour${hours > 1 ? 's' : ''}`;
-    if (days === 0 && hours > 0) durationStr += `${hours} Hour${hours > 1 ? 's' : ''}`;
-    if (totalHours === 0) durationStr = "Less than an hour";
+  // Set default city in address field
+  document.getElementById("city").value = location;
 
-    durationDisplay.innerHTML = `<span class="days">${durationStr.trim()}</span>`;
+  // Setup Back Button
+  document.getElementById("backBtn").addEventListener("click", () => {
+    window.history.back();
+  });
 
-    updateTotalAmount(startDateStr, startTimeStr, endDateStr, endTimeStr);
+  // Setup Delivery Mode Radio Toggles
+  const modeRadios = document.querySelectorAll('input[name="deliveryMode"]');
+  const addressSection = document.getElementById("addressSection");
+
+  modeRadios.forEach(radio => {
+    radio.addEventListener("change", () => {
+      document.querySelectorAll(".mode-radio-card").forEach(c => c.classList.remove("active"));
+      radio.closest(".mode-radio-card").classList.add("active");
+
+      if (radio.value === "home") {
+        addressSection.style.display = "block";
+      } else {
+        addressSection.style.display = "none";
+      }
+    });
+  });
+
+  // Setup Form Submission
+  document.getElementById("continueBtn").addEventListener("click", (e) => {
+    e.preventDefault();
+
+    const selectedMode = document.querySelector('input[name="deliveryMode"]:checked').value;
+    const pincode = document.getElementById("pincode").value.trim();
+    const street = document.getElementById("street").value.trim();
+    const city = document.getElementById("city").value.trim();
+    const state = document.getElementById("state").value.trim();
+
+    if (selectedMode === "home") {
+      if (!pincode || !street || !city || !state) {
+        alert("Please complete your delivery address or use 'Detect Location'.");
+        return;
+      }
+    }
+
+    const nextParams = new URLSearchParams({
+      name,
+      brand,
+      image,
+      price: pricePerHour,
+      location,
+      pickupDate,
+      pickupTime,
+      dropoffDate,
+      dropoffTime,
+      total: totalAmount,
+      hours: totalHours,
+      deliveryMode: selectedMode
+    });
+
+    if (selectedMode === "home") {
+      nextParams.set("pincode", pincode);
+      nextParams.set("street", street);
+      nextParams.set("city", city);
+      nextParams.set("state", state);
+    }
+
+    window.location.href = `confirm.html?${nextParams.toString()}`;
+  });
+});
+
+function calculateHours(startDate, startTime, endDate, endTime) {
+  try {
+    const start = new Date(`${startDate}T${startTime}`);
+    const end = new Date(`${endDate}T${endTime}`);
+    if (isNaN(start.getTime()) || isNaN(end.getTime()) || end <= start) return 8;
+    const diffMs = end - start;
+    return Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60)));
+  } catch (e) {
+    return 8;
   }
 }
 
-function calculateTotalHours(startDateStr, startTimeStr, endDateStr, endTimeStr) {
-  const start = parseDateTime(startDateStr, startTimeStr);
-  const end = parseDateTime(endDateStr, endTimeStr);
-  if (!start || !end) return 0;
-  let diffMs = end - start;
-  if (diffMs < 0) diffMs = 0;
-  return Math.floor(diffMs / (1000 * 60 * 60));
-}
+// GPS Location Detection via OpenStreetMap Nominatim
+function detectUserLocation() {
+  const msgEl = document.getElementById("gpsMessage");
+  const detectBtn = document.getElementById("detectGpsBtn");
 
-const params = new URLSearchParams(window.location.search);
-const locationParam = params.get("location") || "Vijayawada";
-const pickupDateRaw = params.get("pickupDate") || "2025-05-18";
-const dropoffDateRaw = params.get("dropoffDate") || "2025-05-20";
-const pickupTime = params.get("pickupTime") || "10:00";
-const dropoffTime = params.get("dropoffTime") || "10:00";
-const name = params.get("name") || "Glamour";
-const brand = params.get("brand") || "HERO";
-const image = params.get("image") || "https://i.imgur.com/Nb0lHBJ.png";
-const pricePerHour = params.get("price") || "0.00";
-
-function toDDMMYYYY(str) {
-  if (/^\d{2}-\d{2}-\d{4}$/.test(str)) return str;
-  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
-    const [yyyy, mm, dd] = str.split("-");
-    return `${dd}-${mm}-${yyyy}`;
-  }
-  return str;
-}
-
-const pickupDate = toDDMMYYYY(pickupDateRaw);
-const dropoffDate = toDDMMYYYY(dropoffDateRaw);
-
-// --- HOURS/DAYS LOGIC ---
-const totalHours = calculateTotalHours(pickupDate, pickupTime, dropoffDate, dropoffTime);
-const rentalInfoEl = document.getElementById("rentalInfo");
-let durationStr = "";
-if (totalHours < 24) {
-  durationStr += `${totalHours} Hour(s)`;
-} else {
-  const days = Math.floor(totalHours / 24);
-  const hours = totalHours % 24;
-  durationStr += `${days} Day(s)`;
-  if (hours > 0) durationStr += ` ${hours} Hour(s)`;
-}
-if (totalHours === 0) durationStr = "Less than an hour";
-
-const displayStr = `📍 ${locationParam} <span>${pickupDate} → ${dropoffDate}</span> <span class="days">${durationStr}</span>`;
-rentalInfoEl.innerHTML = displayStr;
-
-// --- VEHICLE NAME IN PLACE OF BRAND ---
-document.getElementById("brand").textContent = name; // Show vehicle name where brand was
-document.getElementById("name").textContent = "";    // Optionally blank the secondary field
-document.getElementById("bikeImage").src = image;
-
-const durationDisplay = document.getElementById("durationDisplay");
-if (durationDisplay) {
-  setDurationDisplay(pickupDate, pickupTime, dropoffDate, dropoffTime, durationDisplay);
-} else {
-  updateTotalAmount(pickupDate, pickupTime, dropoffDate, dropoffTime);
-}
-
-// --- TOTAL AMOUNT SECTION ---
-function updateTotalAmount(startDateStr, startTimeStr, endDateStr, endTimeStr) {
-  const totalAmountEl = document.getElementById("totalAmount");
-  if (!totalAmountEl) return;
-  if (
-    pricePerHour &&
-    !isNaN(Number(pricePerHour)) &&
-    startDateStr && startTimeStr &&
-    endDateStr && endTimeStr
-  ) {
-    const totalHours = calculateTotalHours(startDateStr, startTimeStr, endDateStr, endTimeStr);
-    const totalAmount = Number(pricePerHour) * totalHours;
-    totalAmountEl.innerHTML = `<strong>Total: </strong>₹${totalAmount}`;
-  } else {
-    totalAmountEl.textContent = "Total: -";
-  }
-}
-// --- END TOTAL AMOUNT SECTION ---
-
-const addressSection = document.getElementById("addressSection");
-const addressForm = document.getElementById("addressForm");
-const addressDisplay = document.getElementById("addressDisplay");
-const addressBtn = document.getElementById("addressBtn");
-
-function toggleAddressForm() {
-  addressForm.style.display = "flex";
-  addressBtn.style.display = "none";
-}
-window.toggleAddressForm = toggleAddressForm;
-
-function submitAddress() {
-  const pincode = document.getElementById("pincode").value.trim();
-  const street = document.getElementById("street").value.trim();
-  const city = document.getElementById("city").value.trim();
-  const state = document.getElementById("state").value.trim();
-
-  if (!pincode || !street || !city || !state) {
-    alert("Please fill all the fields.");
-    return;
-  }
-
-  addressDisplay.innerHTML = `
-    <strong>Pincode:</strong> ${pincode}<br />
-    <strong>Street:</strong> ${street}<br />
-    <strong>City:</strong> ${city}<br />
-    <strong>State:</strong> ${state}
-  `;
-  addressDisplay.style.display = "block";
-  addressForm.style.display = "none";
-  addressBtn.textContent = "Update Address";
-  addressBtn.style.display = "inline-block";
-  document.getElementById("locationMessage").textContent = "";
-}
-window.submitAddress = submitAddress;
-
-function detectLocation() {
-  const messageEl = document.getElementById("locationMessage");
-  messageEl.textContent = "Detecting...";
+  msgEl.textContent = "Detecting your current location...";
+  msgEl.className = "gps-message";
+  detectBtn.disabled = true;
 
   if (!navigator.geolocation) {
-    messageEl.textContent = "Geolocation not supported.";
+    msgEl.textContent = "Geolocation is not supported by your browser.";
+    msgEl.className = "gps-message error";
+    detectBtn.disabled = false;
     return;
   }
 
@@ -161,70 +129,30 @@ function detectLocation() {
       const lon = position.coords.longitude;
 
       fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`)
-        .then((res) => res.json())
-        .then((data) => {
+        .then(res => res.json())
+        .then(data => {
           const address = data.address || {};
           document.getElementById("pincode").value = address.postcode || "";
-          document.getElementById("street").value = address.road || address.pedestrian || "";
-          document.getElementById("city").value = address.city || address.town || address.village || "";
+          document.getElementById("street").value = address.road || address.neighbourhood || address.suburb || "";
+          document.getElementById("city").value = address.city || address.town || address.county || "";
           document.getElementById("state").value = address.state || "";
-          messageEl.textContent = "Location detected!";
+
+          msgEl.textContent = "✓ Location detected & address filled!";
+          msgEl.className = "gps-message success";
         })
         .catch(() => {
-          messageEl.textContent = "Failed to retrieve address.";
+          msgEl.textContent = "Could not fetch address details. Please fill manually.";
+          msgEl.className = "gps-message error";
+        })
+        .finally(() => {
+          detectBtn.disabled = false;
         });
     },
-    () => {
-      messageEl.textContent = "Could not get your location.";
-    }
+    (err) => {
+      msgEl.textContent = "Permission denied or location unavailable.";
+      msgEl.className = "gps-message error";
+      detectBtn.disabled = false;
+    },
+    { timeout: 8000 }
   );
 }
-window.detectLocation = detectLocation;
-
-document.getElementById("backBtn").addEventListener("click", () => {
-  const query = new URLSearchParams({
-    location: locationParam,
-    pickupDate,
-    dropoffDate,
-    pickupTime,
-    dropoffTime,
-    name,
-    brand,
-    image,
-    price: pricePerHour
-  }).toString();
-  window.location.href = "vehicle.html?" + query;
-});
-
-document.getElementById("submitBtn").addEventListener("click", (event) => {
-  event.preventDefault(); // Just in case
-  const deliveryMode = document.querySelector('input[name="delivery"]:checked').value;
-  if (deliveryMode === "home" && !addressDisplay.innerHTML.trim()) {
-    alert("Please submit your address before continuing.");
-    return;
-  }
-
-  const query = new URLSearchParams({
-    location: locationParam,
-    pickupDate,
-    dropoffDate,
-    pickupTime,
-    dropoffTime,
-    name,
-    brand,
-    image,
-    price: pricePerHour,
-    deliveryMode
-  });
-
-  if (deliveryMode === "home") {
-    query.set("pincode", document.getElementById("pincode").value.trim());
-    query.set("street", document.getElementById("street").value.trim());
-    query.set("city", document.getElementById("city").value.trim());
-    query.set("state", document.getElementById("state").value.trim());
-  }
-
-  window.location.href = "confirm.html?" + query.toString();
-});
-
-}); // End DOMContentLoaded

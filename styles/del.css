@@ -1,173 +1,336 @@
+/* =========================================================
+   RENTRO RENTALS - DELIVERY & FULFILLMENT SELECTOR
+   ========================================================= */
+
+@import url('theme.css');
+
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #fffdf3;
-  margin: 0;
-  padding: 2rem;
-  color: #333;
+  background-color: #F8FAFC;
+  min-height: 100vh;
+  padding: 24px 20px 60px;
 }
 
-.container {
-  max-width: 800px;
-  margin: auto;
-  background-color: #ffffff;
-  border: 2px solid #f4d35e;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+.delivery-container {
+  max-width: 780px;
+  margin: 0 auto;
 }
 
-.back-arrow {
-  display: inline-flex;
-  justify-content: center;
+/* Nav Bar */
+.delivery-nav {
+  display: flex;
   align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.delivery-nav .nav-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 40px;
   height: 40px;
-  background-color: #f1f1f1;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  font-size: 1.5em;
-  color: black;
-  cursor: pointer;
+  background: #FFFFFF;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--dark);
   text-decoration: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s, border 0.3s;
-  margin-bottom: 1rem;
+  transition: all var(--transition-fast);
 }
 
-.back-arrow:hover {
-  background-color: #ddd;
-  border-color: #bbb;
+.delivery-nav .nav-back:hover {
+  background: var(--light-bg);
+  border-color: var(--slate);
+  transform: translateX(-3px);
 }
 
-.section {
-  margin-bottom: 2rem;
+.delivery-nav h1 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--dark);
+  letter-spacing: -0.5px;
 }
 
-h2 {
-  color: #f4a261;
-  margin-bottom: 1rem;
-}
-
-.product {
+/* Vehicle Highlight Card */
+.vehicle-summary-card {
+  background: #FFFFFF;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
 }
 
-.brand {
-  color: #f4a261;
-  font-size: 1.2rem;
+.v-summary-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-  #totalAmount {
-    margin-top: 5px;
-    font-weight: bold;
-    color: #333;
-    font-size: 18px;
-  }
-  .brand {
-    font-weight: bold;
-  }
+.v-summary-details .cat-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--primary);
+  letter-spacing: 0.5px;
+}
 
+.v-summary-details h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--dark);
+}
 
+.v-summary-details .time-badge {
+  font-size: 0.85rem;
+  color: var(--slate);
+}
 
-.fee {
+.v-summary-details .price-calc-line {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin-top: 4px;
+}
+
+.v-summary-details .price-calc-line span {
+  color: var(--success);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.v-summary-img-wrap {
+  width: 140px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F8FAFC;
+  border-radius: var(--radius-md);
+  padding: 8px;
+}
+
+.v-summary-img-wrap img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Delivery Mode Selection */
+.section-panel {
+  background: #FFFFFF;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.section-panel h3 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.delivery-modes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.mode-radio-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 18px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  background: #F8FAFC;
+}
+
+.mode-radio-card input {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  accent-color: var(--primary);
+  transform: scale(1.2);
+}
+
+.mode-radio-card:hover {
+  border-color: var(--primary-glow);
+  background: #FFFFFF;
+}
+
+.mode-radio-card.active {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.mode-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mode-desc {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* Address Box */
+.address-form-box {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px dashed var(--border);
+}
+
+.address-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.form-group-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group-item label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--slate);
+  text-transform: uppercase;
+}
+
+.form-group-item input {
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
   font-size: 0.9rem;
-  color: #888;
+  font-family: inherit;
+  outline: none;
+  transition: border-color var(--transition-fast);
 }
 
-.rental-link {
-  color: #e9c46a;
-  text-decoration: none;
-  font-weight: bold;
+.form-group-item input:focus {
+  border-color: var(--primary);
+}
+
+.detect-gps-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #EFF6FF;
+  border: 1.5px solid #BFDBFE;
+  color: #1D4ED8;
+  padding: 9px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
+  transition: all var(--transition-fast);
 }
 
-.location {
-  margin-top: 0.5rem;
-  font-size: 0.95rem;
+.detect-gps-btn:hover {
+  background: #DBEAFE;
 }
 
-.days {
-  background-color: #f4d35e;
-  padding: 2px 6px;
-  border-radius: 5px;
-  font-weight: bold;
-  margin-left: 6px;
+.gps-message {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 8px;
 }
 
-.bike-img {
-  width: 120px;
+.gps-message.success { color: var(--success); }
+.gps-message.error { color: #DC2626; }
+
+/* Policy Grid */
+.perks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
 }
 
-.charges {
+.perk-box {
+  background: #F8FAFC;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
   display: flex;
-  gap: 1rem;
+  align-items: center;
+  gap: 12px;
 }
 
-.charge-box {
-  background-color: #fff7cc;
-  padding: 1rem;
-  border: 2px dashed #f4d35e;
-  border-radius: 10px;
-  text-align: center;
-  flex: 1;
+.perk-box i {
+  font-size: 1.3rem;
+  color: var(--primary);
 }
 
-.address-section {
+.perk-box .perk-text strong {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--dark);
+}
+
+.perk-box .perk-text small {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* Submit Action Button */
+.continue-btn {
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.add-address {
-  background-color: #f4d35e;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, var(--primary) 0%, #FF3D00 100%);
+  color: #FFFFFF;
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 15px;
+  border-radius: var(--radius-md);
   border: none;
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
-  border-radius: 8px;
   cursor: pointer;
-  color: #333;
-  width: fit-content;
+  box-shadow: 0 6px 18px var(--primary-glow);
+  transition: all var(--transition-normal);
+  margin-top: 10px;
 }
 
-.address-form {
-  display: none;
-  flex-direction: column;
-  gap: 0.8rem;
+.continue-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px var(--primary-glow);
 }
 
-.address-form input {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
-}
-
-.address-form label {
-  font-weight: bold;
-}
-
-.address-display {
-  background-color: #fff7cc;
-  padding: 1rem;
-  border-radius: 8px;
-  border: 1px solid #f4d35e;
-}
-
-.message {
-  color: #b45309;
-  font-weight: bold;
-  min-height: 1.2em;
-  margin-top: 0.5rem;
-}
-.submit-btn {
-  background-color: #f4d35e;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  color: #333;
-  width: fit-content;
+@media (max-width: 600px) {
+  .delivery-modes-grid {
+    grid-template-columns: 1fr;
+  }
+  .address-grid {
+    grid-template-columns: 1fr;
+  }
+  .vehicle-summary-card {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+  }
+  .v-summary-img-wrap {
+    width: 100%;
+    height: 120px;
+  }
 }

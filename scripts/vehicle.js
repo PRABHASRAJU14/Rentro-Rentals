@@ -1,201 +1,346 @@
-const params = new URLSearchParams(window.location.search);
-let pickupLocation = params.get("location") || "N/A";
-let pickupDate = params.get("pickupDate") || "N/A";
-let pickupTime = params.get("pickupTime") || "N/A";
-let dropoffDate = params.get("dropoffDate") || "N/A";
-let dropoffTime = params.get("dropoffTime") || calculateDropoffTime(pickupTime);
+/**
+ * Rentro Rentals - Vehicle Flow Cards & Filter Engine
+ */
 
-pickupDate = formatDate(pickupDate);
-dropoffDate = formatDate(dropoffDate);
+// Global State
+let currentCategory = "all";
+let currentSearchQuery = "";
+let currentSort = "recommended";
+let pickupLocation = "VIZAG";
+let pickupDate = "";
+let pickupTime = "10:00";
+let dropoffDate = "";
+let dropoffTime = "18:00";
+let totalHours = 8;
 
 document.addEventListener("DOMContentLoaded", () => {
-  const storedFormData = sessionStorage.getItem("vehicleFormData");
-  if (storedFormData) {
+  // Ensure vehicle seed data is initialized
+  if (typeof initSeedData === "function") {
+    initSeedData();
+  }
+
+  // Parse Query & Session Parameters
+  loadTripParameters();
+
+  // Initialize UI Components
+  setupHeaderInfo();
+  populateLocationDropdown();
+  setupFilterTabs();
+  setupSearchAndSort();
+
+  // Render Initial Vehicle Flow
+  renderVehicleFlow();
+});
+
+function loadTripParameters() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const sessionData = sessionStorage.getItem("vehicleFormData");
+  let parsedSession = {};
+
+  if (sessionData) {
     try {
-      const data = JSON.parse(storedFormData);
-      if (data.pickupDate) pickupDate = formatDate(data.pickupDate);
-      if (data.pickupTime) pickupTime = data.pickupTime;
-      if (data.dropoffDate) dropoffDate = formatDate(data.dropoffDate);
-      if (data.dropoffTime) dropoffTime = data.dropoffTime;
-      if (data.location) pickupLocation = data.location;
+      parsedSession = JSON.parse(sessionData);
     } catch (e) {
       console.warn("Failed to parse vehicleFormData", e);
     }
   }
 
-  populateLocationDropdown();
-  renderVehicles(pickupLocation);
+  // Priority: URL Params -> SessionStorage -> Default
+  pickupLocation = urlParams.get("location") || parsedSession.location || getStoredCityName() || "VIZAG";
+  pickupDate = urlParams.get("pickupDate") || parsedSession.pickupDate || getDefaultDate(0);
+  pickupTime = urlParams.get("pickupTime") || parsedSession.pickupTime || "10:00";
+  dropoffDate = urlParams.get("dropoffDate") || parsedSession.dropoffDate || getDefaultDate(1);
+  dropoffTime = urlParams.get("dropoffTime") || parsedSession.dropoffTime || "18:00";
 
-  document.getElementById("backBtn").addEventListener("click", () => {
-    window.location.href = `search.html?pickupDate=${encodeURIComponent(pickupDate)}&pickupTime=${encodeURIComponent(pickupTime)}&dropoffDate=${encodeURIComponent(dropoffDate)}&dropoffTime=${encodeURIComponent(dropoffTime)}&location=${encodeURIComponent(pickupLocation)}`;
-  });
+  // Calculate total rental hours
+  totalHours = calculateRentalHours(pickupDate, pickupTime, dropoffDate, dropoffTime);
+}
 
-  document.getElementById("locationSelect").addEventListener("change", (e) => {
-    pickupLocation = e.target.value;
-    renderVehicles(pickupLocation);
-  });
-});
+function getStoredCityName() {
+  try {
+    const raw = localStorage.getItem("selectedCity");
+    if (!raw) return "VIZAG";
+    const data = JSON.parse(raw);
+    return data.name || "VIZAG";
+  } catch (e) {
+    return "VIZAG";
+  }
+}
+
+function getDefaultDate(offsetDays) {
+  const d = new Date();
+  d.setDate(d.getDate() + offsetDays);
+  return d.toISOString().split("T")[0];
+}
+
+function calculateRentalHours(startDate, startTime, endDate, endTime) {
+  try {
+    const start = new Date(`${startDate}T${startTime}`);
+    const end = new Date(`${endDate}T${endTime}`);
+    if (isNaN(start) || isNaN(end) || end <= start) return 4;
+    const diffMs = end - start;
+    return Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60)));
+  } catch (e) {
+    return 4;
+  }
+}
+
+function formatDisplayDate(dateStr) {
+  if (!dateStr) return "";
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    const options = { day: "numeric", month: "short" };
+    return d.toLocaleDateString("en-IN", options);
+  } catch (e) {
+    return dateStr;
+  }
+}
+
+function setupHeaderInfo() {
+  const tripPill = document.getElementById("tripSummaryPill");
+  if (tripPill) {
+    const days = Math.floor(totalHours / 24);
+    const remHours = totalHours % 24;
+    let durationText = `${totalHours} hrs`;
+    if (days > 0) {
+      durationText = `${days}d ${remHours > 0 ? remHours + 'h' : ''}`;
+    }
+
+    tripPill.innerHTML = `
+      <span>📍 <strong>${pickupLocation.toUpperCase()}</strong></span>
+      <span>•</span>
+      <span>${formatDisplayDate(pickupDate)} ${pickupTime} &rarr; ${formatDisplayDate(dropoffDate)} ${dropoffTime}</span>
+      <span>•</span>
+      <span class="badge badge-primary">${durationText}</span>
+      <a href="search.html" class="edit-link">Edit</a>
+    `;
+  }
+}
 
 function populateLocationDropdown() {
   const select = document.getElementById("locationSelect");
-  select.innerHTML = ""; // Clear old options
+  if (!select) return;
 
   const storedVehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
-  let uniqueLocations = [...new Set(storedVehicles.map(v => v.location).filter(Boolean))];
+  const uniqueCities = [...new Set(storedVehicles.map(v => (v.location || "").toUpperCase()).filter(Boolean))];
 
-  uniqueLocations = uniqueLocations.filter(
-    loc => loc.toLowerCase() !== (pickupLocation || "").toLowerCase()
-  );
-
-  if (pickupLocation && pickupLocation !== "N/A") {
-    const firstOption = document.createElement("option");
-    firstOption.value = pickupLocation;
-    firstOption.textContent = pickupLocation;
-    firstOption.selected = true;
-    select.appendChild(firstOption);
+  // If current location is not in list, add it
+  if (!uniqueCities.includes(pickupLocation.toUpperCase())) {
+    uniqueCities.unshift(pickupLocation.toUpperCase());
   }
 
-  uniqueLocations.forEach(loc => {
-    const option = document.createElement("option");
-    option.value = loc;
-    option.textContent = loc;
-    select.appendChild(option);
+  select.innerHTML = uniqueCities.map(city => 
+    `<option value="${city}" ${city === pickupLocation.toUpperCase() ? "selected" : ""}>📍 ${city}</option>`
+  ).join("");
+
+  select.addEventListener("change", (e) => {
+    pickupLocation = e.target.value;
+    setupHeaderInfo();
+    renderVehicleFlow();
   });
 }
 
-function parseDateTime(dateStr, timeStr) {
-  if (!dateStr || !timeStr || dateStr === "N/A" || timeStr === "N/A") return null;
-  const [day, month, year] = dateStr.split("-").map(Number);
-  const [hour, minute] = timeStr.split(":").map(Number);
-  return new Date(year, month - 1, day, hour, minute);
+function setupFilterTabs() {
+  const tabs = document.querySelectorAll(".flow-tab");
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      tabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      currentCategory = tab.dataset.category || "all";
+      renderVehicleFlow();
+    });
+  });
 }
 
-function calculateTotalHours(startDateStr, startTimeStr, endDateStr, endTimeStr) {
-  const start = parseDateTime(startDateStr, startTimeStr);
-  const end = parseDateTime(endDateStr, endTimeStr);
-  if (!start || !end) return 0;
-  let diffMs = end - start;
-  if (diffMs < 0) diffMs = 0;
-  const totalHours = diffMs / (1000 * 60 * 60);
-  return Math.ceil(totalHours);
+function setupSearchAndSort() {
+  const searchInput = document.getElementById("vehicleSearchInput");
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      currentSearchQuery = e.target.value.toLowerCase().trim();
+      renderVehicleFlow();
+    });
+  }
+
+  const sortSelect = document.getElementById("vehicleSortSelect");
+  if (sortSelect) {
+    sortSelect.addEventListener("change", (e) => {
+      currentSort = e.target.value;
+      renderVehicleFlow();
+    });
+  }
 }
 
-function renderVehicles(location) {
-  const container = document.getElementById("vehicles-container");
-  container.innerHTML = "";
-
-  const storedVehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
-  const filtered = storedVehicles.filter(
-    v => v.location && v.location.toLowerCase() === location.toLowerCase()
+function getFilteredVehicles() {
+  const stored = JSON.parse(localStorage.getItem("vehicles")) || [];
+  
+  // Filter by location
+  let filtered = stored.filter(v => 
+    (v.location || "").toUpperCase() === pickupLocation.toUpperCase()
   );
 
-  const types = ["Scooter", "Bike", "Bicycle", "Car"];
-  const grouped = {};
+  // Fallback: If no vehicles in this exact city, show all vehicles to prevent empty state
+  if (filtered.length === 0 && stored.length > 0) {
+    filtered = stored;
+  }
 
-  types.forEach(type => {
-    grouped[type] = filtered.filter(
-      v => v.type && v.type.toLowerCase() === type.toLowerCase()
+  // Filter by category
+  if (currentCategory !== "all") {
+    filtered = filtered.filter(v => 
+      (v.type || "").toLowerCase() === currentCategory.toLowerCase()
     );
-  });
+  }
 
-  let hasVehicles = false;
+  // Filter by search query
+  if (currentSearchQuery) {
+    filtered = filtered.filter(v => 
+      (v.name || "").toLowerCase().includes(currentSearchQuery) ||
+      (v.type || "").toLowerCase().includes(currentSearchQuery) ||
+      (v.badge || "").toLowerCase().includes(currentSearchQuery)
+    );
+  }
 
-  types.forEach(type => {
-    const vehicles = grouped[type];
-    if (vehicles.length > 0) {
-      hasVehicles = true;
-      const groupDiv = document.createElement("div");
-      groupDiv.className = "vehicle-group";
+  // Sort
+  if (currentSort === "price-low") {
+    filtered.sort((a, b) => Number(a.price) - Number(b.price));
+  } else if (currentSort === "price-high") {
+    filtered.sort((a, b) => Number(b.price) - Number(a.price));
+  } else if (currentSort === "rating") {
+    filtered.sort((a, b) => (b.rating || 4.5) - (a.rating || 4.5));
+  }
 
-      const heading = document.createElement("h2");
-      heading.textContent = type + "s";
-      groupDiv.appendChild(heading);
+  return filtered;
+}
 
-      vehicles.forEach((vehicle, index) => {
-        const card = document.createElement("div");
-        card.className = "card fade-in";
-        card.style.animationDelay = `${index * 0.1}s`;
+function updateCategoryCounts() {
+  const stored = JSON.parse(localStorage.getItem("vehicles")) || [];
+  const locationFleet = stored.filter(v => (v.location || "").toUpperCase() === pickupLocation.toUpperCase());
+  const fleetToCount = locationFleet.length > 0 ? locationFleet : stored;
 
-        let totalAmount = "-";
-        let totalAmountNumber = 0;
-        if (
-          vehicle.price &&
-          !isNaN(Number(vehicle.price)) &&
-          pickupDate !== "N/A" && pickupTime !== "N/A" &&
-          dropoffDate !== "N/A" && dropoffTime !== "N/A"
-        ) {
-          const totalHours = calculateTotalHours(
-            pickupDate,
-            pickupTime,
-            dropoffDate,
-            dropoffTime
-          );
-          totalAmountNumber = Number(vehicle.price) * totalHours;
-          totalAmount = "₹" + totalAmountNumber;
-        }
+  const counts = {
+    all: fleetToCount.length,
+    scooter: fleetToCount.filter(v => (v.type || "").toLowerCase() === "scooter").length,
+    bike: fleetToCount.filter(v => (v.type || "").toLowerCase() === "bike").length,
+    bicycle: fleetToCount.filter(v => (v.type || "").toLowerCase() === "bicycle").length,
+    car: fleetToCount.filter(v => (v.type || "").toLowerCase() === "car").length
+  };
 
-        const urlParams = new URLSearchParams({
-          name: vehicle.name,
-          image: vehicle.image,
-          price: vehicle.price,
-          location: location,
-          pickupDate,
-          pickupTime,
-          dropoffDate,
-          dropoffTime,
-          total: totalAmountNumber
-        });
-
-        card.innerHTML = `
-          <h3>${vehicle.name}</h3>
-          <img src="${vehicle.image}" alt="${vehicle.name}" class="scooter-img"/>
-          <div class="location-name"><strong>Location:</strong> ${location}</div>
-          <div class="time-row">
-            <div class="time-block">
-              <div class="time">${pickupTime}</div>
-              <div class="date">${pickupDate}</div>
-            </div>
-            <div class="to-circle">to</div>
-            <div class="time-block">
-              <div class="time">${dropoffTime}</div>
-              <div class="date">${dropoffDate}</div>
-            </div>
-          </div>
-          <div class="price">₹ <strong>${Number(vehicle.price).toFixed(2)}</strong> <span class="per-hour">/hr</span></div>
-          <div class="card-bottom">
-            <div class="total-amount">
-              <strong>Total: </strong>
-              <span>${totalAmount}</span>
-            </div>
-            <button class="book-btn" onclick="window.location.href='del.html?${urlParams.toString()}'">Book</button>
-          </div>
-        `;
-        groupDiv.appendChild(card);
-      });
-
-      container.appendChild(groupDiv);
+  document.querySelectorAll(".flow-tab").forEach(tab => {
+    const cat = tab.dataset.category;
+    const badge = tab.querySelector(".count-badge");
+    if (badge && counts[cat] !== undefined) {
+      badge.textContent = counts[cat];
     }
   });
+}
 
-  if (!hasVehicles) {
-    container.innerHTML = `<p class="no-vehicles">🚫 No vehicles available in <strong>${location}</strong>.</p>`;
+function renderVehicleFlow() {
+  const container = document.getElementById("vehicleFlowContainer");
+  const resultCount = document.getElementById("resultCount");
+  if (!container) return;
+
+  updateCategoryCounts();
+  const vehicles = getFilteredVehicles();
+
+  if (resultCount) {
+    resultCount.textContent = `Showing ${vehicles.length} ride${vehicles.length !== 1 ? 's' : ''}`;
   }
+
+  if (vehicles.length === 0) {
+    container.innerHTML = `
+      <div class="empty-catalog-state" style="grid-column: 1 / -1;">
+        <div class="empty-icon">🛵</div>
+        <h3>No rides found in ${pickupLocation}</h3>
+        <p>Try switching to another category, clear your search filter, or check another city hub.</p>
+        <button class="btn-primary" onclick="resetFilters()">Reset All Filters</button>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = vehicles.map((v, index) => {
+    const hourlyRate = Number(v.price) || 40;
+    const tripTotal = hourlyRate * totalHours;
+    const rating = v.rating || 4.8;
+    const trips = v.trips || Math.floor(Math.random() * 120 + 30);
+    const badge = v.badge || "Instant Unlock";
+    const mileage = v.mileage || (v.type === "Scooter" ? "55 km/l" : v.type === "Bike" ? "35 km/l" : "Eco-friendly");
+    const speed = v.speed || (v.type === "Scooter" ? "85 km/h" : v.type === "Bike" ? "120 km/h" : "25 km/h");
+    const transmission = v.transmission || (v.type === "Scooter" ? "Automatic" : "Manual");
+
+    // Booking URL construction
+    const bookingParams = new URLSearchParams({
+      name: v.name,
+      brand: v.type || "Rentro",
+      image: v.image,
+      price: hourlyRate,
+      location: pickupLocation,
+      pickupDate: pickupDate,
+      pickupTime: pickupTime,
+      dropoffDate: dropoffDate,
+      dropoffTime: dropoffTime,
+      total: tripTotal
+    });
+
+    return `
+      <div class="bike-flow-card fade-in" style="animation-delay: ${index * 0.05}s;">
+        <!-- Top Status Row -->
+        <div class="card-top-row">
+          <span class="highlight-badge">⚡ ${badge}</span>
+          <span class="rating-badge">★ ${rating.toFixed(1)} (${trips})</span>
+        </div>
+
+        <!-- Vehicle Image Showcase -->
+        <div class="vehicle-showcase">
+          <img src="${v.image}" alt="${v.name}" onerror="this.src='../images/bike.png'" />
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body">
+          <div class="vehicle-title-wrap">
+            <span class="vehicle-type-tag">${v.type} • 2-Wheeler Hub</span>
+            <h3 class="vehicle-model-name">${v.name}</h3>
+          </div>
+
+          <!-- Specs Flow Ribbon -->
+          <div class="specs-flow-ribbon">
+            <span class="spec-chip">⛽ ${mileage}</span>
+            <span class="spec-chip">⚡ ${speed}</span>
+            <span class="spec-chip">⚙️ ${transmission}</span>
+            <span class="spec-chip">🪖 2 Helmets Free</span>
+          </div>
+
+          <!-- Timing Strip -->
+          <div class="timing-strip">
+            <span>📅 ${formatDisplayDate(pickupDate)} ${pickupTime}</span>
+            <span>&rarr;</span>
+            <span>${formatDisplayDate(dropoffDate)} ${dropoffTime}</span>
+            <span class="badge badge-success">Zero Deposit</span>
+          </div>
+
+          <!-- Card Footer & Price Flow -->
+          <div class="card-footer">
+            <div class="price-flow-col">
+              <div class="hourly-rate">₹${hourlyRate.toFixed(0)} <small>/ hr</small></div>
+              <div class="total-trip-chip">₹${tripTotal.toFixed(0)} total for ${totalHours} hrs</div>
+            </div>
+            <a href="del.html?${bookingParams.toString()}" class="book-flow-btn">
+              Book Ride <i>&rarr;</i>
+            </a>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
 }
 
-function formatDate(dateString) {
-  if (!dateString || dateString === "N/A") return "N/A";
-  const d = new Date(dateString);
-  if (isNaN(d.getTime())) return dateString;
-  const day = String(d.getDate()).padStart(2, "0");
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const year = d.getFullYear();
-  return `${day}-${month}-${year}`;
-}
-
-function calculateDropoffTime(pickupTime) {
-  if (!pickupTime || !/^\d{2}:\d{2}$/.test(pickupTime)) return pickupTime;
-  let [hours, minutes] = pickupTime.split(":").map(Number);
-  hours += 2;
-  if (hours >= 24) hours -= 24;
-  return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+function resetFilters() {
+  currentCategory = "all";
+  currentSearchQuery = "";
+  const searchInput = document.getElementById("vehicleSearchInput");
+  if (searchInput) searchInput.value = "";
+  document.querySelectorAll(".flow-tab").forEach(t => {
+    t.classList.toggle("active", t.dataset.category === "all");
+  });
+  renderVehicleFlow();
 }

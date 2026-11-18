@@ -2,63 +2,124 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Netbanking Payment</title>
-  <link rel="stylesheet" href="../styles/payc.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Netbanking Payment - Rentro Rentals</title>
+  
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/booking.css" />
+  <link rel="stylesheet" href="../styles/responsive.css" />
+  
+  <script src="../scripts/utils.js" defer></script>
+  <script src="../scripts/storage.js" defer></script>
+  <script src="../scripts/auth.js" defer></script>
+  <script src="../scripts/payments.js" defer></script>
 </head>
 <body>
-  <div class="container">
-    <p class="amount-text">Total Payable Amount: <strong id="totalAmount">₹ 0.00</strong></p>
 
-    <div class="payment-box">
-      <div class="payment-header">
-        CHOOSE PAYMENT METHOD
+  <header class="rentro-navbar">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="brand-logo">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="5" cy="18" r="3"></circle><circle cx="19" cy="18" r="3"></circle><path d="M12 18V8a2 2 0 0 1 2-2h4"></path><polyline points="15 3 18 6 15 9"></polyline><path d="M5 18h14"></path></svg>
+        </div>
+        <span>Rentro<span class="brand-accent">Rentals</span></span>
+      </a>
+      <div style="font-size:0.9rem; font-weight:700; color:var(--text-secondary);">
+        Internet Banking Portal
       </div>
-
-      <div class="form-section">
-        <label for="bank-select">Select your bank</label>
-        <select id="bank-select">
-          <option>Choose your bank</option>
-          <option>State Bank of India</option>
-          <option>HDFC Bank</option>
-          <option>ICICI Bank</option>
-          <option>Axis Bank</option>
-          <option>Punjab National Bank</option>
-          <option>Canara Bank</option>
-          <!-- Add more banks as needed -->
-        </select>
-
-        <div class="input-box">
-          <label>Account Holder Name</label>
-          <input type="text" placeholder="Enter account holder name" />
-        </div>
-
-        <div class="input-box">
-          <label>Account Number</label>
-          <input type="text" placeholder="Enter account number" />
-        </div>
-
-        <div class="input-box">
-          <label>IFSC Code</label>
-          <input type="text" placeholder="Enter IFSC code" maxlength="11" />
-        </div>
-      </div>
-
-      <button class="pay-button" id="pay-button">MAKE PAYMENT</button>
     </div>
-  </div>
+  </header>
+
+  <main class="checkout-step-container">
+    <div class="container container-narrow">
+      <div class="checkout-card" style="max-width: 600px; margin: 0 auto;">
+        <div class="checkout-header">
+          <div>
+            <h1>Select Your Bank</h1>
+            <p style="color:var(--text-muted); font-size:0.85rem;">All major Indian retail & corporate banks supported</p>
+          </div>
+          <span style="font-size: 1.5rem; font-weight: 800; color:var(--secondary);" id="payc3Amount">₹0</span>
+        </div>
+
+        <form id="netbankingForm">
+          <div class="form-group">
+            <label class="form-label" for="popularBank">Popular Banks</label>
+            <div class="bank-selection-grid">
+              <button type="button" class="bank-option-btn selected" data-bank="State Bank of India">SBI</button>
+              <button type="button" class="bank-option-btn" data-bank="HDFC Bank">HDFC Bank</button>
+              <button type="button" class="bank-option-btn" data-bank="ICICI Bank">ICICI Bank</button>
+              <button type="button" class="bank-option-btn" data-bank="Axis Bank">Axis Bank</button>
+              <button type="button" class="bank-option-btn" data-bank="Kotak Mahindra Bank">Kotak</button>
+              <button type="button" class="bank-option-btn" data-bank="Punjab National Bank">PNB</button>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top:20px;">
+            <label class="form-label" for="allBanksDropdown">Or Choose from All Banks</label>
+            <select id="allBanksDropdown" class="form-control">
+              <option value="">-- Select Bank --</option>
+              <option value="Bank of Baroda">Bank of Baroda</option>
+              <option value="Canara Bank">Canara Bank</option>
+              <option value="Union Bank of India">Union Bank of India</option>
+              <option value="IndusInd Bank">IndusInd Bank</option>
+              <option value="Federal Bank">Federal Bank</option>
+              <option value="Yes Bank">Yes Bank</option>
+              <option value="IDFC FIRST Bank">IDFC FIRST Bank</option>
+            </select>
+          </div>
+
+          <div style="background:var(--bg-subtle); padding:16px; border-radius:var(--radius-md); font-size:0.85rem; color:var(--text-secondary); margin: 20px 0;">
+            🔒 You will be directed to your bank's secure netbanking authorization server. Keep your customer ID and transaction password handy.
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <a href="payment.html" class="btn btn-secondary">&larr; Back</a>
+            <button type="submit" class="btn btn-primary btn-lg">Proceed to Bank Authorization &rarr;</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const params = new URLSearchParams(window.location.search);
-      const total = parseFloat(params.get("total")) || 0;
-      document.getElementById("totalAmount").textContent = `₹ ${total.toFixed(2)}`;
+    document.addEventListener('DOMContentLoaded', () => {
+      RentroStorage.init();
+      const draft = RentroPayments.getCheckoutDraft();
+      if (!draft) {
+        window.location.href = 'search.html';
+        return;
+      }
 
-      document.getElementById("pay-button").addEventListener("click", () => {
-        // Optional: add form validation here
+      document.getElementById('payc3Amount').textContent = RentroUtils.formatCurrency(draft.totalAmount);
 
-        // Redirect to success page
-        window.location.href = "success.html";
+      let selectedBank = 'State Bank of India';
+      const bankButtons = document.querySelectorAll('.bank-option-btn');
+      const allBanksDropdown = document.getElementById('allBanksDropdown');
+
+      bankButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          bankButtons.forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          selectedBank = btn.getAttribute('data-bank');
+          allBanksDropdown.value = '';
+        });
+      });
+
+      allBanksDropdown.addEventListener('change', (e) => {
+        if (e.target.value) {
+          bankButtons.forEach(b => b.classList.remove('selected'));
+          selectedBank = e.target.value;
+        }
+      });
+
+      document.getElementById('netbankingForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        RentroPayments.generateOTP();
+        draft.paymentMethod = `Netbanking (${selectedBank})`;
+        RentroPayments.saveCheckoutDraft(draft);
+
+        RentroUtils.showToast(`Connecting to ${selectedBank}...`, 'info');
+        setTimeout(() => window.location.href = 'otp.html', 500);
       });
     });
   </script>

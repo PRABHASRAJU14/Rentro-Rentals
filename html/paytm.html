@@ -1,42 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Paytm Payment</title>
-  <link rel="stylesheet" href="../styles/payc.css" />
+  <meta charset="UTF-8">
+  <title>Wallet Payment - Rentro Rentals</title>
+  <script>
+    window.location.replace('payment.html');
+  </script>
 </head>
 <body>
-  <div class="container">
-    <p class="amount-text">Total Payable Amount: <strong id="totalAmount">₹ 0.00</strong></p>
-
-    <div class="payment-box">
-      <div class="payment-header">
-        CHOOSE PAYMENT METHOD
-      </div>
-
-      <div class="form-section">
-        <label for="paytm-id">Enter your Paytm mobile number or Paytm ID</label>
-        <input type="text" id="paytm-id" placeholder="Mobile number or Paytm ID" />
-      </div>
-
-      <button class="pay-button" id="pay-button">MAKE PAYMENT</button>
-    </div>
-  </div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const params = new URLSearchParams(window.location.search);
-      const total = parseFloat(params.get("total")) || 0;
-      document.getElementById("totalAmount").textContent = `₹ ${total.toFixed(2)}`;
-
-      document.getElementById("pay-button").addEventListener("click", () => {
-        // Optional: Validate input here if needed
-
-        // Redirect to success.html on button click
-        window.location.href = "success.html";
-      });
-    });
-  </script>
+  <p>Redirecting to checkout...</p>
 </body>
 </html>
