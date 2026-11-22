@@ -414,12 +414,7 @@
           return;
         }
 
-        const currentUser = RentroAuth.getCurrentUser() || {
-          id: 'GUEST_USER',
-          name: 'Guest Customer',
-          email: 'guest@example.com',
-          phone: '9876543210'
-        };
+        const currentUser = RentroAuth.getCurrentUser();
 
         const draftBooking = {
           vehicleId: vehicle.id,
@@ -428,10 +423,10 @@
           vehicleCity: vehicle.city,
           pickupLocation: vehicle.location,
           providerId: vehicle.providerId,
-          customerId: currentUser.id,
-          customerName: currentUser.name,
-          customerEmail: currentUser.email,
-          customerPhone: currentUser.phone,
+          customerId: currentUser ? currentUser.id : '',
+          customerName: currentUser ? currentUser.name : '',
+          customerEmail: currentUser ? currentUser.email : '',
+          customerPhone: currentUser ? currentUser.phone : '',
           pickupDate: pickupDateInput.value,
           pickupTime: pickupTimeInput.value,
           returnDate: returnDateInput.value,
@@ -447,7 +442,16 @@
         // Save draft in payments session
         RentroPayments.saveCheckoutDraft(draftBooking);
 
-        // Navigate to confirmation page
+        // If not authenticated, redirect to login page before confirmation
+        if (!currentUser) {
+          RentroUtils.showToast('Please sign in or sign up to book your ride.', 'info');
+          setTimeout(() => {
+            window.location.href = `login.html?redirect=${encodeURIComponent('confirm.html')}`;
+          }, 350);
+          return;
+        }
+
+        // Authenticated customer proceeds straight to confirmation
         window.location.href = 'confirm.html';
       });
     });

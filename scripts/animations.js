@@ -12,12 +12,12 @@ const RentroAnimations = {
 
   init() {
     this.setupPageEntrance();
-    this.setupScrollProgressBar();
-    this.setupNavbarScroll();
+    this.setupUnifiedScroll();
     this.setupActiveNavIndicator();
     this.setupMobileDrawerBackdrop();
 
     if (this.isReducedMotion) {
+      document.querySelectorAll('.rentro-reveal').forEach(el => el.classList.add('is-revealed'));
       return;
     }
 
@@ -25,22 +25,20 @@ const RentroAnimations = {
     this.scanAndReveal();
     this.setupMutationObserver();
     this.setupSmoothScroll();
-    this.setupParallax();
-
-    // Universal Safety Fallback: Ensure no element is ever stuck invisible
-    setTimeout(() => {
-      document.querySelectorAll('.rentro-reveal:not(.is-revealed)').forEach(el => {
-        el.classList.add('is-revealed');
-      });
-    }, 450);
   },
 
-  // 1. Core Scroll Reveal Observer
+  // 1. Core Scroll Reveal Observer (Triggers as user scrolls down into view)
   setupScrollObserver() {
+    if (!('IntersectionObserver' in window)) {
+      // Fallback for older browsers without IntersectionObserver
+      document.querySelectorAll('.rentro-reveal').forEach(el => el.classList.add('is-revealed'));
+      return;
+    }
+
     const observerOptions = {
       root: null,
-      rootMargin: '0px 0px -40px 0px',
-      threshold: 0.08
+      rootMargin: '0px 0px -25px 0px',
+      threshold: 0.05
     };
 
     this.observer = new IntersectionObserver((entries, obs) => {
@@ -53,9 +51,13 @@ const RentroAnimations = {
     }, observerOptions);
   },
 
-  // 2. Scan and Tag Elements with Reveal & Stagger Delays
+  // 2. Scan and Tag Elements with Reveal & Cascading Stagger Delays
   scanAndReveal(root = document) {
-    if (this.isReducedMotion || !this.observer) return;
+    if (this.isReducedMotion) {
+      root.querySelectorAll('.rentro-reveal').forEach(el => el.classList.add('is-revealed'));
+      return;
+    }
+    if (!this.observer) return;
 
     // Single standalone elements to reveal
     const standaloneSelectors = [
@@ -97,7 +99,7 @@ const RentroAnimations = {
         items.forEach((item, index) => {
           if (!item.classList.contains('rentro-reveal') && !item.classList.contains('is-revealed')) {
             item.classList.add('rentro-reveal');
-            const staggerDelay = Math.min(index * 90, 600); // 90ms cascading delay per item
+            const staggerDelay = Math.min(index * 80, 500); // 80ms cascading stagger delay per card
             item.style.setProperty('--stagger-delay', `${staggerDelay}ms`);
             this.observer.observe(item);
           }
@@ -139,44 +141,64 @@ const RentroAnimations = {
     });
   },
 
-  // 4. Hairline Top Scroll Progress Bar
-  setupScrollProgressBar() {
-    if (document.getElementById('rentroScrollProgressBar')) return;
+  // 4. Unified RAF-Throttled Scroll Controller (Progress Bar + Navbar Shadow + Parallax)
+  // Consolidates all scroll event handling into 1 single passive listener to eliminate all lag
+  setupUnifiedScroll() {
+    // Hairline Top Scroll Progress Bar creation
+    if (!document.getElementById('rentroScrollProgressBar')) {
+      const bar = document.createElement('div');
+      bar.className = 'rentro-scroll-progress';
+      bar.id = 'rentroScrollProgressBar';
+      document.body.prepend(bar);
+      this.progressBar = bar;
+    } else {
+      this.progressBar = document.getElementById('rentroScrollProgressBar');
+    }
 
-    const bar = document.createElement('div');
-    bar.className = 'rentro-scroll-progress';
-    bar.id = 'rentroScrollProgressBar';
-    document.body.prepend(bar);
-    this.progressBar = bar;
-
-    window.addEventListener('scroll', () => {
-      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
-      if (this.progressBar) {
-        this.progressBar.style.width = `${scrolled}%`;
-      }
-    }, { passive: true });
-  },
-
-  // 5. Sticky Navigation Bar Scroll Shadow & Blur Transition
-  setupNavbarScroll() {
     const navbar = document.querySelector('.rentro-navbar');
-    if (!navbar) return;
+    const heroBg = document.querySelector('.hero-bg-image');
+    let isTicking = false;
 
-    const checkScroll = () => {
-      if (window.pageYOffset > 18) {
-        navbar.classList.add('scrolled');
-      } else {
-        navbar.classList.remove('scrolled');
+    const onScrollUpdate = () => {
+      const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+      // A. Navbar subtle sticky blur & shadow transition
+      if (navbar) {
+        if (scrollY > 16) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
       }
+
+      // B. Top hairline scroll progress bar
+      if (this.progressBar) {
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
+        this.progressBar.style.width = `${progress}%`;
+      }
+
+      // C. Hardware-accelerated Parallax (only for hero while visible)
+      if (heroBg && !this.isReducedMotion && scrollY <= 750) {
+        const yOffset = Math.min(scrollY * 0.15, 40);
+        heroBg.style.transform = `translate3d(0, ${yOffset}px, 0)`;
+      }
+
+      isTicking = false;
     };
 
-    window.addEventListener('scroll', checkScroll, { passive: true });
-    checkScroll();
+    window.addEventListener('scroll', () => {
+      if (!isTicking) {
+        window.requestAnimationFrame(onScrollUpdate);
+        isTicking = true;
+      }
+    }, { passive: true });
+
+    // Initial check on load
+    onScrollUpdate();
   },
 
-  // 6. Active Navigation Page Indicator
+  // 5. Active Navigation Page Indicator
   setupActiveNavIndicator() {
     const currentPath = window.location.pathname.toLowerCase();
     const navLinks = document.querySelectorAll('.nav-link, .drawer-link');
@@ -197,7 +219,7 @@ const RentroAnimations = {
     });
   },
 
-  // 7. Mobile Drawer Backdrop & Smooth Dismissal
+  // 6. Mobile Drawer Backdrop & Smooth Dismissal
   setupMobileDrawerBackdrop() {
     let backdrop = document.getElementById('rentroDrawerBackdrop');
     if (!backdrop) {
@@ -235,7 +257,7 @@ const RentroAnimations = {
     });
   },
 
-  // 8. Fluid In-Page Anchor Smooth Scrolling with Header Offset
+  // 7. Fluid In-Page Anchor Smooth Scrolling with Header Offset
   setupSmoothScroll() {
     document.addEventListener('click', (e) => {
       const anchor = e.target.closest('a[href^="#"]');
@@ -263,38 +285,12 @@ const RentroAnimations = {
     });
   },
 
-  // 9. Subtle Hardware-Accelerated Parallax Motion
-  setupParallax() {
-    if (this.isReducedMotion) return;
-
-    const heroBg = document.querySelector('.hero-bg-image');
-    if (!heroBg) return;
-
-    let ticking = false;
-    let lastScrollY = window.pageYOffset;
-
-    window.addEventListener('scroll', () => {
-      lastScrollY = window.pageYOffset;
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          // Limit parallax to hero visibility range
-          if (lastScrollY <= 800) {
-            const yOffset = Math.min(lastScrollY * 0.16, 45); // Subtle 0.16 ratio
-            heroBg.style.transform = `translate3d(0, ${yOffset}px, 0)`;
-          }
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }, { passive: true });
-  },
-
-  // 10. Polished Page Entrance
+  // 8. Polished Page Entrance
   setupPageEntrance() {
     document.body.classList.add('rentro-page-ready');
   },
 
-  // 11. Helper to render clean shimmer skeleton placeholders
+  // 9. Helper to render clean shimmer skeleton placeholders
   renderSkeleton(container, count = 3) {
     if (!container) return;
     const cards = Array.from({ length: count }, () => `
@@ -308,7 +304,7 @@ const RentroAnimations = {
     container.innerHTML = cards;
   },
 
-  // 12. Helper to render helpful empty states
+  // 10. Helper to render helpful empty states
   renderEmptyState(container, { icon = '🔍', title = 'No items found', message = 'There are no records to display right now.', actionText = '', actionLink = '' } = {}) {
     if (!container) return;
     container.innerHTML = `

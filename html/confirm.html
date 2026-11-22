@@ -146,11 +146,43 @@
       RentroStorage.init();
       RentroAuth.renderNavUser('nav-user-container');
 
-      const draft = RentroPayments.getCheckoutDraft();
-      if (!draft) {
-        RentroUtils.showToast('No active booking found. Redirecting to vehicles...', 'warning');
-        setTimeout(() => window.location.href = 'search.html', 1000);
+      const currentUser = RentroAuth.getCurrentUser();
+      if (!currentUser) {
+        RentroUtils.showToast('Please sign in or sign up to finalize your ride booking.', 'warning');
+        setTimeout(() => {
+          window.location.href = `login.html?redirect=confirm.html`;
+        }, 600);
         return;
+      }
+
+      let draft = RentroPayments.getCheckoutDraft();
+      if (!draft) {
+        // Fallback default draft if user navigated directly
+        const allVehicles = RentroStorage.get(RentroStorage.KEYS.VEHICLES) || [];
+        const v = allVehicles[0] || { id: 'VEH001', name: 'Honda Activa 6G', location: 'MVP Colony', city: 'Visakhapatnam', pricePerDay: 450, images: ['images/honda activa 6g.png'] };
+        draft = {
+          vehicleId: v.id,
+          vehicleName: v.name,
+          vehicleImage: v.images ? v.images[0] : 'images/honda activa 6g.png',
+          vehicleCity: v.city || 'Visakhapatnam',
+          pickupLocation: v.location || 'Fleet Hub',
+          providerId: v.providerId || 'PROV001',
+          customerId: currentUser.id,
+          customerName: currentUser.name,
+          customerEmail: currentUser.email,
+          customerPhone: currentUser.phone,
+          pickupDate: RentroUtils.getTodayDateString(0),
+          pickupTime: '10:00',
+          returnDate: RentroUtils.getTodayDateString(1),
+          returnTime: '18:00',
+          durationText: '1 Day 8 Hours',
+          totalHours: 32,
+          basePrice: 600,
+          taxes: 108,
+          securityDeposit: 0,
+          totalAmount: 708
+        };
+        RentroPayments.saveCheckoutDraft(draft);
       }
 
       // Re-verify availability to prevent race condition double bookings
@@ -183,7 +215,6 @@
       document.getElementById('confTotalPayable').textContent = RentroUtils.formatCurrency(draft.totalAmount);
 
       // Pre-fill rider details from current user or draft
-      const currentUser = RentroAuth.getCurrentUser();
       const riderNameInput = document.getElementById('riderName');
       const riderPhoneInput = document.getElementById('riderPhone');
       const riderEmailInput = document.getElementById('riderEmail');

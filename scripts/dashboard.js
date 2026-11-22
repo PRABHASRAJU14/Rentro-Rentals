@@ -27,13 +27,20 @@ window.switchDashboardTab = function(tabId) {
   });
 
   if (targetFound) {
+    try {
+      sessionStorage.setItem('rentro_active_dashboard_tab', tabId);
+      if (history.replaceState) {
+        history.replaceState(null, null, `#${tabId}`);
+      }
+    } catch (e) {}
+
     if (tabId === 'fleet-tab' && typeof window.renderFleetList === 'function') window.renderFleetList();
     if (tabId === 'bookings-tab' && typeof window.renderBookingsList === 'function') window.renderBookingsList();
     if (tabId === 'earnings-tab' && typeof window.renderEarningsBreakdown === 'function') window.renderEarningsBreakdown();
     
     // Trigger fluid animation scan when switching tabs
     if (window.RentroAnimations && typeof RentroAnimations.scanAndReveal === 'function') {
-      setTimeout(() => RentroAnimations.scanAndReveal(), 40);
+      RentroAnimations.scanAndReveal();
     }
   }
 };
@@ -381,8 +388,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load Dashboard Data initially
   window.refreshDashboard();
 
-  // Support Tab selection via query parameter ?tab=fleet-tab or URL hash #fleet-tab
-  const urlTab = new URLSearchParams(window.location.search).get('tab') || window.location.hash.replace('#', '');
+  // Support Tab selection via sessionStorage, query parameter ?tab=fleet-tab or URL hash #fleet-tab
+  const savedTab = sessionStorage.getItem('rentro_active_dashboard_tab');
+  const urlTab = new URLSearchParams(window.location.search).get('tab') || window.location.hash.replace('#', '') || savedTab;
   if (urlTab) {
     const validTabs = ['overview-tab', 'fleet-tab', 'bookings-tab', 'earnings-tab'];
     const matched = validTabs.find(t => t === urlTab || t === `${urlTab}-tab`);

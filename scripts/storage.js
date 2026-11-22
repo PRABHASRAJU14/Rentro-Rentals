@@ -15,11 +15,12 @@ const RentroStorage = {
     VERSION: 'rentro_data_version'
   },
 
-  CURRENT_VERSION: '2.3.0',
+  CURRENT_VERSION: '2.4.0',
 
   init() {
     const existingVersion = localStorage.getItem(this.KEYS.VERSION);
     if (!existingVersion || existingVersion !== this.CURRENT_VERSION) {
+      localStorage.removeItem(this.KEYS.CURRENT_USER);
       this.seedData();
       localStorage.setItem(this.KEYS.VERSION, this.CURRENT_VERSION);
     }
@@ -408,11 +409,6 @@ const RentroStorage = {
       }
     ];
     localStorage.setItem(this.KEYS.BOOKINGS, JSON.stringify(defaultBookings));
-
-    // Default Current User (Logged in as Customer Rahul Sharma for immediate seamless testing)
-    if (!localStorage.getItem(this.KEYS.CURRENT_USER)) {
-      localStorage.setItem(this.KEYS.CURRENT_USER, JSON.stringify(defaultUsers[0]));
-    }
   },
 
   // Generic Get from LocalStorage
