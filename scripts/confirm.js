@@ -1,98 +1,112 @@
+/**
+ * Rentro Rentals - Booking Confirmation & Invoice Service
+ */
+
 document.addEventListener("DOMContentLoaded", () => {
-  // Check if consumer profile exists, if not redirect to profile collection
-  function checkConsumerProfile() {
-    const consumerProfile = JSON.parse(localStorage.getItem('consumerProfile'));
-    if (!consumerProfile) {
-      // Save current URL and query params to return after profile collection
-      const currentUrl = window.location.href;
-      const urlParams = new URLSearchParams(window.location.search);
-      urlParams.set('returnUrl', 'confirm.html');
-      
-      window.location.href = `profile-collection.html?${urlParams.toString()}`;
-      return false;
+  const urlParams = new URLSearchParams(window.location.search);
+
+  // Check if consumer profile exists, if not prompt profile collection
+  function checkProfile() {
+    let consumerProfile = null;
+    try {
+      consumerProfile = JSON.parse(localStorage.getItem("consumerProfile"));
+    } catch (e) {}
+
+    if (!consumerProfile || !consumerProfile.fullName) {
+      // Auto-fallback from userProfile or userSession if available
+      const legacyProfile = JSON.parse(localStorage.getItem("userProfile") || "null");
+      const userSession = JSON.parse(localStorage.getItem("userSession") || "null");
+
+      if (legacyProfile && legacyProfile.name) {
+        consumerProfile = {
+          fullName: legacyProfile.name,
+          email: legacyProfile.email || "rider@rentro.com",
+          phone: legacyProfile.phone || "+91 9876543210"
+        };
+        localStorage.setItem("consumerProfile", JSON.stringify(consumerProfile));
+      } else if (userSession && userSession.email) {
+        consumerProfile = {
+          fullName: userSession.email.split("@")[0].toUpperCase(),
+          email: userSession.email,
+          phone: "+91 9876543210"
+        };
+        localStorage.setItem("consumerProfile", JSON.stringify(consumerProfile));
+      } else {
+        // Redirect to profile collection
+        urlParams.set("returnUrl", "confirm.html");
+        window.location.href = `profile-collection.html?${urlParams.toString()}`;
+        return false;
+      }
     }
-    return true;
+    return consumerProfile;
   }
 
-  // Only proceed if profile exists
-  if (!checkConsumerProfile()) {
-    return;
-  }
+  const profile = checkProfile();
+  if (!profile) return;
 
-  function parseDateTime(dateStr, timeStr) {
-    const [day, month, year] = dateStr.split("-").map(Number);
-    const [hour, minute] = timeStr.split(":").map(Number);
-    return new Date(year, month - 1, day, hour, minute);
-  }
+  // Extract Query Parameters
+  const name = urlParams.get("name") || "Honda Activa 6G";
+  const brand = urlParams.get("brand") || "Scooter";
+  const image = urlParams.get("image") || "../images/honda activa 6g.png";
+  const pricePerHour = parseFloat(urlParams.get("price")) || 40;
+  const location = urlParams.get("location") || "VIZAG";
+  const pickupDate = urlParams.get("pickupDate") || "Today";
+  const pickupTime = urlParams.get("pickupTime") || "10:00";
+  const dropoffDate = urlParams.get("dropoffDate") || "Tomorrow";
+  const dropoffTime = urlParams.get("dropoffTime") || "18:00";
+  const deliveryMode = urlParams.get("deliveryMode") || "hub";
+  const hours = parseFloat(urlParams.get("hours")) || 8;
+  const totalAmount = parseFloat(urlParams.get("total")) || (pricePerHour * hours);
 
-  function calculateTotalHours(start, end) {
-    const diffMs = end - start;
-    return Math.max(1, Math.ceil(diffMs / (1000 * 60 * 60)));
-  }
-
-  function toDDMMYYYY(str) {
-    if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
-      const [yyyy, mm, dd] = str.split("-");
-      return `${dd}-${mm}-${yyyy}`;
-    }
-    return str;
-  }
-
-  const params = new URLSearchParams(window.location.search);
-
-  const pickupDateRaw = params.get("pickupDate") || "2025-05-18";
-  const dropoffDateRaw = params.get("dropoffDate") || "2025-05-20";
-  const pickupTime = params.get("pickupTime") || "10:00";
-  const dropoffTime = params.get("dropoffTime") || "10:00";
-  const pricePerHour = parseFloat(params.get("price")) || 0;
-  const location = params.get("location") || "N/A";
-  const name = params.get("name") || "";
-  const image = params.get("image") || "";
-
-  const pickupDate = toDDMMYYYY(pickupDateRaw);
-  const dropoffDate = toDDMMYYYY(dropoffDateRaw);
-
+  // Populate UI
   document.getElementById("bikeImage").src = image;
   document.getElementById("bikeModel").textContent = name;
+  document.getElementById("vehicleTypeBadge").textContent = `${brand} • ${location}`;
   document.getElementById("pickupDate").textContent = pickupDate;
-  document.getElementById("dropoffDate").textContent = dropoffDate;
   document.getElementById("pickupTime").textContent = pickupTime;
+  document.getElementById("dropoffDate").textContent = dropoffDate;
   document.getElementById("dropoffTime").textContent = dropoffTime;
-  document.getElementById("location").textContent = location;
-  document.getElementById("kmIncluded").textContent = "N/A";
+  document.getElementById("rentalHours").textContent = `${hours} Hours`;
+  document.getElementById("deliveryMode").textContent = deliveryMode === "home" ? "Doorstep Delivery" : "Hub Self-Pickup";
 
-  const start = parseDateTime(pickupDate, pickupTime);
-  const end = parseDateTime(dropoffDate, dropoffTime);
-  const totalHours = calculateTotalHours(start, end);
-  const totalAmount = pricePerHour * totalHours;
+  // Rider info
+  document.getElementById("riderName").textContent = profile.fullName;
+  document.getElementById("riderContact").textContent = `${profile.phone} • ${profile.email}`;
 
+  // Pricing
+  document.getElementById("basePrice").textContent = `₹${(pricePerHour * hours).toFixed(2)}`;
   document.getElementById("totalAmount").textContent = `₹${totalAmount.toFixed(2)}`;
 
-  // Store vehicle name for success page
-  localStorage.setItem('lastVehicleName', name);
+  // Back button
+  document.getElementById("backBtn").addEventListener("click", () => {
+    window.history.back();
+  });
 
+  // Proceed to Pay
   document.getElementById("pay-btn").addEventListener("click", () => {
-    // Store booking details with consumer profile
-    const consumerProfile = JSON.parse(localStorage.getItem('consumerProfile'));
     const bookingDetails = {
+      bookingId: "RR-" + Math.floor(100000 + Math.random() * 900000),
       vehicleName: name,
+      vehicleType: brand,
       vehicleImage: image,
+      pricePerHour: pricePerHour,
       totalAmount: totalAmount,
+      hours: hours,
       pickupDate: pickupDate,
-      dropoffDate: dropoffDate,
       pickupTime: pickupTime,
+      dropoffDate: dropoffDate,
       dropoffTime: dropoffTime,
       location: location,
-      consumerName: consumerProfile.fullName,
-      consumerEmail: consumerProfile.email,
-      consumerPhone: consumerProfile.phone,
-      bookingId: Date.now(),
+      deliveryMode: deliveryMode,
+      consumerName: profile.fullName,
+      consumerEmail: profile.email,
+      consumerPhone: profile.phone,
       bookingDate: new Date().toISOString()
     };
 
-    localStorage.setItem('currentBooking', JSON.stringify(bookingDetails));
+    localStorage.setItem("currentBooking", JSON.stringify(bookingDetails));
+    localStorage.setItem("lastVehicleName", name);
 
-    // Pass price and hours to payment page
-    window.location.href = `payment.html?price=${pricePerHour}&hours=${totalHours}`;
+    window.location.href = `payment.html?price=${pricePerHour}&hours=${hours}&total=${totalAmount}`;
   });
 });

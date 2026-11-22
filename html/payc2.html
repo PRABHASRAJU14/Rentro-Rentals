@@ -1,58 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="icon" type="image/png" href="../images/logo-badge.png" />
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Credit Card Payment</title>
-  <link rel="stylesheet" href="../styles/payc.css" />
-  <script src="../scripts/payc2.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Credit Card Payment - Rentro Rentals</title>
+  
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/booking.css" />
+  <link rel="stylesheet" href="../styles/responsive.css" />
+  
+  <script src="../scripts/utils.js" defer></script>
+  <script src="../scripts/storage.js" defer></script>
+  <script src="../scripts/auth.js" defer></script>
+  <script src="../scripts/payments.js" defer></script>
+  <script src="../scripts/validation.js" defer></script>
 </head>
 <body>
-  <div class="container">
-    <p class="amount-text">Total Payable Amount: <strong>₹ 1780.54</strong></p>
 
-    <div class="payment-box">
-      <div class="payment-header">
-        CHOOSE PAYMENT METHOD
+  <header class="rentro-navbar">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="brand-logo">
+        <div class="brand-icon"><img src="../images/logo.png" alt="Rentro Rentals Logo" class="brand-logo-img" /></div>
+        <span>Rentro<span class="brand-accent">Rentals</span></span>
+      </a>
+      <div style="font-size:0.9rem; font-weight:700; color:var(--text-secondary);">
+        Credit Card Gateway
       </div>
-
-      <div class="form-section">
-        <label for="card-type">Enter your credit card details</label>
-        <select id="card-type">
-          <option>Choose your credit card type</option>
-          <option>Visa</option>
-          <option>MasterCard</option>
-          <option>American Express</option>
-        </select>
-
-        <div class="input-box">
-          <label>Card Number</label>
-          <input type="text" placeholder="Enter your card number" />
-        </div>
-
-        <div class="input-box">
-          <label>Name on the card</label>
-          <input type="text" placeholder="Enter name on the card" />
-        </div>
-
-        <div class="row">
-          <div class="input-small">
-            <label>Expiry</label>
-            <input type="text" placeholder="M" maxlength="2" />
-          </div>
-          <div class="input-small">
-            <label>&nbsp;</label>
-            <input type="text" placeholder="Y" maxlength="2" />
-          </div>
-          <div class="input-small">
-            <label>CVV</label>
-            <input type="password" placeholder="CVV" maxlength="4" />
-          </div>
-        </div>
-      </div>
-
-      <button class="pay-button">MAKE PAYMENT</button>
     </div>
-  </div>
+  </header>
+
+  <main class="checkout-step-container">
+    <div class="container container-narrow">
+      <div class="checkout-card" style="max-width: 600px; margin: 0 auto;">
+        <div class="checkout-header">
+          <div>
+            <h1>Pay via Credit Card</h1>
+            <p style="color:var(--text-muted); font-size:0.85rem;">Reward points & EMI eligible cards supported</p>
+          </div>
+          <span style="font-size: 1.5rem; font-weight: 800; color:var(--secondary);" id="payc2Amount">₹0</span>
+        </div>
+
+        <!-- Live Visual Card -->
+        <div class="card-visual-wrapper">
+          <div class="credit-card-mockup" style="background: linear-gradient(135deg, #111827 0%, #374151 100%);">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div class="card-chip"></div>
+              <span style="font-weight:800; font-style:italic; font-size:1.1rem; color:#f59e0b;" id="creditCardType">CREDIT CARD</span>
+            </div>
+            <div class="card-number-display" id="visualCreditNum">•••• •••• •••• ••••</div>
+            <div class="card-meta-row">
+              <div>
+                <div style="font-size:0.65rem; color:#9ca3af; text-transform:uppercase;">Card Holder</div>
+                <div class="card-holder-name" id="visualCreditHolder">CARDHOLDER NAME</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:0.65rem; color:#9ca3af; text-transform:uppercase;">Valid Thru</div>
+                <div class="card-expiry-display" id="visualCreditExp">MM/YY</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form id="creditCardForm">
+          <div class="form-group">
+            <label class="form-label" for="creditNetwork">Card Type</label>
+            <select id="creditNetwork" class="form-control">
+              <option value="Visa">Visa Signature / Platinum</option>
+              <option value="MasterCard">MasterCard World</option>
+              <option value="American Express">American Express</option>
+              <option value="Diners Club">Diners Club</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="creditNumber">16-Digit Credit Card Number</label>
+            <input type="text" id="creditNumber" class="form-control" placeholder="5241 2345 6789 0123" maxlength="19" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="creditHolder">Name on Card</label>
+            <input type="text" id="creditHolder" class="form-control" placeholder="Full name on credit card" required />
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+            <div class="form-group">
+              <label class="form-label" for="creditExpiry">Valid Thru (MM/YY)</label>
+              <input type="text" id="creditExpiry" class="form-control" placeholder="05/29" maxlength="5" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="creditCVV">CVV / CVV2</label>
+              <input type="password" id="creditCVV" class="form-control" placeholder="•••" maxlength="4" required />
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px;">
+            <a href="payment.html" class="btn btn-secondary">&larr; Change Method</a>
+            <button type="submit" class="btn btn-primary btn-lg">Generate Bank OTP &rarr;</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      RentroStorage.init();
+      const draft = RentroPayments.getCheckoutDraft();
+      if (!draft) {
+        window.location.href = 'search.html';
+        return;
+      }
+
+      document.getElementById('payc2Amount').textContent = RentroUtils.formatCurrency(draft.totalAmount);
+
+      const numInput = document.getElementById('creditNumber');
+      const nameInput = document.getElementById('creditHolder');
+      const expInput = document.getElementById('creditExpiry');
+      const networkSelect = document.getElementById('creditNetwork');
+
+      RentroValidator.formatCardNumberInput(numInput);
+      RentroValidator.formatExpiryInput(expInput);
+
+      numInput.addEventListener('input', (e) => {
+        document.getElementById('visualCreditNum').textContent = e.target.value || '•••• •••• •••• ••••';
+      });
+      nameInput.addEventListener('input', (e) => {
+        document.getElementById('visualCreditHolder').textContent = e.target.value.toUpperCase() || 'CARDHOLDER NAME';
+      });
+      expInput.addEventListener('input', (e) => {
+        document.getElementById('visualCreditExp').textContent = e.target.value || 'MM/YY';
+      });
+      networkSelect.addEventListener('change', (e) => {
+        document.getElementById('creditCardType').textContent = e.target.value.toUpperCase() + ' CREDIT';
+      });
+
+      document.getElementById('creditCardForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        RentroPayments.generateOTP();
+        draft.paymentMethod = `${networkSelect.value} Credit Card`;
+        RentroPayments.saveCheckoutDraft(draft);
+
+        RentroUtils.showToast('Initiating credit card authorization...', 'info');
+        setTimeout(() => window.location.href = 'otp.html', 500);
+      });
+    });
+  </script>
 </body>
 </html>

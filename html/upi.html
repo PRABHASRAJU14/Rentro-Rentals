@@ -1,45 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>UPI Payment</title>
-  <link rel="stylesheet" href="../styles/payc.css" />
+  <link rel="icon" type="image/png" href="../images/logo-badge.png" />
+  <meta charset="UTF-8">
+  <title>UPI Payment - Rentro Rentals</title>
+  <script>
+    // Seamless redirect to Unified Payment Gateway
+    window.location.replace('payment.html');
+  </script>
 </head>
 <body>
-  <div class="container">
-    <p class="amount-text">Total Payable Amount: <strong id="totalAmount">₹ 0.00</strong></p>
-
-    <div class="payment-box">
-      <div class="payment-header">
-        CHOOSE PAYMENT METHOD
-      </div>
-
-      <div class="form-section">
-        <label for="upi-id">Enter your UPI ID</label>
-        <input type="text" id="upi-id" placeholder="example@bank" />
-
-        <div class="input-box">
-          <label>Name on UPI account</label>
-          <input type="text" placeholder="Enter your name" />
-        </div>
-      </div>
-
-      <button class="pay-button" id="pay-button">MAKE PAYMENT</button>
-    </div>
-  </div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const params = new URLSearchParams(window.location.search);
-      const total = parseFloat(params.get("total")) || 0;
-      document.getElementById("totalAmount").textContent = `₹ ${total.toFixed(2)}`;
-
-      document.getElementById("pay-button").addEventListener("click", () => {
-        // Optional: add validation here
-        window.location.href = "success.html";
-      });
-    });
-  </script>
+  <p>Redirecting to secure payment checkout...</p>
 </body>
 </html>

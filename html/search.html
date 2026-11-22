@@ -1,198 +1,260 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="icon" type="image/png" href="../images/logo-badge.png" />
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Rent a Ride</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #fffdf3;
-      margin: 0;
-      padding: 2rem;
-      color: #333;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-    }
-
-    .main-container {
-      width: 100%;
-      max-width: 430px;
-      background-color: #ffffff;
-      border: 2px solid #f4d35e;
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-    }
-
-    @media (min-width: 1024px) {
-      .main-container {
-        max-width: 720px;
-        padding: 2rem;
-      }
-    }
-
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 1rem;
-    }
-
-    .back-arrow {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      width: 40px;
-      height: 40px;
-      background-color: #f1f1f1;
-      border: 2px solid #ccc;
-      border-radius: 8px;
-      font-size: 1.5em;
-      color: black;
-      cursor: pointer;
-      text-decoration: none;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-      transition: background-color 0.3s, border 0.3s;
-      margin-bottom: 1rem;
-    }
-
-    .back-arrow:hover {
-      background-color: #ddd;
-      border-color: #bbb;
-    }
-
-    .banner {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      border-bottom: 1px solid #eee;
-      margin-bottom: 1rem;
-      border-radius: 8px;
-    }
-
-    .card h2 {
-      color: #f4a261;
-      margin-bottom: 1rem;
-      font-size: 1.4rem;
-    }
-
-    .card h2 span {
-      color: #f4a261;
-    }
-
-    .card p {
-      font-size: 1rem;
-      color: #555;
-      margin-bottom: 1.5rem;
-    }
-
-    .input-box {
-      display: flex;
-      align-items: center;
-      border: 2px solid #f4d35e;
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 1rem;
-      background-color: #fff7cc;
-      transition: border-color 0.3s ease;
-    }
-
-    .input-box:focus-within {
-      border-color: #f4a261;
-      box-shadow: 0 0 8px rgba(244, 163, 97, 0.5);
-    }
-
-    .input-box input {
-      border: none;
-      background: transparent;
-      font-size: 1rem;
-      flex: 1;
-      outline: none;
-      color: #333;
-      cursor: pointer;
-    }
-
-    .input-box input[readonly] {
-      cursor: pointer;
-    }
-
-    .duration {
-      font-size: 1rem;
-      color: #555;
-      margin-bottom: 1.5rem;
-    }
-
-    .search-btn {
-      background-color: #f4d35e;
-      color: #333;
-      padding: 14px;
-      text-align: center;
-      border: none;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 1.1rem;
-      width: 100%;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(244, 211, 94, 0.6);
-      transition: background-color 0.3s ease, transform 0.3s ease;
-    }
-
-    .search-btn:hover {
-      background-color: #f4a261;
-      color: white;
-      transform: translateY(-2px);
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search & Filter Vehicles - Rentro Rentals</title>
+  
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/landing.css" />
+  <link rel="stylesheet" href="../styles/search.css" />
+  <link rel="stylesheet" href="../styles/responsive.css" />
+  
+  <script src="../scripts/utils.js" defer></script>
+  <script src="../scripts/storage.js" defer></script>
+  <script src="../scripts/auth.js" defer></script>
+  <script src="../scripts/vehicles.js" defer></script>
+  <script src="../scripts/bookings.js" defer></script>
+  <script src="../scripts/search.js" defer></script>
 </head>
 <body>
 
-  <div class="main-container">
+  <!-- Navigation Bar -->
+  <header class="rentro-navbar">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="brand-logo">
+        <div class="brand-icon"><img src="../images/logo.png" alt="Rentro Rentals Logo" class="brand-logo-img" /></div>
+        <span>Rentro<span class="brand-accent">Rentals</span></span>
+      </a>
 
-    <!-- Back arrow -->
-    <!-- <a href="city.html" class="back-arrow" aria-label="Go back">&#8592;</a> -->
+      <nav class="nav-links">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="city.html" class="nav-link">Locations</a>
+        <a href="search.html" class="nav-link active">Search Rides</a>
+        <a href="dashboard.html" class="nav-link">Provider Dashboard</a>
+      </nav>
 
-    <!-- Top banner image -->
-    <img src="/images/default-image.jpg" alt="City Banner" class="banner" id="city-banner" />
-
-    <!-- Main content -->
-    <div class="card">
-      <h2>Commuting Made <span>Easy</span></h2>
-      <p>Scooter/Scooty/Bike on Rent in <span id="city-name-text">Default City</span></p>
-
-      <div class="input-box">
-        <input type="text" id="location" value="Default City" readonly />
+      <div class="nav-actions">
+        <div id="nav-user-container"></div>
+        <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Open Navigation">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
       </div>
-      <h>Pickup Date:</h3>
-      <div class="input-box">
-        <input type="date" id="pickupDate" />
-      </div>
-      <h>Pickup time:</h3>
-      <div class="input-box">
-        <input type="time" id="pickupTime" />
-      </div>
-      <h>Dropoff Date:</h3>
-      <div class="input-box">
-        <input type="date" id="dropoffDate" />
-      </div>
-      <h>Dropoff time:</h3>
-      <div class="input-box">
-        <input type="time" id="dropoffTime" />
-      </div>
-
-      <div class="duration" id="duration">Duration: </div>
-
-      <button class="search-btn" id="searchBtn">Search</button>
     </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <div class="drawer-header">
+      <span class="brand-logo" style="font-size: 1.15rem;">
+        <span>Rentro<span class="brand-accent">Rentals</span></span>
+      </span>
+      <button class="modal-close-btn" id="closeDrawerBtn">&times;</button>
+    </div>
+    <ul class="drawer-links">
+      <li><a href="../index.html" class="drawer-link">Home</a></li>
+      <li><a href="city.html" class="drawer-link">Browse Cities</a></li>
+      <li><a href="search.html" class="drawer-link">Find Vehicles</a></li>
+      <li><a href="dashboard.html" class="drawer-link">Provider Dashboard</a></li>
+      <li><a href="profile-collection.html" class="drawer-link">My Profile</a></li>
+    </ul>
   </div>
 
-  <script src="../scripts/search.js"></script>
+  <!-- Search Header Strip -->
+  <section class="search-page-header">
+    <div class="container">
+      <div class="search-bar-inline">
+        <!-- City Dropdown -->
+        <div class="search-inline-item">
+          <label for="searchCitySelect">Location</label>
+          <select id="searchCitySelect">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+
+        <div class="search-divider"></div>
+
+        <!-- Pickup Date -->
+        <div class="search-inline-item">
+          <label for="pickupDate">Pickup Date</label>
+          <input type="date" id="pickupDate" />
+        </div>
+
+        <div class="search-divider"></div>
+
+        <!-- Return Date -->
+        <div class="search-inline-item">
+          <label for="returnDate">Return Date</label>
+          <input type="date" id="returnDate" />
+        </div>
+
+        <div class="search-divider"></div>
+
+        <!-- Quick Keywords -->
+        <div class="search-inline-item" style="flex: 1.2;">
+          <label for="searchKeywords">Search Model / Keyword</label>
+          <input type="text" id="searchKeywords" placeholder="e.g. Activa, Pulsar, Classic..." />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Search Content -->
+  <main class="search-content-area">
+    <div class="container">
+      
+      <!-- Category Chips Bar -->
+      <div class="category-chips-bar">
+        <button class="chip-btn active" data-category="all">All Two-Wheelers</button>
+        <button class="chip-btn" data-category="Scooter">Daily Scooters</button>
+        <button class="chip-btn" data-category="Sports Bike">Sports Bikes</button>
+        <button class="chip-btn" data-category="Cruiser">Cruisers</button>
+        <button class="chip-btn" data-category="Electric Scooter">Electric Rides</button>
+      </div>
+
+      <div class="search-layout">
+        <!-- Left Filter Sidebar -->
+        <aside class="search-filter-sidebar" id="filterSidebar">
+          <div class="filter-header">
+            <h3>Filters</h3>
+            <button class="btn-clear-filters" id="clearFiltersBtn">Reset All</button>
+          </div>
+
+          <!-- Price Range Filter -->
+          <div class="filter-group">
+            <div class="filter-title">Daily Price Range (₹)</div>
+            <div class="price-range-inputs">
+              <input type="number" id="minPriceInput" placeholder="Min ₹" min="0" step="50" />
+              <span>to</span>
+              <input type="number" id="maxPriceInput" placeholder="Max ₹" min="0" step="50" />
+            </div>
+          </div>
+
+          <!-- Brand Filter -->
+          <div class="filter-group">
+            <div class="filter-title">Brand</div>
+            <div class="filter-options-list">
+              <label class="filter-checkbox-label">
+                <input type="checkbox" name="brandFilter" value="Honda" />
+                Honda
+              </label>
+              <label class="filter-checkbox-label">
+                <input type="checkbox" name="brandFilter" value="TVS" />
+                TVS
+              </label>
+              <label class="filter-checkbox-label">
+                <input type="checkbox" name="brandFilter" value="Suzuki" />
+                Suzuki
+              </label>
+              <label class="filter-checkbox-label">
+                <input type="checkbox" name="brandFilter" value="Bajaj" />
+                Bajaj
+              </label>
+              <label class="filter-checkbox-label">
+                <input type="checkbox" name="brandFilter" value="Royal Enfield" />
+                Royal Enfield
+              </label>
+              <label class="filter-checkbox-label">
+                <input type="checkbox" name="brandFilter" value="Ather" />
+                Ather Electric
+              </label>
+            </div>
+          </div>
+
+          <!-- Transmission Filter -->
+          <div class="filter-group">
+            <div class="filter-title">Transmission</div>
+            <div class="filter-options-list">
+              <label class="filter-checkbox-label">
+                <input type="checkbox" name="transFilter" value="Automatic" />
+                Automatic (Gearless)
+              </label>
+              <label class="filter-checkbox-label">
+                <input type="checkbox" name="transFilter" value="Manual" />
+                Manual (Geared)
+              </label>
+            </div>
+          </div>
+
+          <!-- Fuel Type -->
+          <div class="filter-group">
+            <div class="filter-title">Fuel Type</div>
+            <div class="filter-options-list">
+              <label class="filter-checkbox-label">
+                <input type="checkbox" name="fuelFilter" value="Petrol" />
+                Petrol
+              </label>
+              <label class="filter-checkbox-label">
+                <input type="checkbox" name="fuelFilter" value="Electric" />
+                Electric
+              </label>
+            </div>
+          </div>
+
+          <!-- Availability Only Toggle -->
+          <div class="filter-group">
+            <div class="filter-title">Availability</div>
+            <label class="filter-checkbox-label">
+              <input type="checkbox" id="availFilter" />
+              Show available only
+            </label>
+          </div>
+        </aside>
+
+        <!-- Right Results Area -->
+        <div class="search-results-container">
+          <div class="search-results-topbar">
+            <div class="results-count-text" id="resultsCountText">
+              Loading available vehicles...
+            </div>
+
+            <div class="sort-dropdown-wrap">
+              <label for="sortSelect" style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Sort By:</label>
+              <select id="sortSelect">
+                <option value="recommended">Recommended & Top Rated</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="rating">Highest Customer Rating</option>
+                <option value="name">Vehicle Name (A - Z)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Dynamic Vehicle Cards Grid -->
+          <div class="vehicles-grid" id="searchVehiclesGrid">
+            <!-- Populated via search.js -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="rentro-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>&copy; 2026 Rentro Rentals Marketplace. All rights reserved.</div>
+        <div style="display:flex; gap: 20px;">
+          <a href="../index.html">Home</a>
+          <a href="city.html">Locations</a>
+          <a href="dashboard.html">Provider Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Mobile drawer
+      const mobileToggle = document.getElementById('mobileNavToggle');
+      const closeDrawer = document.getElementById('closeDrawerBtn');
+      const drawer = document.getElementById('mobileDrawer');
+      if (mobileToggle && drawer) {
+        mobileToggle.addEventListener('click', () => drawer.classList.add('open'));
+        closeDrawer.addEventListener('click', () => drawer.classList.remove('open'));
+      }
+    });
+  </script>
 </body>
 </html>
-    

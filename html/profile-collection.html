@@ -1,154 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="icon" type="image/png" href="../images/logo-badge.png" />
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Complete Your Profile</title>
-  <link rel="stylesheet" href="../styles/profile-collection.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Profile &amp; Settings - Rentro Rentals</title>
+  
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/auth.css" />
+  <link rel="stylesheet" href="../styles/responsive.css" />
+  
+  <script src="../scripts/utils.js" defer></script>
+  <script src="../scripts/storage.js" defer></script>
+  <script src="../scripts/auth.js" defer></script>
 </head>
 <body>
-  <div class="container">
-    <h2>Complete Your Profile</h2>
-    <p class="subtitle">Please provide your details to complete the booking</p>
-    
-    <form id="profile-form" novalidate>
-      <div class="form-group">
-        <label for="fullName">Full Name *</label>
-        <input type="text" id="fullName" placeholder="Enter your full name" required />
-        <div class="error" id="name-error"></div>
-      </div>
 
-      <div class="form-group">
-        <label for="phone">Phone Number *</label>
-        <div class="phone-input-group">
-          <select id="country-code">
-            <option value="+91" selected>+91</option>
-            <option value="+1">+1</option>
-            <option value="+44">+44</option>
-            <option value="+61">+61</option>
-            <option value="+81">+81</option>
-            <option value="+49">+49</option>
-            <option value="+33">+33</option>
-            <option value="+86">+86</option>
-            <option value="+55">+55</option>
-            <option value="+27">+27</option>
-          </select>
-          <input type="tel" id="phone" placeholder="Enter phone number" required />
+  <header class="rentro-navbar">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="brand-logo">
+        <div class="brand-icon"><img src="../images/logo.png" alt="Rentro Rentals Logo" class="brand-logo-img" /></div>
+        <span>Rentro<span class="brand-accent">Rentals</span></span>
+      </a>
+
+      <div class="nav-actions">
+        <div id="nav-user-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="checkout-step-container">
+    <div class="container container-narrow">
+      <div class="checkout-card" style="max-width: 680px; margin: 0 auto;">
+        
+        <div style="display:flex; align-items:center; gap:20px; padding-bottom:24px; border-bottom:1px solid var(--border-color); margin-bottom:28px;">
+          <img id="profileAvatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80" alt="Avatar" style="width:72px; height:72px; border-radius:50%; object-fit:cover; border:2px solid var(--primary);" />
+          <div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <h1 style="font-size:1.6rem; font-weight:800; color:var(--secondary);" id="profileDisplayName">Rahul Sharma</h1>
+              <span class="badge badge-info" id="profileRoleBadge">Customer</span>
+            </div>
+            <p style="color:var(--text-muted); font-size:0.88rem;" id="profileUserEmail">rahul@example.com</p>
+          </div>
         </div>
-        <div class="error" id="phone-error"></div>
-      </div>
 
-      <div class="form-group">
-        <label for="email">Email Address *</label>
-        <input type="email" id="email" placeholder="Enter your email" required />
-        <div class="error" id="email-error"></div>
-      </div>
+        <form id="profileForm">
+          <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:16px;">General Information</h3>
 
-      <button type="submit" class="submit-btn">Save & Continue</button>
-    </form>
-  </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+            <div class="form-group">
+              <label class="form-label" for="profName">Full Name</label>
+              <input type="text" id="profName" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="profPhone">Mobile Phone</label>
+              <input type="tel" id="profPhone" class="form-control" maxlength="10" required />
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+            <div class="form-group">
+              <label class="form-label" for="profCity">Base City</label>
+              <select id="profCity" class="form-control">
+                <option value="Visakhapatnam">Visakhapatnam</option>
+                <option value="Vijayawada">Vijayawada</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="Bangalore">Bangalore</option>
+                <option value="Chennai">Chennai</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Delhi NCR">Delhi NCR</option>
+                <option value="Pune">Pune</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="profAvatar">Avatar Image URL</label>
+              <input type="url" id="profAvatar" class="form-control" />
+            </div>
+          </div>
+
+          <!-- Customer Only Section -->
+          <div id="consumerSpecificProfile" style="margin-top:16px;">
+            <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:16px;">Driving License &amp; Verification</h3>
+            <div class="form-group">
+              <label class="form-label" for="profDl">Driving License Number</label>
+              <input type="text" id="profDl" class="form-control" placeholder="DL-04202100892" />
+            </div>
+          </div>
+
+          <!-- Provider Only Section -->
+          <div id="providerSpecificProfile" style="display:none; margin-top:16px; padding:20px; background:var(--bg-subtle); border-radius:var(--radius-md);">
+            <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:16px; color:var(--secondary);">
+              Host Fleet &amp; Payout Settings
+            </h3>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+              <div class="form-group">
+                <label class="form-label" for="profBusiness">Registered Fleet Name</label>
+                <input type="text" id="profBusiness" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="profPan">Business PAN</label>
+                <input type="text" id="profPan" class="form-control" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="profBank">Settlement Bank Account</label>
+              <input type="text" id="profBank" class="form-control" placeholder="HDFC Bank - A/C No: ****4589" />
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:28px;">
+            <button type="button" class="btn btn-ghost text-danger" id="profileLogoutBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+              Sign Out
+            </button>
+            <button type="submit" class="btn btn-primary btn-lg">
+              Save Profile Changes
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="rentro-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>&copy; 2026 Rentro Rentals Marketplace. All rights reserved.</div>
+        <div style="display:flex; gap: 20px;">
+          <a href="../index.html">Home</a>
+          <a href="search.html">Search Vehicles</a>
+        </div>
+      </div>
+    </div>
+  </footer>
 
   <script>
-    const form = document.getElementById("profile-form");
-    const fullNameInput = document.getElementById("fullName");
-    const phoneInput = document.getElementById("phone");
-    const emailInput = document.getElementById("email");
-    const countryCodeSelect = document.getElementById("country-code");
+    document.addEventListener('DOMContentLoaded', () => {
+      RentroStorage.init();
+      RentroAuth.renderNavUser('nav-user-container');
 
-    // Phone number length validation
-    const phoneNumberLengths = {
-      "+91": 10, "+1": 10, "+44": 10, "+61": 9, "+81": 10,
-      "+49": 10, "+33": 9, "+86": 11, "+55": 11, "+27": 10,
-    };
-
-    // Load existing profile if available
-    window.addEventListener('DOMContentLoaded', () => {
-      const existingProfile = JSON.parse(localStorage.getItem('consumerProfile'));
-      const userSession = JSON.parse(localStorage.getItem('userSession'));
-      
-      if (existingProfile) {
-        fullNameInput.value = existingProfile.fullName || '';
-        emailInput.value = existingProfile.email || '';
-        
-        if (existingProfile.phone) {
-          const phoneMatch = existingProfile.phone.match(/^(\+\d+)\s(.+)$/);
-          if (phoneMatch) {
-            countryCodeSelect.value = phoneMatch[1];
-            phoneInput.value = phoneMatch[2];
-          }
-        }
-      } else if (userSession && userSession.email) {
-        emailInput.value = userSession.email;
-      }
-    });
-
-    function isValidName(name) {
-      return /^[A-Za-z\s]+$/.test(name.trim()) && name.trim().length >= 2;
-    }
-
-    function isValidEmail(email) {
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return regex.test(email);
-    }
-
-    function clearErrors() {
-      document.getElementById("name-error").textContent = "";
-      document.getElementById("phone-error").textContent = "";
-      document.getElementById("email-error").textContent = "";
-    }
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      clearErrors();
-
-      const fullName = fullNameInput.value.trim();
-      const phone = phoneInput.value.trim();
-      const email = emailInput.value.trim();
-      const countryCode = countryCodeSelect.value;
-      const validLength = phoneNumberLengths[countryCode];
-      
-      let isValid = true;
-
-      // Validate full name
-      if (!isValidName(fullName)) {
-        document.getElementById("name-error").textContent = "Please enter a valid full name (letters and spaces only, minimum 2 characters).";
-        isValid = false;
+      const user = RentroAuth.getCurrentUser();
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
       }
 
-      // Validate phone
-      if (!/^\d+$/.test(phone)) {
-        document.getElementById("phone-error").textContent = "Phone number must contain only digits.";
-        isValid = false;
-      } else if (phone.length !== validLength) {
-        document.getElementById("phone-error").textContent = `Phone number should be ${validLength} digits for ${countryCode}.`;
-        isValid = false;
+      document.getElementById('profileDisplayName').textContent = user.name;
+      document.getElementById('profileUserEmail').textContent = user.email;
+      document.getElementById('profileRoleBadge').textContent = user.role === 'provider' ? 'Fleet Provider' : 'Customer';
+      document.getElementById('profileRoleBadge').className = user.role === 'provider' ? 'badge badge-warning' : 'badge badge-info';
+
+      if (user.avatar) {
+        document.getElementById('profileAvatar').src = user.avatar;
       }
 
-      // Validate email
-      if (!isValidEmail(email)) {
-        document.getElementById("email-error").textContent = "Please enter a valid email address.";
-        isValid = false;
+      // Populate Inputs
+      document.getElementById('profName').value = user.name || '';
+      document.getElementById('profPhone').value = user.phone || '';
+      document.getElementById('profCity').value = user.city || 'Visakhapatnam';
+      document.getElementById('profAvatar').value = user.avatar || '';
+
+      if (user.role === 'provider') {
+        document.getElementById('consumerSpecificProfile').style.display = 'none';
+        document.getElementById('providerSpecificProfile').style.display = 'block';
+        document.getElementById('profBusiness').value = user.businessName || '';
+        document.getElementById('profPan').value = user.panNumber || '';
+        document.getElementById('profBank').value = user.bankAccount || '';
+      } else {
+        document.getElementById('consumerSpecificProfile').style.display = 'block';
+        document.getElementById('providerSpecificProfile').style.display = 'none';
+        document.getElementById('profDl').value = user.drivingLicense || '';
       }
 
-      if (isValid) {
-        // Save consumer profile
-        const consumerProfile = {
-          fullName: fullName,
-          email: email,
-          phone: countryCode + " " + phone,
-          createdAt: new Date().toISOString()
+      // Logout handler
+      document.getElementById('profileLogoutBtn').addEventListener('click', () => {
+        RentroAuth.logout();
+      });
+
+      // Submit Updates
+      document.getElementById('profileForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const updated = {
+          name: document.getElementById('profName').value.trim(),
+          phone: document.getElementById('profPhone').value.trim(),
+          city: document.getElementById('profCity').value,
+          avatar: document.getElementById('profAvatar').value.trim()
         };
-        
-        localStorage.setItem('consumerProfile', JSON.stringify(consumerProfile));
-        
-        // Get the return URL from query params or default to confirm.html
-        const urlParams = new URLSearchParams(window.location.search);
-        const returnUrl = urlParams.get('returnUrl') || 'confirm.html';
-        const queryString = urlParams.toString().replace(/[?&]returnUrl=[^&]*/, '').replace(/^&/, '');
-        
-        // Redirect back to the original page with preserved query parameters
-        window.location.href = returnUrl + (queryString ? '?' + queryString : '');
-      }
+
+        if (user.role === 'provider') {
+          updated.businessName = document.getElementById('profBusiness').value.trim();
+          updated.panNumber = document.getElementById('profPan').value.trim();
+          updated.bankAccount = document.getElementById('profBank').value.trim();
+        } else {
+          updated.drivingLicense = document.getElementById('profDl').value.trim();
+        }
+
+        RentroAuth.updateCurrentUser(updated);
+        RentroUtils.showToast('Profile updated successfully!', 'success');
+        setTimeout(() => location.reload(), 500);
+      });
     });
   </script>
 </body>

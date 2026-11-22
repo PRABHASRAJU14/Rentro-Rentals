@@ -1,0 +1,402 @@
+/**
+ * Rentro Rentals - Modern Fluid Animation System
+ * Cinematic scroll reveals, staggered cascades, subtle parallax, and micro-interactions.
+ */
+
+:root {
+  /* Fluid Cubic-Bezier Easing Curves */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-in-out-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Animation Timings */
+  --duration-fast: 220ms;
+  --duration-medium: 380ms;
+  --duration-reveal: 680ms;
+  --duration-slow: 850ms;
+  --stagger-step: 90ms;
+}
+
+/* ==========================================================================
+   1. Page Entrance Transition
+   ========================================================================== */
+body {
+  opacity: 1;
+  transition: opacity 0.35s var(--ease-out-smooth);
+}
+
+body.rentro-page-init {
+  opacity: 0;
+}
+
+body.rentro-page-ready {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   2. Scroll Reveal Animations (Fade + Upward Glide + Subtle Scale)
+   ========================================================================== */
+.rentro-reveal {
+  opacity: 0;
+  transform: translateY(28px) scale(0.985);
+  transition: opacity var(--duration-reveal) var(--ease-out-expo),
+              transform var(--duration-reveal) var(--ease-out-expo);
+  will-change: opacity, transform;
+}
+
+.rentro-reveal.is-revealed {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Specialized Reveal Variations */
+.rentro-reveal-fade {
+  opacity: 0;
+  transition: opacity var(--duration-reveal) var(--ease-out-expo);
+}
+
+.rentro-reveal-fade.is-revealed {
+  opacity: 1;
+}
+
+.rentro-reveal-scale {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity var(--duration-reveal) var(--ease-out-expo),
+              transform var(--duration-reveal) var(--ease-spring);
+}
+
+.rentro-reveal-scale.is-revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Stagger Delay Rules */
+.rentro-reveal[style*="--stagger-delay"] {
+  transition-delay: var(--stagger-delay, 0ms);
+}
+
+/* ==========================================================================
+   3. Interactive Hover Effects (Cards, Buttons, Images, Icons)
+   ========================================================================== */
+
+/* Universal Card Lift with Layered Ambient Shadow */
+.vehicle-card,
+.category-card,
+.step-card,
+.trust-item,
+.city-card,
+.metric-card,
+.panel-card,
+.testimonial-card,
+.feature-card {
+  transition: transform var(--duration-fast) var(--ease-out-smooth),
+              box-shadow var(--duration-fast) var(--ease-out-smooth),
+              border-color var(--duration-fast) var(--ease-out-smooth);
+}
+
+.vehicle-card:hover,
+.category-card:hover,
+.step-card:hover,
+.city-card:hover,
+.testimonial-card:hover,
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 35px -8px rgba(15, 23, 42, 0.12),
+              0 8px 16px -6px rgba(15, 23, 42, 0.06);
+}
+
+/* Subtle Image Scale on Card Hover */
+.category-card .category-thumb-img,
+.vehicle-card .vehicle-card-img,
+.city-card img {
+  transition: transform 0.45s var(--ease-out-expo);
+  will-change: transform;
+}
+
+.category-card:hover .category-thumb-img,
+.vehicle-card:hover .vehicle-card-img,
+.city-card:hover img {
+  transform: scale(1.05) translateY(-2px);
+}
+
+/* Button Kinetic Response & Soft Shadow Bloom */
+.btn {
+  position: relative;
+  transition: transform var(--duration-fast) var(--ease-out-smooth),
+              box-shadow var(--duration-fast) var(--ease-out-smooth),
+              background var(--duration-fast) var(--ease-out-smooth),
+              color var(--duration-fast) var(--ease-out-smooth);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: scale(0.97) translateY(0);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 10px 24px -6px rgba(245, 158, 11, 0.42);
+}
+
+.btn-secondary:hover {
+  box-shadow: 0 10px 24px -6px rgba(15, 23, 42, 0.28);
+}
+
+.chip-btn {
+  transition: transform var(--duration-fast) var(--ease-out-smooth),
+              background var(--duration-fast) var(--ease-out-smooth),
+              box-shadow var(--duration-fast) var(--ease-out-smooth);
+}
+
+.chip-btn:hover {
+  transform: translateY(-1.5px);
+}
+
+.chip-btn:active {
+  transform: scale(0.96);
+}
+
+/* Navigation Links Smooth Indicator */
+.nav-link {
+  position: relative;
+  transition: color var(--duration-fast) var(--ease-out-smooth);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--primary);
+  border-radius: var(--radius-full);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s var(--ease-out-expo);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Icon Subtle Float Feedback */
+.trust-icon-box svg,
+.step-icon-wrap svg,
+.metric-icon-wrap svg {
+  transition: transform 0.3s var(--ease-spring);
+}
+
+.trust-item:hover .trust-icon-box svg,
+.step-card:hover .step-icon-wrap svg,
+.metric-card:hover .metric-icon-wrap svg {
+  transform: scale(1.12) translateY(-2px);
+}
+
+/* ==========================================================================
+   4. Section & Tab Transitions (Smooth, Directional, No Flashing)
+   ========================================================================== */
+.dashboard-tab-content.active,
+.payment-tab-content.active {
+  animation: tabFadeSlide 0.42s var(--ease-out-expo) forwards;
+}
+
+@keyframes tabFadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal Smooth Zoom & Backdrop Fade */
+.rentro-modal-backdrop {
+  transition: opacity 0.25s var(--ease-out-smooth);
+}
+
+.rentro-modal-card {
+  animation: modalScaleUp 0.35s var(--ease-spring) forwards;
+}
+
+@keyframes modalScaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.93) translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Parallax Layer Hardware Acceleration */
+.hero-bg-image {
+  will-change: transform;
+}
+
+/* Top Hairline Scroll Progress Bar */
+.rentro-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary) 0%, #ea580c 50%, var(--primary) 100%);
+  z-index: 9999;
+  pointer-events: none;
+  transition: width 0.08s ease-out;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+}
+
+/* ==========================================================================
+   5. Skeleton Loading & Shimmer
+   ========================================================================== */
+.skeleton-box {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: rentroShimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes rentroShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-text {
+  height: 14px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+
+.skeleton-title {
+  height: 22px;
+  width: 65%;
+  margin-bottom: 12px;
+  border-radius: 6px;
+}
+
+.skeleton-card {
+  height: 320px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  background: #ffffff;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   6. Beautiful Empty States & Feedback
+   ========================================================================== */
+.rentro-empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  background: #ffffff;
+  border: 1.5px dashed var(--border-color);
+  border-radius: var(--radius-lg);
+  max-width: 520px;
+  margin: 32px auto;
+  box-shadow: var(--shadow-xs);
+  animation: tabFadeSlide 0.4s var(--ease-out-expo) forwards;
+}
+
+.rentro-empty-state-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  color: var(--primary-hover);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  font-size: 28px;
+}
+
+.rentro-empty-state-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--secondary);
+  margin-bottom: 8px;
+}
+
+.rentro-empty-state-desc {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-bottom: 22px;
+}
+
+/* Form Input Shake & Dynamic Feedback */
+@keyframes inputShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+.form-control.input-error {
+  border-color: var(--danger) !important;
+  background: #fffafa !important;
+  animation: inputShake 0.35s ease !important;
+  box-shadow: var(--shadow-glow-danger) !important;
+}
+
+/* Mobile Drawer Overlay Backdrop */
+.drawer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease-out-smooth);
+}
+
+.drawer-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ==========================================================================
+   7. Accessibility & Reduced Motion
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .rentro-reveal,
+  .rentro-reveal-fade,
+  .rentro-reveal-scale {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .vehicle-card:hover,
+  .category-card:hover,
+  .step-card:hover,
+  .city-card:hover {
+    transform: none !important;
+  }
+}

@@ -1,19 +1,456 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="icon" type="image/png" href="../images/logo-badge.png" />
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Select Your Ride</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vehicle Details - Rentro Rentals</title>
+  
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/landing.css" />
   <link rel="stylesheet" href="../styles/vehicle.css" />
-  <script src="../scripts/vehicle.js" defer></script>
+  <link rel="stylesheet" href="../styles/responsive.css" />
+  
+  <script src="../scripts/utils.js" defer></script>
+  <script src="../scripts/storage.js" defer></script>
+  <script src="../scripts/auth.js" defer></script>
+  <script src="../scripts/vehicles.js" defer></script>
+  <script src="../scripts/bookings.js" defer></script>
+  <script src="../scripts/payments.js" defer></script>
 </head>
 <body>
-  <button id="backBtn" class="back-arrow" aria-label="Go back">←</button>
-  <h1 class="page-title">Select Your Ride</h1>
-  <label for="locationSelect">Location:</label>
-  <select id="locationSelect"></select>
-  <div id="vehicles-container">
-    <!-- Vehicle cards will be dynamically inserted here -->
+
+  <!-- Navigation Bar -->
+  <header class="rentro-navbar">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="brand-logo">
+        <div class="brand-icon"><img src="../images/logo.png" alt="Rentro Rentals Logo" class="brand-logo-img" /></div>
+        <span>Rentro<span class="brand-accent">Rentals</span></span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="city.html" class="nav-link">Locations</a>
+        <a href="search.html" class="nav-link">Search Rides</a>
+        <a href="dashboard.html" class="nav-link">Provider Dashboard</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div id="nav-user-container"></div>
+        <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Open Navigation">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <div class="drawer-header">
+      <span class="brand-logo" style="font-size: 1.15rem;">
+        <span>Rentro<span class="brand-accent">Rentals</span></span>
+      </span>
+      <button class="modal-close-btn" id="closeDrawerBtn">&times;</button>
+    </div>
+    <ul class="drawer-links">
+      <li><a href="../index.html" class="drawer-link">Home</a></li>
+      <li><a href="city.html" class="drawer-link">Browse Cities</a></li>
+      <li><a href="search.html" class="drawer-link">Find Vehicles</a></li>
+      <li><a href="dashboard.html" class="drawer-link">Provider Dashboard</a></li>
+      <li><a href="profile-collection.html" class="drawer-link">My Profile</a></li>
+    </ul>
   </div>
+
+  <main class="vehicle-detail-section">
+    <div class="container">
+      <!-- Breadcrumbs -->
+      <div class="breadcrumb-nav">
+        <a href="../index.html">Home</a>
+        <span>/</span>
+        <a href="search.html">Vehicles</a>
+        <span>/</span>
+        <span id="breadcrumbVehicleName" style="color:var(--text-main); font-weight:600;">Loading...</span>
+      </div>
+
+      <div class="vehicle-detail-layout" id="vehicleDetailLayout">
+        <!-- Left: Gallery, Specs & Host -->
+        <div class="vehicle-left-content">
+          <div class="vehicle-gallery-card">
+            <div class="main-image-display">
+              <span class="vehicle-status-badge badge-success vehicle-badge-overlay" id="detailStatusBadge">Available</span>
+              <img id="detailMainImage" src="" alt="Vehicle" onerror="this.src='../images/honda activa 6g.png'" />
+            </div>
+
+            <div class="vehicle-info-block">
+              <div class="vehicle-headline-row">
+                <div>
+                  <h1 class="vehicle-main-name" id="detailVehicleName">Loading...</h1>
+                  <p class="vehicle-tagline" id="detailVehicleTagline">...</p>
+                </div>
+                <div class="vehicle-rating-box" id="detailRatingBox">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                  <span id="detailRatingValue">4.8</span>
+                  <span style="color:var(--text-muted); font-size:0.8rem;" id="detailReviewCount">(38 reviews)</span>
+                </div>
+              </div>
+
+              <!-- Location Row -->
+              <div class="vehicle-location-row" style="margin-bottom: 24px; font-size: 0.95rem;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <span id="detailLocationText">Siripuram Junction, Near Tech Park, Visakhapatnam</span>
+              </div>
+
+              <p id="detailDescription" style="color:var(--text-secondary); line-height:1.7; font-size:1rem; margin-bottom: 28px;">
+                Description loading...
+              </p>
+
+              <!-- Specifications 6-Grid -->
+              <h3 style="font-size: 1.15rem; font-weight:700; margin-bottom: 14px;">Technical Specifications</h3>
+              <div class="specs-detail-grid">
+                <div class="spec-box">
+                  <div class="spec-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l19-9-9 19-2-8-8-2z"></path></svg>
+                  </div>
+                  <div>
+                    <div class="spec-label">Fuel Type</div>
+                    <div class="spec-value" id="specFuel">Petrol</div>
+                  </div>
+                </div>
+
+                <div class="spec-box">
+                  <div class="spec-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                  </div>
+                  <div>
+                    <div class="spec-label">Transmission</div>
+                    <div class="spec-value" id="specTransmission">Automatic</div>
+                  </div>
+                </div>
+
+                <div class="spec-box">
+                  <div class="spec-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                  </div>
+                  <div>
+                    <div class="spec-label">Mileage / Range</div>
+                    <div class="spec-value" id="specMileage">48 km/l</div>
+                  </div>
+                </div>
+
+                <div class="spec-box">
+                  <div class="spec-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                  </div>
+                  <div>
+                    <div class="spec-label">Seating</div>
+                    <div class="spec-value" id="specSeating">2 Persons</div>
+                  </div>
+                </div>
+
+                <div class="spec-box">
+                  <div class="spec-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                  </div>
+                  <div>
+                    <div class="spec-label">Registration</div>
+                    <div class="spec-value" id="specRegNumber">AP 39 BK 4521</div>
+                  </div>
+                </div>
+
+                <div class="spec-box">
+                  <div class="spec-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                  </div>
+                  <div>
+                    <div class="spec-label">Deposit</div>
+                    <div class="spec-value" id="specDeposit">₹500 (Refundable)</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Included Features -->
+              <div class="features-container">
+                <h3 class="features-title">What's Included in Your Rental</h3>
+                <ul class="features-list" id="detailFeaturesList">
+                  <li class="feature-list-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> 2 Clean Sanitized ISI Helmets</li>
+                  <li class="feature-list-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Comprehensive Commercial Insurance</li>
+                  <li class="feature-list-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> 24/7 Roadside Breakdown Assistance</li>
+                  <li class="feature-list-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> Mobile Phone Mount for GPS Navigation</li>
+                </ul>
+              </div>
+
+              <!-- Host Profile Card -->
+              <div class="provider-profile-card">
+                <img id="detailHostAvatar" src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=150&q=80" alt="Host" class="provider-avatar" />
+                <div class="provider-meta">
+                  <div style="font-size:0.75rem; color:var(--primary-hover); font-weight:700; text-transform:uppercase;">Verified Fleet Partner</div>
+                  <h4 id="detailHostBusiness">Coastal Wheels Fleet</h4>
+                  <p id="detailHostLocation">Managed by Kiran Kumar &bull; Response time: under 15 mins</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Sticky Booking Calculator Card -->
+        <aside class="booking-widget-card" id="bookingWidget">
+          <div class="widget-price-header">
+            <div>
+              <span class="widget-price-main" id="widgetPriceDaily">₹420</span>
+              <span class="widget-price-sub">/ day</span>
+            </div>
+            <div style="text-align: right;">
+              <span style="font-weight:700; color:var(--text-main);" id="widgetPriceHourly">₹45</span>
+              <span class="widget-price-sub">/ hr</span>
+            </div>
+          </div>
+
+          <!-- Date Selector -->
+          <div class="booking-dates-box">
+            <div class="booking-date-row">
+              <label for="widgetPickupDate">Pickup Date & Time</label>
+              <div class="date-time-inputs">
+                <input type="date" id="widgetPickupDate" />
+                <input type="time" id="widgetPickupTime" value="10:00" />
+              </div>
+            </div>
+
+            <div class="booking-date-row">
+              <label for="widgetReturnDate">Dropoff Date & Time</label>
+              <div class="date-time-inputs">
+                <input type="date" id="widgetReturnDate" />
+                <input type="time" id="widgetReturnTime" value="18:00" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Overlap Conflict Warning Banner -->
+          <div class="conflict-warning-box" id="conflictWarningBox">
+            <strong>Vehicle Unavailable</strong>
+            <p id="conflictReasonText" style="margin-top:4px;">This vehicle already has a confirmed booking during your chosen time slot.</p>
+          </div>
+
+          <!-- Live Fare Breakdown -->
+          <div class="price-breakdown-table">
+            <div class="price-breakdown-row">
+              <span id="fareDurationLabel">Rental Duration:</span>
+              <strong id="fareDurationVal">8 hrs</strong>
+            </div>
+            <div class="price-breakdown-row">
+              <span>Base Rental Fare:</span>
+              <strong id="fareBaseVal">₹360</strong>
+            </div>
+            <div class="price-breakdown-row">
+              <span>GST & Platform Charges (18%):</span>
+              <strong id="fareTaxesVal">₹65</strong>
+            </div>
+            <div class="price-breakdown-row">
+              <span>Refundable Security Deposit:</span>
+              <strong id="fareDepositVal">₹500</strong>
+            </div>
+            <div class="price-breakdown-row total-row">
+              <span>Total Payable Now:</span>
+              <span id="fareTotalVal">₹925</span>
+            </div>
+          </div>
+
+          <!-- Book Now Button -->
+          <button class="btn btn-primary btn-lg" id="proceedToBookBtn" style="width: 100%; margin-top: 8px;">
+            Continue to Booking
+          </button>
+          
+          <p style="text-align:center; font-size:0.78rem; color:var(--text-muted); margin-top:14px;">
+            🔒 Zero cancellation fee up to 2 hours prior to scheduled pickup.
+          </p>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="rentro-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>&copy; 2026 Rentro Rentals Marketplace. All rights reserved.</div>
+        <div style="display:flex; gap: 20px;">
+          <a href="../index.html">Home</a>
+          <a href="search.html">Search Vehicles</a>
+          <a href="dashboard.html">Provider Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      RentroStorage.init();
+      RentroAuth.renderNavUser('nav-user-container');
+
+      // Mobile Drawer
+      const mobileToggle = document.getElementById('mobileNavToggle');
+      const closeDrawer = document.getElementById('closeDrawerBtn');
+      const drawer = document.getElementById('mobileDrawer');
+      if (mobileToggle && drawer) {
+        mobileToggle.addEventListener('click', () => drawer.classList.add('open'));
+        closeDrawer.addEventListener('click', () => drawer.classList.remove('open'));
+      }
+
+      // Parse vehicle ID from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const vehicleId = urlParams.get('id') || 'VEH001';
+      const vehicle = RentroVehicles.getById(vehicleId);
+
+      if (!vehicle) {
+        document.getElementById('vehicleDetailLayout').innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 60px; background:#fff; border-radius:var(--radius-lg); border:1px solid var(--border-color);">
+            <h2>Vehicle Not Found</h2>
+            <p style="color:var(--text-secondary); margin: 12px 0 24px;">The vehicle you are trying to view does not exist or has been removed.</p>
+            <a href="search.html" class="btn btn-primary">Back to Search</a>
+          </div>
+        `;
+        return;
+      }
+
+      // Populate Vehicle Details
+      document.title = `${vehicle.name} - Rentro Rentals`;
+      document.getElementById('breadcrumbVehicleName').textContent = vehicle.name;
+      document.getElementById('detailVehicleName').textContent = vehicle.name;
+      document.getElementById('detailVehicleTagline').textContent = `${vehicle.brand} ${vehicle.model} &bull; ${vehicle.category}`;
+      document.getElementById('detailLocationText').textContent = `${vehicle.location}, ${vehicle.city}`;
+      document.getElementById('detailDescription').textContent = vehicle.description;
+      document.getElementById('detailMainImage').src = RentroUtils.resolvePath(vehicle.images[0] || 'images/honda activa 6g.png');
+
+      document.getElementById('specFuel').textContent = vehicle.fuelType;
+      document.getElementById('specTransmission').textContent = vehicle.transmission;
+      document.getElementById('specMileage').textContent = vehicle.mileage;
+      document.getElementById('specSeating').textContent = `${vehicle.seatingCapacity} Persons`;
+      document.getElementById('specRegNumber').textContent = vehicle.regNumber;
+      document.getElementById('specDeposit').textContent = `${RentroUtils.formatCurrency(vehicle.securityDeposit || 500)} (Refundable)`;
+
+      document.getElementById('widgetPriceDaily').textContent = RentroUtils.formatCurrency(vehicle.pricePerDay);
+      document.getElementById('widgetPriceHourly').textContent = RentroUtils.formatCurrency(vehicle.pricePerHour);
+
+      // Provider Info
+      const allUsers = RentroStorage.get(RentroStorage.KEYS.USERS) || [];
+      const host = allUsers.find(u => u.id === vehicle.providerId) || {
+        name: 'Kiran Kumar',
+        businessName: 'Coastal Fleet Hub',
+        avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=150&q=80'
+      };
+      document.getElementById('detailHostBusiness').textContent = host.businessName || `${host.name}'s Fleet`;
+      document.getElementById('detailHostLocation').textContent = `Managed by ${host.name} &bull; City: ${vehicle.city}`;
+      if (host.avatar) document.getElementById('detailHostAvatar').src = host.avatar;
+
+      // Initialize Dates from Active Search or defaults
+      const storedSearch = RentroStorage.get(RentroStorage.KEYS.ACTIVE_SEARCH) || {};
+      const pickupDateInput = document.getElementById('widgetPickupDate');
+      const pickupTimeInput = document.getElementById('widgetPickupTime');
+      const returnDateInput = document.getElementById('widgetReturnDate');
+      const returnTimeInput = document.getElementById('widgetReturnTime');
+
+      pickupDateInput.value = urlParams.get('pickupDate') || storedSearch.pickupDate || RentroUtils.getTodayDateString(0);
+      pickupDateInput.min = RentroUtils.getTodayDateString(0);
+      pickupTimeInput.value = urlParams.get('pickupTime') || storedSearch.pickupTime || '10:00';
+
+      returnDateInput.value = urlParams.get('returnDate') || storedSearch.returnDate || RentroUtils.getTodayDateString(1);
+      returnDateInput.min = pickupDateInput.value;
+      returnTimeInput.value = urlParams.get('returnTime') || storedSearch.returnTime || '18:00';
+
+      // Event listeners for live recalculation
+      [pickupDateInput, pickupTimeInput, returnDateInput, returnTimeInput].forEach(elem => {
+        elem.addEventListener('change', recalculateFare);
+      });
+
+      let currentPricing = null;
+
+      function recalculateFare() {
+        const pDate = pickupDateInput.value;
+        const pTime = pickupTimeInput.value;
+        const rDate = returnDateInput.value;
+        const rTime = returnTimeInput.value;
+
+        // Check availability collision
+        const availability = RentroVehicles.checkAvailability(vehicle.id, pDate, pTime, rDate, rTime);
+        const warningBox = document.getElementById('conflictWarningBox');
+        const reasonText = document.getElementById('conflictReasonText');
+        const bookBtn = document.getElementById('proceedToBookBtn');
+
+        if (!availability.available) {
+          warningBox.style.display = 'block';
+          reasonText.textContent = availability.reason;
+          bookBtn.disabled = true;
+          bookBtn.textContent = 'Unavailable for Selected Dates';
+        } else {
+          warningBox.style.display = 'none';
+          bookBtn.disabled = false;
+          bookBtn.textContent = 'Continue to Booking';
+        }
+
+        // Calculate Price
+        currentPricing = RentroBookings.calculatePrice(vehicle, pDate, pTime, rDate, rTime);
+
+        if (currentPricing && currentPricing.isValid) {
+          document.getElementById('fareDurationVal').textContent = currentPricing.durationText;
+          document.getElementById('fareBaseVal').textContent = RentroUtils.formatCurrency(currentPricing.basePrice);
+          document.getElementById('fareTaxesVal').textContent = RentroUtils.formatCurrency(currentPricing.taxes);
+          document.getElementById('fareDepositVal').textContent = RentroUtils.formatCurrency(currentPricing.securityDeposit);
+          document.getElementById('fareTotalVal').textContent = RentroUtils.formatCurrency(currentPricing.grandTotalWithDeposit);
+        } else {
+          document.getElementById('fareDurationVal').textContent = 'Invalid duration';
+          document.getElementById('fareBaseVal').textContent = '₹0';
+          document.getElementById('fareTaxesVal').textContent = '₹0';
+          document.getElementById('fareTotalVal').textContent = '₹0';
+          bookBtn.disabled = true;
+        }
+      }
+
+      // Initial calculation
+      recalculateFare();
+
+      // Proceed to Booking Action
+      document.getElementById('proceedToBookBtn').addEventListener('click', () => {
+        if (!currentPricing || !currentPricing.isValid) {
+          RentroUtils.showToast('Please select a valid rental duration.', 'error');
+          return;
+        }
+
+        const currentUser = RentroAuth.getCurrentUser() || {
+          id: 'GUEST_USER',
+          name: 'Guest Customer',
+          email: 'guest@example.com',
+          phone: '9876543210'
+        };
+
+        const draftBooking = {
+          vehicleId: vehicle.id,
+          vehicleName: vehicle.name,
+          vehicleImage: vehicle.images[0] || 'images/honda activa 6g.png',
+          vehicleCity: vehicle.city,
+          pickupLocation: vehicle.location,
+          providerId: vehicle.providerId,
+          customerId: currentUser.id,
+          customerName: currentUser.name,
+          customerEmail: currentUser.email,
+          customerPhone: currentUser.phone,
+          pickupDate: pickupDateInput.value,
+          pickupTime: pickupTimeInput.value,
+          returnDate: returnDateInput.value,
+          returnTime: returnTimeInput.value,
+          durationText: currentPricing.durationText,
+          totalHours: currentPricing.totalHours,
+          basePrice: currentPricing.basePrice,
+          taxes: currentPricing.taxes,
+          securityDeposit: currentPricing.securityDeposit,
+          totalAmount: currentPricing.grandTotalWithDeposit
+        };
+
+        // Save draft in payments session
+        RentroPayments.saveCheckoutDraft(draftBooking);
+
+        // Navigate to confirmation page
+        window.location.href = 'confirm.html';
+      });
+    });
+  </script>
 </body>
 </html>

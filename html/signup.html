@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="../images/logo-badge.png" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account - Rentro Rentals</title>
+  
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/auth.css" />
+  <link rel="stylesheet" href="../styles/responsive.css" />
+  
+  <script src="../scripts/utils.js" defer></script>
+  <script src="../scripts/storage.js" defer></script>
+  <script src="../scripts/auth.js" defer></script>
+  <script src="../scripts/validation.js" defer></script>
+</head>
+<body>
+
+  <header class="rentro-navbar">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="brand-logo">
+        <div class="brand-icon"><img src="../images/logo.png" alt="Rentro Rentals Logo" class="brand-logo-img" /></div>
+        <span>Rentro<span class="brand-accent">Rentals</span></span>
+      </a>
+
+      <div style="font-size:0.9rem;">
+        Already registered? <a href="login.html" style="color:var(--primary-hover); font-weight:700;">Sign In</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="auth-page-wrapper">
+    <div class="auth-card auth-card-wide">
+      <div class="auth-header">
+        <div style="display:flex; justify-content:center; margin-bottom:16px;">
+          <img src="../images/logo-badge.png" alt="Rentro Rentals Logo" style="width:64px; height:64px; border-radius:16px; box-shadow:0 8px 20px rgba(0,0,0,0.18);" />
+        </div>
+        <h1>Create Your Account</h1>
+        <p>Join India's fastest-growing vehicle sharing marketplace</p>
+      </div>
+
+      <!-- Role Selector Toggle -->
+      <div class="role-switch-container">
+        <button type="button" class="role-tab-btn active" id="signupConsumerTab" data-role="consumer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          I Want to Rent (Customer)
+        </button>
+        <button type="button" class="role-tab-btn" id="signupProviderTab" data-role="provider">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+          I Want to List (Fleet Host)
+        </button>
+      </div>
+
+      <form id="signupForm" novalidate>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+          <div class="form-group">
+            <label class="form-label" for="signupName">Full Legal Name</label>
+            <input type="text" id="signupName" class="form-control" placeholder="John Doe" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="signupPhone">Mobile Number (10 Digits)</label>
+            <input type="tel" id="signupPhone" class="form-control" placeholder="9876543210" maxlength="10" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="signupEmail">Email Address</label>
+          <input type="email" id="signupEmail" class="form-control" placeholder="john@example.com" required />
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+          <div class="form-group">
+            <label class="form-label" for="signupCity">Primary City</label>
+            <select id="signupCity" class="form-control" required>
+              <option value="Visakhapatnam">Visakhapatnam</option>
+              <option value="Vijayawada">Vijayawada</option>
+              <option value="Hyderabad">Hyderabad</option>
+              <option value="Bangalore">Bangalore</option>
+              <option value="Chennai">Chennai</option>
+              <option value="Mumbai">Mumbai</option>
+              <option value="Delhi NCR">Delhi NCR</option>
+              <option value="Pune">Pune</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="signupPassword">Password</label>
+            <div class="password-input-wrap">
+              <input type="password" id="signupPassword" class="form-control" placeholder="Minimum 6 characters" required />
+              <button type="button" class="password-toggle-btn" id="toggleSignupPasswordBtn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Provider-Specific Optional Fields -->
+        <div id="providerSpecificFields" style="display:none; margin-top:16px; padding:16px; background:var(--bg-subtle); border-radius:var(--radius-md);">
+          <h4 style="font-size:0.95rem; font-weight:700; margin-bottom:12px; color:var(--secondary);">
+            Host Fleet Onboarding Information
+          </h4>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+            <div class="form-group">
+              <label class="form-label" for="signupBusinessName">Fleet / Business Name</label>
+              <input type="text" id="signupBusinessName" class="form-control" placeholder="Coastal Wheels Hub" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="signupPan">PAN Number</label>
+              <input type="text" id="signupPan" class="form-control" placeholder="ABCDE1234F" maxlength="10" />
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" for="signupBank">Bank Account Details for Payouts</label>
+            <input type="text" id="signupBank" class="form-control" placeholder="HDFC Bank - A/C 501000..." />
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%; margin-top:24px;">
+          Create Account & Get Started &rarr;
+        </button>
+      </form>
+
+      <div class="auth-disclaimer">
+        ℹ️ By signing up, you agree to Rentro's Community Terms of Service and Rental Safety Guidelines.
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      RentroStorage.init();
+
+      let activeRole = 'consumer';
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('role') === 'provider') {
+        activeRole = 'provider';
+      }
+
+      const consumerTab = document.getElementById('signupConsumerTab');
+      const providerTab = document.getElementById('signupProviderTab');
+      const providerFields = document.getElementById('providerSpecificFields');
+
+      function setRole(role) {
+        activeRole = role;
+        consumerTab.classList.toggle('active', role === 'consumer');
+        providerTab.classList.toggle('active', role === 'provider');
+        providerFields.style.display = (role === 'provider') ? 'block' : 'none';
+      }
+
+      consumerTab.addEventListener('click', () => setRole('consumer'));
+      providerTab.addEventListener('click', () => setRole('provider'));
+      setRole(activeRole);
+
+      // Password toggle
+      const passInput = document.getElementById('signupPassword');
+      const toggleBtn = document.getElementById('toggleSignupPasswordBtn');
+      toggleBtn.addEventListener('click', () => {
+        const type = passInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passInput.setAttribute('type', type);
+      });
+
+      // Submit Registration
+      document.getElementById('signupForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('signupName').value.trim();
+        const phone = document.getElementById('signupPhone').value.trim();
+        const email = document.getElementById('signupEmail').value.trim();
+        const city = document.getElementById('signupCity').value;
+        const password = document.getElementById('signupPassword').value;
+
+        if (!name) {
+          RentroUtils.showToast('Please enter your full name.', 'error');
+          return;
+        }
+        if (!RentroValidator.isValidPhone(phone)) {
+          RentroUtils.showToast('Please enter a valid 10-digit mobile number.', 'error');
+          return;
+        }
+        if (!RentroValidator.isValidEmail(email)) {
+          RentroUtils.showToast('Please enter a valid email address.', 'error');
+          return;
+        }
+        if (password.length < 6) {
+          RentroUtils.showToast('Password must be at least 6 characters.', 'error');
+          return;
+        }
+
+        const registrationPayload = {
+          name, phone, email, city, password, role: activeRole
+        };
+
+        if (activeRole === 'provider') {
+          registrationPayload.businessName = document.getElementById('signupBusinessName').value.trim() || `${name}'s Fleet`;
+          registrationPayload.panNumber = document.getElementById('signupPan').value.trim();
+          registrationPayload.bankAccount = document.getElementById('signupBank').value.trim();
+        }
+
+        const result = RentroAuth.register(registrationPayload);
+        if (result.success) {
+          RentroUtils.showToast(`Account created successfully! Welcome, ${name}.`, 'success');
+          setTimeout(() => {
+            if (activeRole === 'provider') {
+              window.location.href = 'dashboard.html';
+            } else {
+              window.location.href = '../index.html';
+            }
+          }, 600);
+        } else {
+          RentroUtils.showToast(result.message, 'error');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

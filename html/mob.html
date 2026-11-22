@@ -1,47 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mobikwik Payment</title>
-  <link rel="stylesheet" href="../styles/payc.css" />
+  <link rel="icon" type="image/png" href="../images/logo-badge.png" />
+  <meta charset="UTF-8">
+  <title>Wallet Payment - Rentro Rentals</title>
+  <script>
+    window.location.replace('payment.html');
+  </script>
 </head>
 <body>
-  <div class="container">
-    <p class="amount-text">Total Payable Amount: <strong id="totalAmount">₹ 0.00</strong></p>
-
-    <div class="payment-box">
-      <div class="payment-header">
-        CHOOSE PAYMENT METHOD
-      </div>
-
-      <div class="form-section">
-        <label for="mobikwik-id">Enter your Mobikwik mobile number or email</label>
-        <input type="text" id="mobikwik-id" placeholder="Mobile number or Email" />
-      </div>
-
-      <button class="pay-button" id="pay-button">MAKE PAYMENT</button>
-    </div>
-  </div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const params = new URLSearchParams(window.location.search);
-      const total = parseFloat(params.get("total")) || 0;
-      document.getElementById("totalAmount").textContent = `₹ ${total.toFixed(2)}`;
-
-      document.getElementById("pay-button").addEventListener("click", () => {
-        // Optionally, validate input before redirecting
-        // const mobikwikId = document.getElementById("mobikwik-id").value;
-        // if (!mobikwikId) {
-        //   alert("Please enter your Mobikwik mobile number or email.");
-        //   return;
-        // }
-        
-        // Redirect to success page on click
-        window.location.href = "success.html";
-      });
-    });
-  </script>
+  <p>Redirecting to checkout...</p>
 </body>
 </html>

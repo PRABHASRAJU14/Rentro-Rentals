@@ -1,130 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="icon" type="image/png" href="../images/logo-badge.png" />
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login - Rentro Rentals</title>
-  <link rel="stylesheet" href="../styles/login.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In - Rentro Rentals</title>
+  
+  <link rel="stylesheet" href="../styles/global.css" />
+  <link rel="stylesheet" href="../styles/auth.css" />
+  <link rel="stylesheet" href="../styles/responsive.css" />
+  
+  <script src="../scripts/utils.js" defer></script>
+  <script src="../scripts/storage.js" defer></script>
+  <script src="../scripts/auth.js" defer></script>
+  <script src="../scripts/validation.js" defer></script>
 </head>
 <body>
-  <div class="container">
-    <img src="../images/bp.jpg" alt="picture" class="logo" />
-    <h2>LOGIN</h2>
-    
-    <div class="role-selector">
-      <label>
-        <input type="radio" name="role" value="consumer" checked />
-        Consumer
-      </label>
-      <label>
-        <input type="radio" name="role" value="provider" />
-        Provider
-      </label>
+
+  <header class="rentro-navbar">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="brand-logo">
+        <div class="brand-icon"><img src="../images/logo.png" alt="Rentro Rentals Logo" class="brand-logo-img" /></div>
+        <span>Rentro<span class="brand-accent">Rentals</span></span>
+      </a>
+
+      <div style="font-size:0.9rem;">
+        Don't have an account? <a href="signup.html" style="color:var(--primary-hover); font-weight:700;">Sign Up</a>
+      </div>
     </div>
+  </header>
 
-    <form class="form" id="login-form" novalidate>
-      <input type="email" id="email" placeholder="Enter your email" required />
-      <div class="error" id="email-error"></div>
-
-      <div id="provider-fields" style="display: none;">
-        <input type="password" id="password" placeholder="Enter your password" />
-        <div class="error" id="password-error"></div>
+  <main class="auth-page-wrapper">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div style="display:flex; justify-content:center; margin-bottom:16px;">
+          <img src="../images/logo-badge.png" alt="Rentro Rentals Logo" style="width:64px; height:64px; border-radius:16px; box-shadow:0 8px 20px rgba(0,0,0,0.18);" />
+        </div>
+        <h1>Welcome Back</h1>
+        <p>Sign in to manage your rides or fleet dashboard</p>
       </div>
 
-      <button type="submit" class="submit-btn">LOGIN</button>
-    </form>
+      <!-- Role Selector Toggle -->
+      <div class="role-switch-container">
+        <button type="button" class="role-tab-btn active" id="consumerRoleTab" data-role="consumer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          Customer
+        </button>
+        <button type="button" class="role-tab-btn" id="providerRoleTab" data-role="provider">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+          Fleet Provider
+        </button>
+      </div>
 
-    <p class="switch-text">
-      Don't have an account? <a href="create.html">Create Account</a>
-    </p>
-  </div>
+      <!-- Quick Demo Login Presets -->
+      <div style="display:flex; gap:8px; margin-bottom:20px;">
+        <button type="button" class="btn btn-outline-primary btn-sm" id="quickCustomerLoginBtn" style="flex:1;">
+          👤 Demo Customer
+        </button>
+        <button type="button" class="btn btn-outline-primary btn-sm" id="quickProviderLoginBtn" style="flex:1;">
+          🏢 Demo Host
+        </button>
+      </div>
+
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="loginEmail">Email Address</label>
+          <input type="email" id="loginEmail" class="form-control" placeholder="name@example.com" required />
+        </div>
+
+        <div class="form-group">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <label class="form-label" for="loginPassword">Password</label>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Demo: password123</span>
+          </div>
+          <div class="password-input-wrap">
+            <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required />
+            <button type="button" class="password-toggle-btn" id="togglePasswordBtn" aria-label="Toggle password view">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%; margin-top:12px;">
+          Sign In &rarr;
+        </button>
+      </form>
+
+      <div class="auth-disclaimer">
+        ℹ️ <strong>Frontend Simulation:</strong> Authentication is stored locally in your browser session for demo and portfolio testing.
+      </div>
+    </div>
+  </main>
 
   <script>
-    const form = document.getElementById("login-form");
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-    const providerFields = document.getElementById("provider-fields");
-    const roleInputs = document.querySelectorAll('input[name="role"]');
-    
-    // Hardcoded provider credentials
-    const providerCredentials = [
-      { email: "provider1@rentro.com", password: "provider123" },
-      { email: "provider2@rentro.com", password: "provider456" },
-      { email: "admin@rentro.com", password: "admin123" }
-    ];
+    document.addEventListener('DOMContentLoaded', () => {
+      RentroStorage.init();
 
-    // Show/hide password field based on role
-    roleInputs.forEach(radio => {
-      radio.addEventListener('change', function() {
-        if (this.value === 'provider') {
-          providerFields.style.display = 'block';
-          passwordInput.required = true;
+      let activeRole = 'consumer';
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('role') === 'provider') {
+        activeRole = 'provider';
+      }
+
+      const consumerTab = document.getElementById('consumerRoleTab');
+      const providerTab = document.getElementById('providerRoleTab');
+
+      function setRole(role) {
+        activeRole = role;
+        consumerTab.classList.toggle('active', role === 'consumer');
+        providerTab.classList.toggle('active', role === 'provider');
+      }
+
+      consumerTab.addEventListener('click', () => setRole('consumer'));
+      providerTab.addEventListener('click', () => setRole('provider'));
+      setRole(activeRole);
+
+      // Password visibility toggle
+      const passInput = document.getElementById('loginPassword');
+      const toggleBtn = document.getElementById('togglePasswordBtn');
+      toggleBtn.addEventListener('click', () => {
+        const type = passInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passInput.setAttribute('type', type);
+      });
+
+      // Quick Demo Buttons
+      document.getElementById('quickCustomerLoginBtn').addEventListener('click', () => {
+        setRole('consumer');
+        document.getElementById('loginEmail').value = 'rahul@example.com';
+        document.getElementById('loginPassword').value = 'password123';
+        document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+      });
+
+      document.getElementById('quickProviderLoginBtn').addEventListener('click', () => {
+        setRole('provider');
+        document.getElementById('loginEmail').value = 'provider@example.com';
+        document.getElementById('loginPassword').value = 'password123';
+        document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+      });
+
+      // Handle Login Submit
+      document.getElementById('loginForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        if (!RentroValidator.isValidEmail(email)) {
+          RentroUtils.showToast('Please enter a valid email address.', 'error');
+          return;
+        }
+        if (!password) {
+          RentroUtils.showToast('Please enter your password.', 'error');
+          return;
+        }
+
+        const result = RentroAuth.login(email, password, activeRole);
+        if (result.success) {
+          RentroUtils.showToast(`Signed in as ${result.user.name}!`, 'success');
+          
+          const redirect = urlParams.get('redirect');
+          setTimeout(() => {
+            if (redirect) {
+              window.location.href = decodeURIComponent(redirect);
+            } else if (result.user.role === 'provider') {
+              window.location.href = 'dashboard.html';
+            } else {
+              window.location.href = '../index.html';
+            }
+          }, 600);
         } else {
-          providerFields.style.display = 'none';
-          passwordInput.required = false;
+          RentroUtils.showToast(result.message, 'error');
         }
       });
-    });
-
-    function isValidEmail(email) {
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return regex.test(email);
-    }
-
-    function clearErrors() {
-      document.getElementById("email-error").textContent = "";
-      document.getElementById("password-error").textContent = "";
-    }
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      clearErrors();
-
-      const email = emailInput.value.trim();
-      const password = passwordInput.value.trim();
-      const selectedRole = document.querySelector('input[name="role"]:checked').value;
-      
-      let isValid = true;
-
-      if (!isValidEmail(email)) {
-        document.getElementById("email-error").textContent = "Please enter a valid email address.";
-        isValid = false;
-      }
-
-      if (selectedRole === 'provider') {
-        if (!password) {
-          document.getElementById("password-error").textContent = "Password is required for providers.";
-          isValid = false;
-        } else {
-          // Check provider credentials
-          const validProvider = providerCredentials.find(
-            cred => cred.email === email && cred.password === password
-          );
-          
-          if (!validProvider) {
-            document.getElementById("password-error").textContent = "Invalid provider credentials.";
-            isValid = false;
-          }
-        }
-      }
-
-      if (isValid) {
-        // Store user session
-        const userSession = {
-          email: email,
-          role: selectedRole,
-          loginTime: new Date().toISOString()
-        };
-        localStorage.setItem('userSession', JSON.stringify(userSession));
-        localStorage.setItem('userEmail', email);
-
-        // Redirect based on role
-        if (selectedRole === 'provider') {
-          window.location.href = "dashboard.html";
-        } else {
-          window.location.href = "city.html";
-        }
-      }
     });
   </script>
 </body>
